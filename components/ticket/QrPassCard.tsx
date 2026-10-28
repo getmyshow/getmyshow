@@ -77,9 +77,9 @@ export default function QrPassCard({
 
   return (
     <div className="max-w-md mx-auto space-y-6">
-      {/* Success Confirmation Pill Banner */}
-      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-4 flex items-center gap-3.5">
-        <div className="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shrink-0">
+      {/* Success Confirmation Banner (12px Radius) */}
+      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-center gap-3.5 shadow-xs">
+        <div className="w-10 h-10 rounded-lg bg-emerald-500 text-white flex items-center justify-center shrink-0">
           <CheckCircle size={22} weight="fill" />
         </div>
         <div className="text-xs">
@@ -90,10 +90,10 @@ export default function QrPassCard({
         </div>
       </div>
 
-      {/* Pillow-Soft Container holding 35mm Cinema Pass */}
-      <div className="bg-white rounded-[40px] border border-[#DBDAE3] shadow-card overflow-hidden relative p-6 sm:p-7 space-y-6">
+      {/* Modern Card Container holding 35mm Cinema Pass (16px Radius - No Ovals) */}
+      <div className="bg-white rounded-2xl border border-[#DBDAE3] shadow-md overflow-hidden relative p-5 sm:p-6 space-y-6">
         {/* Scalloped Pass Container */}
-        <div className="ticket-scallop-card bg-[#F8F7FA] border border-[#DBDAE3] rounded-3xl overflow-hidden relative">
+        <div className="ticket-scallop-card bg-[#F8F7FA] border border-[#DBDAE3] rounded-xl overflow-hidden relative">
           <div className="ticket-notch-left" />
           <div className="ticket-notch-right" />
 
@@ -101,14 +101,14 @@ export default function QrPassCard({
           <div className="p-4 bg-white border-b border-[#DBDAE3] flex items-center justify-between">
             <Link href="/" className="flex items-center">
               <Image
-                src="/brand/logos/wordmark-tilted-black-text-transparent.svg"
+                src="/brand/logos/wordmark-cropped.svg"
                 alt="GetMyShow"
-                width={120}
-                height={32}
-                className="h-7 w-auto object-contain"
+                width={140}
+                height={38}
+                className="h-8 sm:h-9 w-auto object-contain"
               />
             </Link>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-600 text-white">
+            <span className="px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-emerald-600 text-white">
               Official Admit
             </span>
           </div>
@@ -172,7 +172,7 @@ export default function QrPassCard({
 
           {/* QR Stub & Quiet Zone */}
           <div className="p-6 bg-white flex flex-col items-center justify-center space-y-3">
-            <div className="p-3 bg-white border border-[#DBDAE3] rounded-2xl shadow-xs">
+            <div className="p-3 bg-white border border-[#DBDAE3] rounded-xl shadow-xs">
               {qrDataUrl ? (
                 <img
                   src={qrDataUrl}
@@ -197,8 +197,8 @@ export default function QrPassCard({
             </div>
 
             {/* Hyperlocal Local Sponsor Ad Banner */}
-            <div className="w-full mt-3 p-3 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-[#F97316] text-white flex items-center justify-center shrink-0">
+            <div className="w-full mt-3 p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-md bg-[#F97316] text-white flex items-center justify-center shrink-0">
                 <Tag size={16} weight="fill" />
               </div>
               <div className="text-[11px] leading-tight flex-1">
@@ -209,12 +209,12 @@ export default function QrPassCard({
           </div>
         </div>
 
-        {/* Action Suite Buttons */}
+        {/* Action Suite Buttons (Rectangular 8px Curved Radius - No Ovals) */}
         <div className="grid grid-cols-2 gap-3 pt-2">
           <button
             type="button"
             onClick={handleShare}
-            className="py-3 px-4 rounded-[360px] bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95"
+            className="py-3 px-4 rounded-lg bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 active:scale-95"
           >
             <WhatsappLogo size={16} weight="fill" />
             <span>Share Ticket</span>
@@ -223,7 +223,7 @@ export default function QrPassCard({
           <button
             type="button"
             onClick={handlePrint}
-            className="py-3 px-4 rounded-[360px] border border-[#DBDAE3] hover:border-[#39364F] text-[#39364F] hover:text-[#1E0A3C] text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 bg-white"
+            className="py-3 px-4 rounded-lg border border-[#DBDAE3] hover:border-[#1E0A3C] text-[#39364F] hover:text-[#1E0A3C] text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 bg-white shadow-xs"
           >
             <Printer size={16} weight="bold" />
             <span>Save / Print</span>

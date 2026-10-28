@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {
   Ticket,
-  PlusCircle,
+  Plus,
   QrCode,
   ChartLineUp,
   ShieldCheck,
@@ -54,11 +54,11 @@ const ACTIVE_EVENTS = [
 export default function OrganizerLandingPage() {
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-10 space-y-10">
+      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 py-10 space-y-8">
         {/* Header Banner */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#DBDAE3]">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[20px] bg-[#3659E3]/10 text-[#3659E3] text-xs font-bold mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#3659E3]/10 text-[#3659E3] text-xs font-bold mb-2">
               <Ticket size={16} weight="duotone" />
               <span>Organizer Studio & Box-Office</span>
             </div>
@@ -72,19 +72,19 @@ export default function OrganizerLandingPage() {
 
           <Link
             href="/organizer/create"
-            className="px-6 py-3.5 rounded-[360px] bg-[#F05537] hover:bg-[#d94428] text-white font-bold text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="px-5 py-3 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white font-bold text-sm shadow-xs transition-all active:scale-95 flex items-center justify-center gap-2"
           >
-            <PlusCircle size={18} weight="bold" />
+            <Plus size={18} weight="bold" />
             <span>Create New Event</span>
           </Link>
         </div>
 
-        {/* 3 Metric Cards with Phosphor Duotone Icons */}
+        {/* 3 Metric Cards with Phosphor Duotone Icons (12px Radius) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="p-6 rounded-[32px] bg-white border border-[#DBDAE3] shadow-card space-y-2">
+          <div className="p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Gross GMV</span>
-              <div className="w-10 h-10 rounded-2xl bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-md bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center">
                 <ChartLineUp size={22} weight="duotone" />
               </div>
             </div>
@@ -92,10 +92,10 @@ export default function OrganizerLandingPage() {
             <p className="text-xs text-[#6F7287]">Across 3 active events in Sasaram</p>
           </div>
 
-          <div className="p-6 rounded-[32px] bg-white border border-[#DBDAE3] shadow-card space-y-2">
+          <div className="p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Tickets Issued</span>
-              <div className="w-10 h-10 rounded-2xl bg-[#F05537]/10 text-[#F05537] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-md bg-[#F05537]/10 text-[#F05537] flex items-center justify-center">
                 <Ticket size={22} weight="duotone" />
               </div>
             </div>
@@ -103,10 +103,10 @@ export default function OrganizerLandingPage() {
             <p className="text-xs text-emerald-600 font-semibold">61% overall occupancy rate</p>
           </div>
 
-          <div className="p-6 rounded-[32px] bg-white border border-[#DBDAE3] shadow-card space-y-2">
+          <div className="p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Wallet Balance</span>
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-md bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
                 <Wallet size={22} weight="duotone" />
               </div>
             </div>
@@ -115,8 +115,8 @@ export default function OrganizerLandingPage() {
           </div>
         </div>
 
-        {/* Active Events Table in Pillow-Soft Card */}
-        <div className="bg-white rounded-[40px] border border-[#DBDAE3] shadow-card p-6 sm:p-8 space-y-6">
+        {/* Active Events Table in Modern 16px Card */}
+        <div className="bg-white rounded-2xl border border-[#DBDAE3] shadow-xs p-6 sm:p-8 space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-bold text-[#1E0A3C]">Your Active Events</h2>
@@ -132,7 +132,7 @@ export default function OrganizerLandingPage() {
               >
                 <div className="space-y-1 max-w-lg">
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-[20px] bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
                       {ev.status}
                     </span>
                     <span className="text-xs text-[#6F7287]">{ev.date}</span>
@@ -155,7 +155,7 @@ export default function OrganizerLandingPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/scan/${ev.id}`}
-                      className="px-3.5 py-2 rounded-[360px] border border-[#DBDAE3] hover:border-[#3659E3] text-[#39364F] hover:text-[#3659E3] text-xs font-bold transition flex items-center gap-1.5 bg-white"
+                      className="px-3.5 py-2 rounded-lg border border-[#DBDAE3] hover:border-[#3659E3] text-[#39364F] hover:text-[#3659E3] text-xs font-bold transition flex items-center gap-1.5 bg-white shadow-xs"
                       title="Open Gate Scanner"
                     >
                       <QrCode size={16} weight="bold" />
@@ -164,7 +164,7 @@ export default function OrganizerLandingPage() {
 
                     <Link
                       href={`/organizer/dashboard/${ev.id}`}
-                      className="px-4 py-2 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold transition shadow-xs flex items-center gap-1.5"
+                      className="px-4 py-2 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold transition shadow-xs flex items-center gap-1.5"
                     >
                       <span>Dashboard</span>
                       <ArrowRight size={14} weight="bold" />

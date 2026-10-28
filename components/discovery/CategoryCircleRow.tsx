@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   GraduationCap,
   MusicNotes,
@@ -16,20 +17,61 @@ interface CategoryItem {
   id: string;
   label: string;
   icon: React.ReactNode;
+  imageUrl: string;
 }
 
 const CATEGORIES: CategoryItem[] = [
-  { id: "coaching", label: "Coaching", icon: <GraduationCap size={32} weight="duotone" /> },
-  { id: "music", label: "Music & Live", icon: <MusicNotes size={32} weight="duotone" /> },
-  { id: "dandiya", label: "Cultural Fest", icon: <Sparkle size={32} weight="duotone" /> },
-  { id: "college", label: "College Fests", icon: <Confetti size={32} weight="duotone" /> },
-  { id: "standup", label: "Comedy & Talks", icon: <MicrophoneStage size={32} weight="duotone" /> },
-  { id: "sports", label: "Sports & 10K", icon: <Trophy size={32} weight="duotone" /> },
-  { id: "food", label: "Food & Melas", icon: <ForkKnife size={32} weight="duotone" /> },
-  { id: "workshops", label: "Workshops", icon: <Laptop size={32} weight="duotone" /> },
+  {
+    id: "coaching",
+    label: "Coaching & Seminars",
+    icon: <GraduationCap size={20} weight="fill" />,
+    imageUrl: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "music",
+    label: "Music & Live Concerts",
+    icon: <MusicNotes size={20} weight="fill" />,
+    imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "dandiya",
+    label: "Cultural & Dandiya",
+    icon: <Sparkle size={20} weight="fill" />,
+    imageUrl: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "college",
+    label: "College Tarang Fests",
+    icon: <Confetti size={20} weight="fill" />,
+    imageUrl: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "standup",
+    label: "Comedy & Stand-up",
+    icon: <MicrophoneStage size={20} weight="fill" />,
+    imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "sports",
+    label: "Sports, Marathon & Cricket",
+    icon: <Trophy size={20} weight="fill" />,
+    imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "food",
+    label: "Food Melas & Expos",
+    icon: <ForkKnife size={20} weight="fill" />,
+    imageUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "workshops",
+    label: "Skills & Coding Bootcamps",
+    icon: <Laptop size={20} weight="fill" />,
+    imageUrl: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80",
+  },
 ];
 
-interface CategoryCircleRowProps {
+interface CategoryRowProps {
   selectedCategory?: string;
   onSelectCategory?: (id: string) => void;
 }
@@ -37,10 +79,31 @@ interface CategoryCircleRowProps {
 export default function CategoryCircleRow({
   selectedCategory,
   onSelectCategory,
-}: CategoryCircleRowProps) {
+}: CategoryRowProps) {
   return (
-    <div className="w-full py-8">
-      <div className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar pb-3 px-2 justify-start md:justify-center">
+    <div className="w-full py-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-[#1E0A3C] tracking-tight">
+            Explore Trending Categories
+          </h2>
+          <p className="text-xs sm:text-sm text-[#6F7287] mt-0.5">
+            Discover verified events across Sasaram and neighboring Bihar districts
+          </p>
+        </div>
+        {selectedCategory && (
+          <button
+            type="button"
+            onClick={() => onSelectCategory?.("")}
+            className="text-xs font-bold text-[#F05537] hover:underline"
+          >
+            Show All
+          </button>
+        )}
+      </div>
+
+      {/* Eventbrite-Style Rectangular Visual Category Cards (12px Radius - No Ovals) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
         {CATEGORIES.map((cat) => {
           const isSelected = selectedCategory === cat.id;
 
@@ -49,29 +112,40 @@ export default function CategoryCircleRow({
               key={cat.id}
               type="button"
               onClick={() => onSelectCategory?.(isSelected ? "" : cat.id)}
-              className="group flex flex-col items-center gap-2.5 shrink-0 focus:outline-none transition-transform active:scale-95"
+              className={`group relative h-28 sm:h-32 rounded-xl overflow-hidden border text-left transition-all duration-200 focus:outline-none flex flex-col justify-end p-2.5 ${
+                isSelected
+                  ? "border-[#3659E3] ring-2 ring-[#3659E3] ring-offset-1 shadow-md scale-[1.02]"
+                  : "border-[#DBDAE3] hover:border-[#39364F] hover:shadow-md hover:-translate-y-0.5"
+              }`}
             >
-              {/* 80px Circular Icon Container */}
-              <div
-                className={`w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 border ${
-                  isSelected
-                    ? "bg-[#3659E3] text-white border-[#3659E3] shadow-md scale-105"
-                    : "bg-white text-[#39364F] border-[#DBDAE3] group-hover:border-[#3659E3] group-hover:text-[#3659E3] group-hover:shadow-sm"
-                }`}
-              >
-                {cat.icon}
+              {/* Rich Stock Image Background */}
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src={cat.imageUrl}
+                  alt={cat.label}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 12vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                {/* Dark Vignette Overlay for Text Legibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1E0A3C]/90 via-[#1E0A3C]/50 to-transparent" />
               </div>
 
-              {/* 14px Category Label */}
-              <span
-                className={`text-xs sm:text-sm font-semibold tracking-tight transition-colors ${
-                  isSelected
-                    ? "text-[#3659E3] font-bold"
-                    : "text-[#39364F] group-hover:text-[#1E0A3C]"
-                }`}
-              >
-                {cat.label}
-              </span>
+              {/* Icon & Label Content */}
+              <div className="relative z-10 space-y-1">
+                <div
+                  className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${
+                    isSelected
+                      ? "bg-[#3659E3] text-white"
+                      : "bg-white/20 backdrop-blur-xs text-white group-hover:bg-[#F05537]"
+                  }`}
+                >
+                  {cat.icon}
+                </div>
+                <div className="text-xs font-bold text-white leading-tight line-clamp-2">
+                  {cat.label}
+                </div>
+              </div>
             </button>
           );
         })}

@@ -17,12 +17,16 @@ import {
   TrendUp,
   Buildings,
   DeviceMobile,
+  CurrencyInr,
+  Plus,
 } from "@phosphor-icons/react";
 import EventCard from "@/components/ui/EventCard";
 import CategoryCircleRow from "@/components/discovery/CategoryCircleRow";
+import EmptyEventsIllustration from "@/components/illustrations/EmptyEventsIllustration";
+import OrganizerHostIllustration from "@/components/illustrations/OrganizerHostIllustration";
 import { EventItem } from "@/types";
 
-// High-fidelity demo events representing Sasaram & Bihar target verticals
+// High-fidelity demo events representing Sasaram & Bihar target verticals with rich stock photography
 const DEMO_EVENTS: EventItem[] = [
   {
     id: "1",
@@ -158,6 +162,34 @@ const DEMO_EVENTS: EventItem[] = [
   },
 ];
 
+// Rich city discovery cards for Bihar
+const BIHAR_REGIONAL_CITIES = [
+  {
+    name: "Sasaram",
+    tagline: "Historic Rohtas Capital",
+    imageUrl: "https://images.unsplash.com/photo-1590053303498-356b57953ea6?auto=format&fit=crop&w=600&q=80",
+    eventsCount: 14,
+  },
+  {
+    name: "Patna",
+    tagline: "State Cultural Hub",
+    imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
+    eventsCount: 28,
+  },
+  {
+    name: "Gaya",
+    tagline: "International Heritage & Arts",
+    imageUrl: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=600&q=80",
+    eventsCount: 19,
+  },
+  {
+    name: "Dehri-on-Sone",
+    tagline: "Sone Riverfront Festivals",
+    imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+    eventsCount: 8,
+  },
+];
+
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
@@ -169,63 +201,66 @@ export default function HomePage() {
       if (selectedCategory === "college") return e.slug.includes("college") || e.slug.includes("fest");
       if (selectedCategory === "sports") return e.slug.includes("marathon");
       if (selectedCategory === "standup") return e.slug.includes("kavi");
+      if (selectedCategory === "workshops") return e.slug.includes("startup") || e.slug.includes("pitch");
       return true;
     });
   }, [selectedCategory]);
 
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
-      {/* 1. Eventbrite Full-Bleed Hero Banner */}
+      {/* 1. Eventbrite Full-Bleed Hero Banner with Rich Stock Image */}
       <section className="relative w-full bg-[#1E0A3C] overflow-hidden">
-        <div className="relative max-w-[1280px] mx-auto min-h-[360px] sm:min-h-[420px] flex items-center px-4 sm:px-6 py-12">
+        <div className="relative max-w-[1340px] mx-auto min-h-[420px] sm:min-h-[460px] flex items-center px-4 sm:px-6 py-12">
           {/* Background Stage Image */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1600&auto=format&fit=crop"
-              alt="Concert stage in Bihar"
+              src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1600&auto=format&fit=crop"
+              alt="Live event celebration and crowd"
               fill
               priority
-              className="object-cover opacity-35 filter brightness-90"
+              className="object-cover opacity-40 filter brightness-90"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1E0A3C] via-[#1E0A3C]/85 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1E0A3C] via-[#1E0A3C]/80 to-transparent" />
           </div>
 
-          {/* Eventbrite Floating Overlay Card (4px border-radius) */}
-          <div className="relative z-10 max-w-lg bg-white/95 backdrop-blur-md rounded-lg p-6 sm:p-8 shadow-2xl border border-white/40">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#F05537] uppercase mb-2">
+          {/* Eventbrite Floating Overlay Card (Rectangular with 12px Curved Radius) */}
+          <div className="relative z-10 max-w-lg bg-white/95 backdrop-blur-md rounded-xl p-6 sm:p-8 shadow-2xl border border-white/40">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#F05537] uppercase mb-2">
               <Sparkle size={14} weight="fill" />
-              <span>GetMyShow • Sasaram & Rohtas</span>
+              <span>GetMyShow • Bihar Event Box-Office</span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1E0A3C] tracking-tight leading-tight">
-              FROM COACHING SEMINARS TO CULTURAL NIGHTS.
+              From Coaching Seminars to Cultural Nights.
             </h1>
 
             <p className="mt-2.5 text-sm sm:text-base text-[#6F7287] leading-relaxed">
-              Book verified passes in under 10 seconds via UPI. Zero app download, zero password hassle.
+              Book verified passes in under 10 seconds via Google Pay & PhonePe UPI. Zero app download, zero password hassle.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href="#events"
-                className="px-6 py-3 rounded-[360px] border-2 border-[#3659E3] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-sm font-semibold transition-all shadow-sm active:scale-95"
+                className="px-6 py-3 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold transition-all shadow-xs active:scale-95 flex items-center gap-2"
               >
-                Explore Events
+                <Ticket size={16} weight="bold" />
+                <span>Explore Events</span>
               </Link>
               <Link
                 href="/organizer/create"
-                className="px-6 py-3 rounded-[360px] border border-[#DBDAE3] hover:border-[#39364F] bg-white text-[#39364F] hover:text-[#1E0A3C] text-sm font-semibold transition-all active:scale-95"
+                className="px-6 py-3 rounded-lg border border-[#DBDAE3] hover:border-[#1E0A3C] bg-white text-[#1E0A3C] hover:bg-[#F8F7FA] text-sm font-semibold transition-all active:scale-95 flex items-center gap-2"
               >
-                List Your Event (0% Fee)
+                <Plus size={16} weight="bold" />
+                <span>List Event (0% Fee)</span>
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Eventbrite 80px Circular Category Row */}
+      {/* 2. Eventbrite Rectangular Visual Category Cards Grid */}
       <section className="border-b border-[#DBDAE3] bg-white">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+        <div className="max-w-[1340px] mx-auto px-4 sm:px-6">
           <CategoryCircleRow
             selectedCategory={selectedCategory}
             onSelectCategory={(id) => setSelectedCategory(id)}
@@ -234,10 +269,10 @@ export default function HomePage() {
       </section>
 
       {/* 3. Main Discovery Feed */}
-      <main id="events" className="max-w-[1280px] mx-auto px-4 sm:px-6 py-12 space-y-16">
+      <main id="events" className="max-w-[1340px] mx-auto px-4 sm:px-6 py-12 space-y-16">
         {/* Curated Grid Section */}
         <div>
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6">
             <div>
               <div className="text-xs font-bold text-[#3659E3] uppercase tracking-wider">
                 {selectedCategory ? `Filtered by ${selectedCategory}` : "Discover in Sasaram & Rohtas"}
@@ -258,16 +293,85 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* 4-Column Pillow-Soft 40px Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-            {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+          {/* 4-Column Modern Eventbrite 16px Cards Grid or Empty State with unDraw Illustration */}
+          {filteredEvents.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-6">
+              {filteredEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl border border-[#DBDAE3] p-8 sm:p-12 text-center flex flex-col items-center justify-center space-y-4 shadow-xs">
+              <EmptyEventsIllustration className="w-56 h-40 sm:w-64 sm:h-48" />
+              <div className="max-w-md space-y-1">
+                <h3 className="text-lg font-bold text-[#1E0A3C]">No events found in this category</h3>
+                <p className="text-sm text-[#6F7287]">
+                  There are no scheduled events matching your filter right now. Explore other categories or create your own event!
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory("")}
+                  className="px-5 py-2.5 rounded-lg bg-[#3659E3] hover:bg-[#2B47B8] text-white text-xs font-bold transition-all shadow-xs"
+                >
+                  Show All Events
+                </button>
+                <Link
+                  href="/organizer/create"
+                  className="px-5 py-2.5 rounded-lg border border-[#DBDAE3] hover:border-[#1E0A3C] bg-white text-[#1E0A3C] text-xs font-bold transition-all"
+                >
+                  Host an Event
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 4. Explore Cities in Bihar (Rich Photographic Cards) */}
+        <div>
+          <div className="mb-6">
+            <span className="text-xs font-bold text-[#3659E3] uppercase tracking-wider">
+              Regional Box-Office
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-0.5">
+              Explore Events by City
+            </h2>
+            <p className="text-sm text-[#6F7287] mt-1">
+              Connect with college fests, coaching seminars, and celebrations across Bihar.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {BIHAR_REGIONAL_CITIES.map((city) => (
+              <Link
+                key={city.name}
+                href={`/?city=${encodeURIComponent(city.name)}#events`}
+                className="group relative h-48 rounded-xl overflow-hidden border border-[#DBDAE3] shadow-xs hover:border-[#1E0A3C] hover:shadow-md transition-all block"
+              >
+                <Image
+                  src={city.imageUrl}
+                  alt={city.name}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1E0A3C]/90 via-[#1E0A3C]/40 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <div className="text-lg font-bold leading-tight">{city.name}</div>
+                  <div className="text-xs text-white/80 mt-0.5">{city.tagline}</div>
+                  <div className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#F97316]">
+                    <span>{city.eventsCount} upcoming events</span>
+                    <ArrowRight size={12} weight="bold" />
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
 
-        {/* 4. Why GetMyShow: The Bihar Hyperlocal Superpower Banner */}
-        <section className="bg-white rounded-[40px] border border-[#DBDAE3] p-8 sm:p-12 shadow-xs">
+        {/* 5. Why GetMyShow: The Bihar Hyperlocal Superpower Banner with Custom Vector Art */}
+        <section className="bg-white rounded-2xl border border-[#DBDAE3] p-6 sm:p-10 shadow-xs">
           <div className="max-w-3xl">
             <span className="text-xs font-extrabold text-[#F05537] uppercase tracking-widest">
               The Hyperlocal Ticketing Revolution
@@ -280,10 +384,10 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mt-8 pt-8 border-t border-[#EEEDF2]">
-            <div className="space-y-2">
-              <div className="w-12 h-12 rounded-2xl bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center">
-                <Lightning size={24} weight="duotone" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-[#EEEDF2]">
+            <div className="space-y-3 bg-[#F8F7FA] p-5 rounded-xl border border-[#DBDAE3]/80">
+              <div className="w-10 h-10 rounded-lg bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center">
+                <Lightning size={22} weight="duotone" />
               </div>
               <h3 className="text-base font-bold text-[#1E0A3C]">2-Click No-Login UPI</h3>
               <p className="text-xs sm:text-sm text-[#6F7287] leading-relaxed">
@@ -291,9 +395,9 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="space-y-2">
-              <div className="w-12 h-12 rounded-2xl bg-[#F05537]/10 text-[#F05537] flex items-center justify-center">
-                <Ticket size={24} weight="duotone" />
+            <div className="space-y-3 bg-[#F8F7FA] p-5 rounded-xl border border-[#DBDAE3]/80">
+              <div className="w-10 h-10 rounded-lg bg-[#F05537]/10 text-[#F05537] flex items-center justify-center">
+                <Ticket size={22} weight="duotone" />
               </div>
               <h3 className="text-base font-bold text-[#1E0A3C]">35mm Scalloped Passes</h3>
               <p className="text-xs sm:text-sm text-[#6F7287] leading-relaxed">
@@ -301,9 +405,9 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="space-y-2">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-                <ShieldCheck size={24} weight="duotone" />
+            <div className="space-y-3 bg-[#F8F7FA] p-5 rounded-xl border border-[#DBDAE3]/80">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                <ShieldCheck size={22} weight="duotone" />
               </div>
               <h3 className="text-base font-bold text-[#1E0A3C]">0% Cost for Organizers</h3>
               <p className="text-xs sm:text-sm text-[#6F7287] leading-relaxed">
@@ -313,8 +417,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 5. Organizer CTA Section */}
-        <section className="bg-[#1E0A3C] rounded-[40px] text-white p-8 sm:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+        {/* 6. Organizer CTA Section (Rectangular 16px Radius with Custom Vector Art) */}
+        <section className="bg-[#1E0A3C] rounded-2xl text-white p-8 sm:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 shadow-md">
           <div className="relative z-10 max-w-xl space-y-3">
             <span className="text-xs font-bold text-[#F97316] uppercase tracking-wider flex items-center gap-1.5">
               <Sparkle size={14} weight="fill" />
@@ -326,21 +430,25 @@ export default function HomePage() {
             <p className="text-sm text-[#DBDAE3] leading-relaxed">
               Launch your seminar or fest, accept UPI payments, issue instant digital passes, and scan attendees at the gate with your phone.
             </p>
+
+            <div className="pt-3 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/organizer/create"
+                className="px-6 py-3.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold text-center transition-all shadow-md active:scale-95"
+              >
+                Create Free Event
+              </Link>
+              <Link
+                href="/organizer"
+                className="px-6 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-semibold text-center transition-all active:scale-95 border border-white/20"
+              >
+                Organizer Dashboard
+              </Link>
+            </div>
           </div>
 
-          <div className="relative z-10 shrink-0 flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <Link
-              href="/organizer/create"
-              className="px-6 py-3.5 rounded-[360px] bg-[#F05537] hover:bg-[#d94428] text-white text-sm font-bold text-center transition-all shadow-md active:scale-95"
-            >
-              Create Free Event
-            </Link>
-            <Link
-              href="/organizer"
-              className="px-6 py-3.5 rounded-[360px] bg-white/10 hover:bg-white/20 text-white text-sm font-semibold text-center transition-all active:scale-95 border border-white/20"
-            >
-              Organizer Dashboard
-            </Link>
+          <div className="relative z-10 hidden sm:flex shrink-0 items-center justify-center">
+            <OrganizerHostIllustration className="w-64 h-48 sm:w-72 sm:h-52" />
           </div>
         </section>
       </main>

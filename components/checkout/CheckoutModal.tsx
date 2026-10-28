@@ -77,8 +77,7 @@ export default function CheckoutModal({
   const initiatePayment = () => {
     startTransition(async () => {
       try {
-        // Fast local mock checkout simulation
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
         const demoToken = `DEMO-HMAC-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
@@ -109,7 +108,8 @@ export default function CheckoutModal({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="relative w-full max-w-lg bg-white rounded-[32px] sm:rounded-[40px] border border-[#DBDAE3] shadow-2xl p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200">
+      {/* Eventbrite 16px Modern Dialog Container - No Ovals */}
+      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#DBDAE3] shadow-2xl p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200">
         {/* Header & Close */}
         <div className="flex items-center justify-between pb-4 border-b border-[#EEEDF2]">
           <div>
@@ -125,23 +125,24 @@ export default function CheckoutModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-9 h-9 rounded-full bg-[#F8F7FA] text-[#6F7287] hover:text-[#1E0A3C] hover:bg-[#EEEDF2] flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-md bg-[#F8F7FA] text-[#6F7287] hover:text-[#1E0A3C] hover:bg-[#EEEDF2] flex items-center justify-center transition-colors border border-[#DBDAE3]"
+            aria-label="Close dialog"
           >
             <X size={18} weight="bold" />
           </button>
         </div>
 
         {errorMessage && (
-          <div className="mt-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-xs font-semibold text-red-600">
+          <div className="mt-4 p-3 rounded-lg bg-red-50 border border-red-200 text-xs font-semibold text-red-600">
             {errorMessage}
           </div>
         )}
 
         {/* STEP 1: Pass Selection & Buyer Contact */}
         {step === 1 && (
-          <form onSubmit={handleStepOneSubmit} className="mt-5 space-y-5">
-            {/* Ticket Tier Pill Card */}
-            <div className="p-4 rounded-[24px] bg-[#F8F7FA] border border-[#DBDAE3] flex items-center justify-between">
+          <form onSubmit={handleStepOneSubmit} className="mt-5 space-y-4">
+            {/* Ticket Tier Box (8px radius) */}
+            <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] flex items-center justify-between">
               <div>
                 <h4 className="text-sm font-bold text-[#1E0A3C]">General Admission Pass</h4>
                 <p className="text-xs text-[#6F7287] mt-0.5">
@@ -149,8 +150,8 @@ export default function CheckoutModal({
                 </p>
               </div>
 
-              {/* Quantity Stepper */}
-              <div className="flex items-center gap-3 bg-white border border-[#DBDAE3] rounded-full px-2.5 py-1">
+              {/* Quantity Stepper (Rectangular with rounded-md) */}
+              <div className="flex items-center gap-3 bg-white border border-[#DBDAE3] rounded-md px-2.5 py-1">
                 <button
                   type="button"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -174,9 +175,9 @@ export default function CheckoutModal({
             </div>
 
             {/* Buyer Contact Fields */}
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               <div>
-                <label className="block text-xs font-bold text-[#39364F] mb-1.5">
+                <label className="block text-xs font-bold text-[#39364F] mb-1">
                   Full Name (will appear on ticket pass)
                 </label>
                 <div className="relative">
@@ -187,13 +188,13 @@ export default function CheckoutModal({
                     placeholder="e.g. Rahul Kumar Verma"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-2 focus:ring-[#3659E3]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#39364F] mb-1.5">
+                <label className="block text-xs font-bold text-[#39364F] mb-1">
                   WhatsApp Phone Number (instant QR delivery)
                 </label>
                 <div className="relative">
@@ -205,14 +206,14 @@ export default function CheckoutModal({
                     placeholder="10-digit mobile number"
                     value={whatsapp}
                     onChange={(e) => setWhatsapp(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-2 focus:ring-[#3659E3]/20 transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition-all"
                   />
                 </div>
               </div>
             </div>
 
             {/* Fee Breakdown Summary */}
-            <div className="p-4 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-xs space-y-1.5">
+            <div className="p-3.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs space-y-1.5">
               <div className="flex justify-between text-[#6F7287]">
                 <span>Tickets ({quantity}x {formatINR(event.ticket_price)})</span>
                 <span className="font-semibold text-[#1E0A3C]">{formatINR(baseSubtotal)}</span>
@@ -229,12 +230,12 @@ export default function CheckoutModal({
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-3 pt-2">
+            {/* Action Buttons (Rectangular 8px Curved Radius - Ember Orange) */}
+            <div className="space-y-2.5 pt-2">
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full py-4 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold shadow-sm hover:shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isPending ? (
                   <>
@@ -259,15 +260,15 @@ export default function CheckoutModal({
 
         {/* STEP 2: Custom Questionnaire (if coaching/seminar) */}
         {step === 2 && (
-          <div className="mt-5 space-y-5">
+          <div className="mt-5 space-y-4">
             <p className="text-xs text-[#6F7287]">
               The organizer requires these details for attendance and scholarship roll rosters:
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {event.custom_fields?.map((field) => (
                 <div key={field.id}>
-                  <label className="block text-xs font-bold text-[#39364F] mb-1.5">
+                  <label className="block text-xs font-bold text-[#39364F] mb-1">
                     {field.label} {field.required && <span className="text-[#F05537]">*</span>}
                   </label>
                   <input
@@ -276,7 +277,7 @@ export default function CheckoutModal({
                     placeholder={field.placeholder}
                     value={customAnswers[field.id] || ""}
                     onChange={(e) => handleCustomChange(field.id, e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-2 focus:ring-[#3659E3]/20 transition-all"
+                    className="w-full px-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition-all"
                   />
                 </div>
               ))}
@@ -286,7 +287,7 @@ export default function CheckoutModal({
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-5 py-3 rounded-[360px] border border-[#DBDAE3] text-[#39364F] text-xs font-bold hover:bg-[#F8F7FA]"
+                className="px-5 py-3 rounded-lg border border-[#DBDAE3] text-[#39364F] text-xs font-bold hover:bg-[#F8F7FA]"
               >
                 Back
               </button>
@@ -295,7 +296,7 @@ export default function CheckoutModal({
                 type="button"
                 onClick={initiatePayment}
                 disabled={isPending}
-                className="flex-1 py-3.5 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-sm font-bold shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 py-3 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold shadow-sm transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isPending ? (
                   <>

@@ -11,10 +11,10 @@ import {
   List,
   X,
   Ticket,
-  PlusCircle,
-  CalendarBlank,
+  Plus,
   Buildings,
   UserCheck,
+  CalendarBlank,
 } from "@phosphor-icons/react";
 
 const BIHAR_CITIES = [
@@ -51,34 +51,34 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[#DBDAE3] transition-colors">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
-        {/* Brand Logo & Mobile Trigger */}
+      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+        {/* Brand Logo (Enlarged prominent size) & Mobile Hamburger */}
         <div className="flex items-center gap-3 shrink-0">
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-full text-[#39364F] hover:bg-[#F8F7FA] transition-colors"
+            className="md:hidden p-2 rounded-lg text-[#39364F] hover:bg-[#F8F7FA] transition-colors border border-transparent hover:border-[#DBDAE3]"
             aria-label="Toggle navigation menu"
           >
             {isMobileMenuOpen ? <X size={22} weight="bold" /> : <List size={22} weight="bold" />}
           </button>
 
-          <Link href="/" className="flex items-center group transition-transform active:scale-95">
+          <Link href="/" className="flex items-center group transition-transform active:scale-98">
             <Image
-              src="/brand/logos/wordmark-tilted-black-text-transparent.svg"
-              alt="GetMyShow Logo"
-              width={140}
-              height={38}
+              src="/brand/logos/wordmark-cropped.svg"
+              alt="GetMyShow — Hyperlocal Bihar Event Ticketing"
+              width={220}
+              height={58}
               priority
-              className="h-8 sm:h-9 w-auto object-contain"
+              className="h-10 sm:h-12 md:h-13 w-auto object-contain"
             />
           </Link>
         </div>
 
-        {/* Eventbrite-Style 100px Pill Search Bar */}
+        {/* Eventbrite-Style Rectangular Search Bar (Anti-Slop 8px Radius) */}
         <form
           onSubmit={handleSearchSubmit}
-          className="hidden md:flex items-center bg-white border border-[#DBDAE3] rounded-[100px] h-12 px-3 shadow-xs hover:border-[#BEC0C6] focus-within:border-[#3659E3] focus-within:shadow-[0_0_0_2px_rgba(54,89,227,0.15)] transition-all max-w-xl w-full"
+          className="hidden md:flex items-center bg-white border border-[#DBDAE3] rounded-lg h-11 px-2.5 shadow-xs hover:border-[#BEC0C6] focus-within:border-[#3659E3] focus-within:shadow-[0_0_0_2px_rgba(54,89,227,0.12)] transition-all max-w-xl w-full"
         >
           {/* Query Input */}
           <div className="flex items-center gap-2 flex-1 px-2">
@@ -92,7 +92,7 @@ export default function Header() {
             />
           </div>
 
-          <div className="h-6 w-px bg-[#DBDAE3]" />
+          <div className="h-5 w-px bg-[#DBDAE3]" />
 
           {/* Location Selector Trigger */}
           <div className="relative">
@@ -113,7 +113,7 @@ export default function Header() {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsCityDropdownOpen(false)}
                 />
-                <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-[#DBDAE3] p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="absolute right-0 mt-3 w-64 bg-white rounded-lg shadow-xl border border-[#DBDAE3] p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
                   <div className="px-3 py-2 text-xs font-bold text-[#6F7287] uppercase tracking-wider">
                     Select Your City
                   </div>
@@ -123,7 +123,7 @@ export default function Header() {
                         key={c.name}
                         type="button"
                         onClick={() => handleSelectCity(c.name)}
-                        className={`w-full text-left px-3 py-2 rounded-xl text-sm font-semibold flex items-center justify-between transition-colors ${
+                        className={`w-full text-left px-3 py-2 rounded-md text-sm font-semibold flex items-center justify-between transition-colors ${
                           selectedCity === c.name
                             ? "bg-[#3659E3]/10 text-[#3659E3]"
                             : "text-[#39364F] hover:bg-[#F8F7FA] hover:text-[#1E0A3C]"
@@ -142,30 +142,24 @@ export default function Header() {
             )}
           </div>
 
-          {/* Ember Orange Circular Search Submit Button */}
+          {/* Rectangular Search Submit Button */}
           <button
             type="submit"
             aria-label="Submit search"
-            className="w-8 h-8 rounded-full bg-[#F05537] hover:bg-[#D94428] text-white flex items-center justify-center transition-transform active:scale-95 ml-1 shrink-0"
+            className="h-8 px-3 rounded-md bg-[#F05537] hover:bg-[#D94428] text-white flex items-center gap-1.5 text-xs font-bold transition-all active:scale-95 ml-1 shrink-0"
           >
-            <MagnifyingGlass size={15} weight="bold" />
+            <MagnifyingGlass size={14} weight="bold" />
+            <span className="hidden sm:inline">Search</span>
           </button>
         </form>
 
         {/* Right Navigation Suite */}
-        <div className="flex items-center gap-3 sm:gap-5">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Link
             href="/#events"
             className="text-sm font-semibold text-[#39364F] hover:text-[#1E0A3C] transition-colors hidden lg:block"
           >
             Find Events
-          </Link>
-
-          <Link
-            href="/organizer/create"
-            className="text-sm font-semibold text-[#39364F] hover:text-[#1E0A3C] transition-colors hidden sm:block"
-          >
-            Create Event
           </Link>
 
           <Link
@@ -175,10 +169,19 @@ export default function Header() {
             Organizer Portal
           </Link>
 
-          {/* Pill Action Button */}
+          {/* Rectangular Create Event CTA (8px radius) */}
+          <Link
+            href="/organizer/create"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold transition-all shadow-xs active:scale-95"
+          >
+            <Plus size={16} weight="bold" />
+            <span>Create Event</span>
+          </Link>
+
+          {/* Rectangular Sign In (8px radius) */}
           <Link
             href="/organizer"
-            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-[360px] border border-[#DBDAE3] hover:border-[#39364F] text-sm font-semibold text-[#39364F] hover:text-[#1E0A3C] transition-all bg-white hover:bg-[#F8F7FA]"
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-[#DBDAE3] hover:border-[#39364F] text-sm font-semibold text-[#39364F] hover:text-[#1E0A3C] transition-all bg-white hover:bg-[#F8F7FA]"
           >
             <UserCheck size={16} weight="bold" className="text-[#3659E3]" />
             <span>Sign In</span>
@@ -190,7 +193,7 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-[#DBDAE3] bg-white px-4 py-4 space-y-4 animate-in slide-in-from-top-4 duration-200">
           {/* Mobile Search */}
-          <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 bg-[#F8F7FA] border border-[#DBDAE3] rounded-full px-3 py-2">
+          <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 bg-[#F8F7FA] border border-[#DBDAE3] rounded-lg px-3 py-2">
             <MagnifyingGlass size={18} weight="bold" className="text-[#6F7287]" />
             <input
               type="text"
@@ -199,12 +202,12 @@ export default function Header() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-transparent text-sm text-[#39364F] outline-none font-medium"
             />
-            <button type="submit" className="w-7 h-7 rounded-full bg-[#F05537] text-white flex items-center justify-center shrink-0">
+            <button type="submit" className="h-8 px-3 rounded-md bg-[#F05537] text-white flex items-center justify-center text-xs font-bold shrink-0">
               <MagnifyingGlass size={14} weight="bold" />
             </button>
           </form>
 
-          {/* City Chips */}
+          {/* City Selector */}
           <div>
             <div className="text-xs font-bold text-[#6F7287] uppercase tracking-wider mb-2">
               Popular Cities
@@ -218,7 +221,7 @@ export default function Header() {
                     handleSelectCity(c.name);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
+                  className={`px-3 py-1.5 rounded-md text-xs font-semibold border transition-colors ${
                     selectedCity === c.name
                       ? "bg-[#3659E3] text-white border-[#3659E3]"
                       : "bg-[#F8F7FA] text-[#39364F] border-[#DBDAE3]"
@@ -232,12 +235,12 @@ export default function Header() {
 
           <div className="h-px bg-[#DBDAE3]" />
 
-          {/* Mobile Links */}
+          {/* Mobile Links (Rectangular 8px) */}
           <div className="grid grid-cols-2 gap-2 text-sm font-semibold">
             <Link
               href="/#events"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-3 rounded-2xl bg-[#F8F7FA] hover:bg-slate-100 text-[#39364F] flex items-center gap-2"
+              className="p-3 rounded-lg bg-[#F8F7FA] hover:bg-slate-100 text-[#39364F] flex items-center gap-2 border border-[#DBDAE3]"
             >
               <Ticket size={18} weight="duotone" className="text-[#3659E3]" />
               <span>Browse Events</span>
@@ -245,15 +248,15 @@ export default function Header() {
             <Link
               href="/organizer/create"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-3 rounded-2xl bg-[#F8F7FA] hover:bg-slate-100 text-[#39364F] flex items-center gap-2"
+              className="p-3 rounded-lg bg-[#F05537]/10 hover:bg-[#F05537]/20 text-[#F05537] flex items-center gap-2 border border-[#F05537]/20"
             >
-              <PlusCircle size={18} weight="duotone" className="text-[#F05537]" />
+              <Plus size={18} weight="bold" />
               <span>Create Event</span>
             </Link>
             <Link
               href="/organizer"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-3 rounded-2xl bg-[#F8F7FA] hover:bg-slate-100 text-[#39364F] flex items-center gap-2 col-span-2"
+              className="p-3 rounded-lg bg-[#F8F7FA] hover:bg-slate-100 text-[#39364F] flex items-center gap-2 col-span-2 border border-[#DBDAE3]"
             >
               <Buildings size={18} weight="duotone" className="text-[#4F46E5]" />
               <span>Organizer Portal & Wallet</span>

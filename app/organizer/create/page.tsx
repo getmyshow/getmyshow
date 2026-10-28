@@ -16,6 +16,7 @@ import {
   CircleNotch,
 } from "@phosphor-icons/react";
 import { formatINR } from "@/lib/utils";
+import CheckoutSuccessIllustration from "@/components/illustrations/CheckoutSuccessIllustration";
 
 export default function CreateEventPage() {
   const [title, setTitle] = useState("");
@@ -51,9 +52,9 @@ export default function CreateEventPage() {
   if (isSuccess) {
     return (
       <div className="min-h-[85vh] bg-[#F8F7FA] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-[40px] border border-[#DBDAE3] shadow-card p-8 text-center space-y-6">
-          <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
-            <CheckCircle size={36} weight="fill" />
+        <div className="max-w-md w-full bg-white rounded-2xl border border-[#DBDAE3] shadow-md p-8 text-center space-y-6">
+          <div className="flex justify-center">
+            <CheckoutSuccessIllustration className="w-48 h-36" />
           </div>
           <div>
             <h1 className="text-2xl font-black text-[#1E0A3C]">Event Created Successfully!</h1>
@@ -62,7 +63,7 @@ export default function CreateEventPage() {
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-left space-y-2 text-xs">
+          <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-left space-y-2 text-xs">
             <div className="flex justify-between">
               <span className="text-[#6F7287]">Title:</span>
               <span className="font-bold text-[#1E0A3C]">{title}</span>
@@ -80,13 +81,13 @@ export default function CreateEventPage() {
           <div className="flex flex-col gap-2.5 pt-2">
             <Link
               href="/"
-              className="w-full py-3.5 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white font-bold text-xs shadow-md transition-all active:scale-95 text-center"
+              className="w-full py-3 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white font-bold text-xs shadow-xs transition-all active:scale-95 text-center"
             >
               View on Homepage
             </Link>
             <Link
               href="/organizer"
-              className="w-full py-3.5 rounded-[360px] border border-[#DBDAE3] text-[#39364F] font-bold text-xs transition-all active:scale-95 text-center bg-white hover:bg-[#F8F7FA]"
+              className="w-full py-3 rounded-lg border border-[#DBDAE3] text-[#39364F] font-bold text-xs transition-all active:scale-95 text-center bg-white hover:bg-[#F8F7FA]"
             >
               Organizer Portal
             </Link>
@@ -107,7 +108,8 @@ export default function CreateEventPage() {
           <span>Back to Organizer Desk</span>
         </Link>
 
-        <div className="bg-white rounded-[40px] border border-[#DBDAE3] shadow-card p-6 sm:p-10 space-y-8">
+        {/* Form Container (16px Radius - No Ovals) */}
+        <div className="bg-white rounded-2xl border border-[#DBDAE3] shadow-md p-6 sm:p-10 space-y-8">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F05537] uppercase tracking-wider mb-1">
               <Sparkle size={14} weight="fill" />
@@ -121,7 +123,7 @@ export default function CreateEventPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Title & Description */}
             <div className="space-y-4">
               <div>
@@ -134,7 +136,7 @@ export default function CreateEventPage() {
                   placeholder="e.g. Super 50 Scholarship Seminar or Rohtas Garba Night"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-2 focus:ring-[#3659E3]/20 transition"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition"
                 />
               </div>
 
@@ -147,7 +149,7 @@ export default function CreateEventPage() {
                   placeholder="Outline key highlights, chief guests, entry rules, etc."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-2 focus:ring-[#3659E3]/20 transition resize-none"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition resize-none"
                 />
               </div>
             </div>
@@ -161,7 +163,7 @@ export default function CreateEventPage() {
                 <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
                 >
                   <option value="Sasaram">Sasaram (Rohtas)</option>
                   <option value="Dehri-on-Sone">Dehri-on-Sone</option>
@@ -182,7 +184,7 @@ export default function CreateEventPage() {
                   placeholder="e.g. Sardar Patel Hall, Gaurakshani"
                   value={venue}
                   onChange={(e) => setVenue(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
                 />
               </div>
             </div>
@@ -198,7 +200,7 @@ export default function CreateEventPage() {
                   required
                   value={eventDate}
                   onChange={(e) => setEventDate(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
                 />
               </div>
 
@@ -213,13 +215,13 @@ export default function CreateEventPage() {
                   max={10000}
                   value={capacity}
                   onChange={(e) => setCapacity(Number(e.target.value))}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
                 />
               </div>
             </div>
 
             {/* Pricing & 0% Commission Toggle */}
-            <div className="p-5 rounded-3xl bg-[#F8F7FA] border border-[#DBDAE3] space-y-4">
+            <div className="p-4 rounded-xl bg-[#F8F7FA] border border-[#DBDAE3] space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-bold text-[#1E0A3C]">Base Ticket Price (₹)</h3>
@@ -231,7 +233,7 @@ export default function CreateEventPage() {
                   step={10}
                   value={ticketPrice}
                   onChange={(e) => setTicketPrice(Number(e.target.value))}
-                  className="w-28 px-3 py-2 rounded-xl bg-white border border-[#DBDAE3] text-sm font-bold text-[#1E0A3C] text-right outline-none focus:border-[#3659E3]"
+                  className="w-28 px-3 py-2 rounded-lg bg-white border border-[#DBDAE3] text-sm font-bold text-[#1E0A3C] text-right outline-none focus:border-[#3659E3]"
                 />
               </div>
 
@@ -250,13 +252,13 @@ export default function CreateEventPage() {
                 <button
                   type="button"
                   onClick={() => setPassFeeToBuyer(!passFeeToBuyer)}
-                  className={`w-12 h-6 rounded-full transition-colors p-0.5 shrink-0 ${
+                  className={`w-11 h-6 rounded-md transition-colors p-0.5 shrink-0 ${
                     passFeeToBuyer ? "bg-[#3659E3]" : "bg-[#DBDAE3]"
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white transition-transform ${
-                      passFeeToBuyer ? "translate-x-6" : "translate-x-0"
+                    className={`w-5 h-5 rounded-sm bg-white transition-transform ${
+                      passFeeToBuyer ? "translate-x-5" : "translate-x-0"
                     }`}
                   />
                 </button>
@@ -275,7 +277,7 @@ export default function CreateEventPage() {
                   placeholder="Institute / Club"
                   value={organizerName}
                   onChange={(e) => setOrganizerName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
                 />
               </div>
 
@@ -289,7 +291,7 @@ export default function CreateEventPage() {
                   placeholder="10-digit number"
                   value={organizerWhatsapp}
                   onChange={(e) => setOrganizerWhatsapp(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3]"
                 />
               </div>
 
@@ -303,17 +305,17 @@ export default function CreateEventPage() {
                   maxLength={4}
                   value={scannerPin}
                   onChange={(e) => setScannerPin(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-sm font-mono font-bold text-[#1E0A3C] text-center outline-none focus:border-[#3659E3]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm font-mono font-bold text-[#1E0A3C] text-center outline-none focus:border-[#3659E3]"
                 />
               </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="pt-4">
+            {/* Submit Button (Rectangular 8px Curved Radius - Ember Orange) */}
+            <div className="pt-3">
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full py-4 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold shadow-sm hover:shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isPending ? (
                   <>

@@ -78,10 +78,10 @@ export default function GateScannerPage() {
   return (
     <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 py-8 bg-[#F8F7FA]">
       {!unlocked ? (
-        /* PIN Lock Screen */
-        <div className="w-full max-w-sm p-6 sm:p-8 rounded-[40px] bg-white border border-[#DBDAE3] text-center space-y-6 shadow-card">
-          <div className="w-14 h-14 rounded-full bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center mx-auto shadow-xs">
-            <LockKey size={28} weight="bold" />
+        /* PIN Lock Screen (16px Radius - No Ovals) */
+        <div className="w-full max-w-sm p-6 sm:p-8 rounded-2xl bg-white border border-[#DBDAE3] text-center space-y-6 shadow-md">
+          <div className="w-12 h-12 rounded-lg bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center mx-auto shadow-xs">
+            <LockKey size={26} weight="bold" />
           </div>
 
           <div>
@@ -92,7 +92,7 @@ export default function GateScannerPage() {
           </div>
 
           {pinError && (
-            <div className="p-3 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-600 font-semibold">
+            <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-600 font-semibold">
               {pinError}
             </div>
           )}
@@ -105,12 +105,12 @@ export default function GateScannerPage() {
               placeholder="••••"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="w-full text-center text-3xl font-mono tracking-widest py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-[#1E0A3C] outline-none focus:border-[#3659E3] focus:ring-2 focus:ring-[#3659E3]/20 transition-all font-bold"
+              className="w-full text-center text-3xl font-mono tracking-widest py-3 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-[#1E0A3C] outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition-all font-bold"
             />
 
             <button
               type="submit"
-              className="w-full py-3.5 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-sm font-bold shadow-md transition-all active:scale-95"
+              className="w-full py-3.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold shadow-sm transition-all active:scale-95"
             >
               Unlock Scanner
             </button>
@@ -138,26 +138,26 @@ export default function GateScannerPage() {
             </div>
             <button
               onClick={() => setUnlocked(false)}
-              className="px-3.5 py-1.5 rounded-full border border-[#DBDAE3] bg-white text-xs font-semibold text-[#39364F] hover:bg-[#F8F7FA]"
+              className="px-3.5 py-1.5 rounded-lg border border-[#DBDAE3] bg-white text-xs font-semibold text-[#39364F] hover:bg-[#F8F7FA] shadow-xs"
             >
               Lock Gate
             </button>
           </div>
 
-          {/* Scanner Viewfinder Box */}
-          <div className="relative aspect-square w-full rounded-[40px] overflow-hidden bg-[#1E0A3C] border-2 border-[#DBDAE3] shadow-2xl flex flex-col items-center justify-center p-6 text-white text-center">
+          {/* Scanner Viewfinder Box (16px Radius) */}
+          <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-[#1E0A3C] border-2 border-[#DBDAE3] shadow-xl flex flex-col items-center justify-center p-6 text-white text-center">
             {/* Visual Flash Overlays */}
             {scanStatus === "valid" && (
-              <div className="absolute inset-0 bg-emerald-600/90 z-20 flex flex-col items-center justify-center p-6 text-white animate-in zoom-in-95 duration-150">
+              <div className="absolute inset-0 bg-emerald-600/95 z-20 flex flex-col items-center justify-center p-6 text-white animate-in zoom-in-95 duration-150">
                 <CheckCircle size={64} weight="fill" className="text-white drop-shadow-md" />
                 <h3 className="text-2xl font-black mt-2">VALID ADMIT PASS!</h3>
                 <p className="text-base font-bold mt-1 text-emerald-100">{scannedTicket?.name}</p>
-                <span className="mt-2 px-3 py-1 bg-white/20 rounded-full text-xs font-mono font-bold">
+                <span className="mt-2 px-3 py-1 bg-white/20 rounded-md text-xs font-mono font-bold">
                   {scannedTicket?.ticketNumber} • {scannedTicket?.quantity} Pass
                 </span>
                 <button
                   onClick={() => setScanStatus("idle")}
-                  className="mt-6 px-6 py-2 bg-white text-emerald-900 rounded-full font-bold text-xs shadow-lg active:scale-95"
+                  className="mt-6 px-6 py-2.5 bg-white text-emerald-900 rounded-lg font-bold text-xs shadow-md active:scale-95"
                 >
                   Scan Next Ticket
                 </button>
@@ -165,7 +165,7 @@ export default function GateScannerPage() {
             )}
 
             {scanStatus === "duplicate" && (
-              <div className="absolute inset-0 bg-red-600/90 z-20 flex flex-col items-center justify-center p-6 text-white animate-in zoom-in-95 duration-150">
+              <div className="absolute inset-0 bg-red-600/95 z-20 flex flex-col items-center justify-center p-6 text-white animate-in zoom-in-95 duration-150">
                 <WarningCircle size={64} weight="fill" className="text-white drop-shadow-md animate-bounce" />
                 <h3 className="text-2xl font-black mt-2">ALREADY SCANNED!</h3>
                 <p className="text-sm font-semibold mt-1 text-red-100">
@@ -173,7 +173,7 @@ export default function GateScannerPage() {
                 </p>
                 <button
                   onClick={() => setScanStatus("idle")}
-                  className="mt-6 px-6 py-2 bg-white text-red-900 rounded-full font-bold text-xs shadow-lg active:scale-95"
+                  className="mt-6 px-6 py-2.5 bg-white text-red-900 rounded-lg font-bold text-xs shadow-md active:scale-95"
                 >
                   Dismiss Alert
                 </button>
@@ -181,7 +181,7 @@ export default function GateScannerPage() {
             )}
 
             {/* Target Reticle */}
-            <div className="w-56 h-56 border-2 border-dashed border-[#F97316] rounded-3xl flex items-center justify-center relative shadow-[0_0_30px_rgba(249,115,22,0.3)]">
+            <div className="w-56 h-56 border-2 border-dashed border-[#F97316] rounded-xl flex items-center justify-center relative shadow-[0_0_30px_rgba(249,115,22,0.3)]">
               <Scan size={44} weight="bold" className="text-white/60 animate-pulse" />
               <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-white" />
               <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-white" />
@@ -194,11 +194,11 @@ export default function GateScannerPage() {
             </p>
           </div>
 
-          {/* Gate Simulation Buttons */}
+          {/* Gate Simulation Buttons (Rectangular 8px Curved Radius - No Ovals) */}
           <div className="grid grid-cols-2 gap-3 pt-2">
             <button
               onClick={() => simulateScan("valid")}
-              className="py-3 px-4 rounded-[360px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
+              className="py-3 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-xs active:scale-95 flex items-center justify-center gap-1.5"
             >
               <CheckCircle size={16} weight="fill" />
               <span>Simulate Valid Scan</span>
@@ -206,7 +206,7 @@ export default function GateScannerPage() {
 
             <button
               onClick={() => simulateScan("duplicate")}
-              className="py-3 px-4 rounded-[360px] bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
+              className="py-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition shadow-xs active:scale-95 flex items-center justify-center gap-1.5"
             >
               <WarningCircle size={16} weight="fill" />
               <span>Simulate Duplicate</span>

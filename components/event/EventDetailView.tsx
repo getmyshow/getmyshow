@@ -75,7 +75,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
 
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F] pb-32">
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 pt-6 space-y-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-6 space-y-6">
         {/* Breadcrumb Navigation & Share Button */}
         <div className="flex items-center justify-between text-xs text-[#6F7287]">
           <div className="flex items-center gap-2 overflow-hidden">
@@ -96,7 +96,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
 
           <button
             onClick={handleShare}
-            className="px-3.5 py-1.5 rounded-[360px] bg-white border border-[#DBDAE3] text-[#39364F] hover:text-[#3659E3] hover:border-[#3659E3] transition shadow-xs flex items-center gap-1.5 font-semibold text-xs"
+            className="px-3.5 py-1.5 rounded-lg bg-white border border-[#DBDAE3] text-[#39364F] hover:text-[#3659E3] hover:border-[#3659E3] transition shadow-xs flex items-center gap-1.5 font-semibold text-xs active:scale-95"
             title="Share Event"
           >
             <ShareNetwork size={16} weight="bold" />
@@ -104,8 +104,8 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
           </button>
         </div>
 
-        {/* 16:9 Widescreen Hero Media Banner */}
-        <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full bg-[#EEEDF2] rounded-[40px] overflow-hidden border border-[#DBDAE3] shadow-xs">
+        {/* 16:9 Widescreen Hero Media Banner (Eventbrite 16px Modern Radius) */}
+        <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full bg-[#EEEDF2] rounded-2xl overflow-hidden border border-[#DBDAE3] shadow-xs">
           {event.poster_url ? (
             <Image
               src={event.poster_url}
@@ -122,7 +122,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
           )}
 
           {/* Floating Eventbrite Date Callout Badge */}
-          <div className="absolute top-5 left-5 z-10 bg-white/95 backdrop-blur-md rounded-2xl p-2.5 shadow-md border border-[#DBDAE3] text-center min-w-[56px]">
+          <div className="absolute top-5 left-5 z-10 bg-white/95 backdrop-blur-md rounded-lg p-2.5 shadow-md border border-[#DBDAE3] text-center min-w-[56px]">
             <span className="block text-xs font-black text-[#3659E3] uppercase tracking-wider">
               {monthShort}
             </span>
@@ -139,16 +139,16 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
             {/* Title & Metadata */}
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-[20px] text-xs font-bold bg-white text-[#3659E3] border border-[#DBDAE3]">
+                <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-white text-[#3659E3] border border-[#DBDAE3]">
                   {event.city}
                 </span>
                 {isAlmostFull && (
-                  <span className="px-3 py-1 rounded-[20px] text-xs font-extrabold uppercase bg-[#F05537] text-white flex items-center gap-1">
+                  <span className="px-2.5 py-1 rounded-md text-xs font-extrabold uppercase bg-[#F05537] text-white flex items-center gap-1">
                     <Sparkle size={13} weight="fill" />
                     Fast Filling
                   </span>
                 )}
-                <span className="px-3 py-1 rounded-[20px] text-xs font-semibold bg-white text-[#6F7287] border border-[#DBDAE3]">
+                <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-white text-[#6F7287] border border-[#DBDAE3]">
                   {event.tickets_sold} / {event.total_capacity} Passes Claimed
                 </span>
               </div>
@@ -158,10 +158,10 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
               </h1>
             </div>
 
-            {/* Date, Time & Venue Info Cards */}
+            {/* Date, Time & Venue Info Cards (12px Radius) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-5 rounded-[24px] bg-white border border-[#DBDAE3] flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center shrink-0">
+              <div className="p-5 rounded-xl bg-white border border-[#DBDAE3] flex items-start gap-3.5 shadow-xs">
+                <div className="w-10 h-10 rounded-lg bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center shrink-0">
                   <CalendarBlank size={20} weight="bold" />
                 </div>
                 <div>
@@ -171,8 +171,8 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
                 </div>
               </div>
 
-              <div className="p-5 rounded-[24px] bg-white border border-[#DBDAE3] flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-[#F05537]/10 text-[#F05537] flex items-center justify-center shrink-0">
+              <div className="p-5 rounded-xl bg-white border border-[#DBDAE3] flex items-start gap-3.5 shadow-xs">
+                <div className="w-10 h-10 rounded-lg bg-[#F05537]/10 text-[#F05537] flex items-center justify-center shrink-0">
                   <MapPinLine size={20} weight="bold" />
                 </div>
                 <div>
@@ -184,9 +184,9 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
             </div>
 
             {/* Organizer Profile Card */}
-            <div className="p-6 rounded-[32px] bg-white border border-[#DBDAE3] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-6 rounded-xl bg-white border border-[#DBDAE3] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
               <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-full bg-[#1E0A3C] text-white flex items-center justify-center font-bold text-lg shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-[#1E0A3C] text-white flex items-center justify-center font-bold text-lg shrink-0">
                   {event.organizer_name.charAt(0)}
                 </div>
                 <div>
@@ -202,7 +202,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
                 href={`https://wa.me/${event.organizer_whatsapp}?text=${encodeURIComponent(`Hi, I have a question regarding ${event.title} on GetMyShow`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 rounded-[360px] border border-[#DBDAE3] hover:border-[#25D366] text-[#39364F] hover:text-[#25D366] text-xs font-bold transition flex items-center gap-1.5 bg-white"
+                className="px-4 py-2.5 rounded-lg border border-[#DBDAE3] hover:border-[#25D366] text-[#39364F] hover:text-[#25D366] text-xs font-bold transition flex items-center gap-1.5 bg-white shadow-xs"
               >
                 <WhatsappLogo size={16} weight="fill" className="text-[#25D366]" />
                 <span>Contact Host</span>
@@ -210,7 +210,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
             </div>
 
             {/* About This Event Description */}
-            <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#DBDAE3] space-y-4">
+            <div className="p-6 sm:p-8 rounded-xl bg-white border border-[#DBDAE3] space-y-4 shadow-xs">
               <h2 className="text-xl font-bold text-[#1E0A3C]">About This Event</h2>
               <div className="text-sm text-[#39364F] leading-relaxed whitespace-pre-line space-y-3">
                 {event.description}
@@ -219,15 +219,15 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
 
             {/* Tags Row */}
             <div className="space-y-2">
-              <h3 className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Tags</h3>
+              <h3 className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Event Highlights</h3>
               <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-[20px] bg-white border border-[#DBDAE3] text-xs font-semibold text-[#39364F]">
+                <span className="px-3 py-1 rounded-md bg-white border border-[#DBDAE3] text-xs font-semibold text-[#39364F]">
                   #{event.city}
                 </span>
-                <span className="px-3 py-1 rounded-[20px] bg-white border border-[#DBDAE3] text-xs font-semibold text-[#39364F]">
-                  #LivePass
+                <span className="px-3 py-1 rounded-md bg-white border border-[#DBDAE3] text-xs font-semibold text-[#39364F]">
+                  #DigitalPass
                 </span>
-                <span className="px-3 py-1 rounded-[20px] bg-white border border-[#DBDAE3] text-xs font-semibold text-[#39364F]">
+                <span className="px-3 py-1 rounded-md bg-white border border-[#DBDAE3] text-xs font-semibold text-[#39364F]">
                   #UPIFastCheckout
                 </span>
               </div>
@@ -236,7 +236,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
 
           {/* Right Column: Sticky Booking Widget (Desktop) */}
           <div className="hidden lg:block">
-            <div className="sticky top-28 p-6 sm:p-7 rounded-[40px] bg-white border border-[#DBDAE3] shadow-card space-y-6">
+            <div className="sticky top-28 p-6 sm:p-7 rounded-xl bg-white border border-[#DBDAE3] shadow-md space-y-6">
               <div>
                 <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Pass Pricing</span>
                 <div className="flex items-baseline gap-2 mt-1">
@@ -250,10 +250,10 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
               </div>
 
               {/* Quantity Counter */}
-              <div className="p-4 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] space-y-2">
+              <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-[#39364F]">Select Quantity</span>
-                  <div className="flex items-center gap-3 bg-white border border-[#DBDAE3] rounded-full px-2 py-1">
+                  <div className="flex items-center gap-3 bg-white border border-[#DBDAE3] rounded-md px-2 py-1">
                     <button
                       type="button"
                       onClick={() => setTicketQuantity(Math.max(1, ticketQuantity - 1))}
@@ -282,11 +282,11 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
                 </div>
               </div>
 
-              {/* Primary Book CTA */}
+              {/* Primary Book CTA (Rectangular 8px Curved Radius - Ember Orange) */}
               <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
-                className="w-full py-4 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-base font-bold shadow-md hover:shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-base font-bold shadow-md hover:shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2"
               >
                 <Ticket size={20} weight="bold" />
                 <span>Book Passes via UPI</span>
@@ -321,7 +321,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex-1 py-3.5 px-6 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-sm font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+            className="flex-1 py-3 px-5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
           >
             <Ticket size={18} weight="bold" />
             <span>Book Passes Now</span>

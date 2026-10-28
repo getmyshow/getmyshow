@@ -17,11 +17,11 @@ export default function Footer() {
     <footer className="bg-white border-t border-[#DBDAE3] text-[#39364F] text-sm">
       {/* Trust & Guarantee Strip */}
       <div className="border-b border-[#EEEDF2] bg-[#F8F7FA]">
-        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-8">
+        <div className="max-w-[1340px] mx-auto px-4 sm:px-6 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center shrink-0">
-                <Lightning size={24} weight="duotone" />
+              <div className="w-10 h-10 rounded-lg bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center shrink-0">
+                <Lightning size={22} weight="duotone" />
               </div>
               <div>
                 <h4 className="text-xs font-bold text-[#1E0A3C] uppercase tracking-wide">
@@ -34,8 +34,8 @@ export default function Footer() {
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-[#F05537]/10 text-[#F05537] flex items-center justify-center shrink-0">
-                <ShieldCheck size={24} weight="duotone" />
+              <div className="w-10 h-10 rounded-lg bg-[#F05537]/10 text-[#F05537] flex items-center justify-center shrink-0">
+                <ShieldCheck size={22} weight="duotone" />
               </div>
               <div>
                 <h4 className="text-xs font-bold text-[#1E0A3C] uppercase tracking-wide">
@@ -48,8 +48,8 @@ export default function Footer() {
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
-                <MapPin size={24} weight="duotone" />
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+                <MapPin size={22} weight="duotone" />
               </div>
               <div>
                 <h4 className="text-xs font-bold text-[#1E0A3C] uppercase tracking-wide">
@@ -65,17 +65,17 @@ export default function Footer() {
       </div>
 
       {/* Main Footer Links */}
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-12">
+      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          {/* Brand Info */}
+          {/* Brand Info (Prominent Logo Size) */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block">
               <Image
-                src="/brand/logos/wordmark-tilted-black-text-transparent.svg"
+                src="/brand/logos/wordmark-cropped.svg"
                 alt="GetMyShow Logo"
-                width={140}
-                height={38}
-                className="h-8 w-auto object-contain"
+                width={180}
+                height={48}
+                className="h-9 sm:h-10 w-auto object-contain"
               />
             </Link>
             <p className="text-xs text-[#6F7287] leading-relaxed max-w-sm">
