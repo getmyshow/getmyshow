@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: getmyshow-backend
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://getmyshow.vercel.app
+      - key: UPSTASH_REDIS_REST_URL
+        value: https://hardy-kiwi-242204.upstash.io
+      - key: UPSTASH_REDIS_REST_TOKEN
+        value: gQAAAAAAA7IcAAIgcDJjOTRiNjcwYWFkNjE0MjIyOTdkNTI1NmZjNTVjZTFhNw
+      - key: RENDER_REDIS_URL
+        value: redis://red-dbh267vf3r2c73au17ag:6379
+      - key: NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+        value: eyvu6d0g
+      - key: CLOUDINARY_API_KEY
+        value: 153184336961959
+      - key: CLOUDINARY_API_SECRET
+        value: 8EmAfse0263PXJl0NCtcvx3srMg
+      - key: QR_HMAC_SECRET
+        value: getmyshow_secret_qr_token_key_change_in_production
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        value: https://bexxwfvnhaetezvtayfx.supabase.co
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJleHh3ZnZuaGFldGV6dnRheWZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNzk2OTcsImV4cCI6MjEwODc1NTY5N30.ioHgDbM_MFhdEa2m-j517FIiSbkzsNL963Dw1qHLBvM
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJleHh3ZnZuaGFldGV6dnRheWZ4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzE3OTY5NywiZXhwIjoyMTA4NzU1Njk3fQ.4ti4DLNrx1TReN8y9iBek-f5SNKGvKY2Jp2BuUP4Rwk
+      - key: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+        value: pk_test_YnVyc3RpbmctYmlyZC00NDAxLmNsZXJrLmFjY291bnRzLmRldiQ
+      - key: CLERK_SECRET_KEY
+        value: sk_test_LhHbQ3pBrQvSLd0bI9OtQnAboRmVUFQIjVNN6005YN
+      - key: NEXT_PUBLIC_CLERK_SIGN_IN_URL
+        value: /sign-in
+      - key: NEXT_PUBLIC_CLERK_SIGN_UP_URL
+        value: /sign-up
