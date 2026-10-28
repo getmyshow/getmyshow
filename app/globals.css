@@ -1,8 +1,8 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* Eventbrite Discovery Tokens */
@@ -140,6 +140,56 @@ body {
   position: relative;
 }
 
+/* Sleek Modern Floating Scrollbar (Completely eliminates ugly Windows classic arrow/track) */
+html {
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+html::-webkit-scrollbar-button,
+body::-webkit-scrollbar-button,
+*::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4) !important;
+  border-radius: 9999px !important;
+  border: 1px solid transparent !important;
+  background-clip: padding-box !important;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7) !important;
+  border-radius: 9999px !important;
+  border: 1px solid transparent !important;
+  background-clip: padding-box !important;
+}
+
 /* Custom Scrollbar for Horizontal Filter Tabs */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -161,6 +211,22 @@ body {
 
 .animate-banner-progress {
   animation: bannerProgress 5s linear forwards;
+}
+
+/* Gate Scanner Laser Keyframe */
+@keyframes scanLaser {
+  0% {
+    top: 6%;
+    opacity: 0.7;
+  }
+  50% {
+    top: 92%;
+    opacity: 1;
+  }
+  100% {
+    top: 6%;
+    opacity: 0.7;
+  }
 }
 
 /* ==========================================================================
@@ -186,13 +252,12 @@ body {
   }
 
   /* Force-hide global website chrome & navigation elements */
-  header,
-  footer,
+  body > header,
+  body > footer,
   nav,
   .no-print,
   .print-hidden,
-  button,
-  a[href^="/"] {
+  button {
     display: none !important;
   }
 
@@ -204,7 +269,7 @@ body {
 
   /* Single-page ticket container */
   .ticket-print-wrapper {
-    max-width: 440px !important;
+    max-width: 480px !important;
     width: 100% !important;
     margin: 0 auto !important;
     padding: 0 !important;
@@ -213,6 +278,19 @@ body {
     border: none !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+  }
+
+  /* Ensure all images, logos, QR codes, and ticket links are permanently visible in print */
+  .ticket-print-wrapper img,
+  .ticket-print-wrapper svg,
+  .ticket-print-wrapper a,
+  .ticket-scallop-card,
+  .ticket-scallop-card * {
+    display: revert !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .ticket-scallop-card {

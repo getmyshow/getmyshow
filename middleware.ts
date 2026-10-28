@@ -7,7 +7,10 @@ const isOrganizerRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
   if (isOrganizerRoute(req)) {
-    await auth.protect();
+    const session = await auth();
+    if (!session.userId) {
+      return session.redirectToSignIn({ returnBackUrl: req.url });
+    }
   }
 });
 

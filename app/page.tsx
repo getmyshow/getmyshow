@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { getEvents } from "@/actions/events";
 import {
   Sparkle,
@@ -192,10 +193,23 @@ const BIHAR_REGIONAL_CITIES = [
   },
 ];
 
-export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const urlCategory = searchParams ? searchParams.get("category") || "" : "";
+  const urlSearch = searchParams ? searchParams.get("search") || "" : "";
+  const urlCity = searchParams ? searchParams.get("city") || "" : "";
+
+  const [selectedCategory, setSelectedCategory] = useState<string>(urlCategory);
   const [liveEvents, setLiveEvents] = useState<EventItem[]>(DEMO_EVENTS);
   const [isDbConnected, setIsDbConnected] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (urlCategory) {
+      setSelectedCategory(urlCategory);
+    } else {
+      setSelectedCategory("");
+    }
+  }, [urlCategory]);
 
   useEffect(() => {
     let mounted = true;
@@ -213,19 +227,35 @@ export default function HomePage() {
   }, []);
 
   const filteredEvents = useMemo(() => {
-    const list = liveEvents.length > 0 ? liveEvents : DEMO_EVENTS;
+    let list = liveEvents.length > 0 ? liveEvents : DEMO_EVENTS;
+
+    if (urlCity && urlCity !== "All") {
+      list = list.filter((e) => e.city.toLowerCase().includes(urlCity.toLowerCase()));
+    }
+
+    if (urlSearch) {
+      const q = urlSearch.toLowerCase();
+      list = list.filter((e) =>
+        e.title.toLowerCase().includes(q) ||
+        (e.description && e.description.toLowerCase().includes(q)) ||
+        e.venue.toLowerCase().includes(q)
+      );
+    }
+
     if (!selectedCategory) return list;
     return list.filter((e) => {
-      const slug = e.slug || "";
-      if (selectedCategory === "coaching") return slug.includes("scholarship") || slug.includes("seminar");
-      if (selectedCategory === "dandiya") return slug.includes("dandiya");
-      if (selectedCategory === "college") return slug.includes("college") || slug.includes("fest");
-      if (selectedCategory === "sports") return slug.includes("marathon");
-      if (selectedCategory === "standup") return slug.includes("kavi");
+      const slug = (e.slug || "").toLowerCase();
+      const title = (e.title || "").toLowerCase();
+      if (selectedCategory === "coaching") return slug.includes("scholarship") || slug.includes("seminar") || title.includes("seminar") || title.includes("test");
+      if (selectedCategory === "music") return slug.includes("concert") || title.includes("concert") || title.includes("music") || slug.includes("dandiya");
+      if (selectedCategory === "dandiya") return slug.includes("dandiya") || title.includes("cultural") || title.includes("garba");
+      if (selectedCategory === "college") return slug.includes("college") || slug.includes("fest") || title.includes("fest");
+      if (selectedCategory === "sports") return slug.includes("marathon") || title.includes("marathon") || title.includes("run");
+      if (selectedCategory === "standup") return slug.includes("kavi") || title.includes("comedy") || title.includes("poetry");
       if (selectedCategory === "workshops") return slug.includes("startup") || slug.includes("pitch");
       return true;
     });
-  }, [liveEvents, selectedCategory]);
+  }, [liveEvents, selectedCategory, urlSearch, urlCity]);
 
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
@@ -427,5 +457,13 @@ export default function HomePage() {
         </section>
       </main>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F8F7FA]" />}>
+      <HomeContent />
+    </Suspense>
   );
 }

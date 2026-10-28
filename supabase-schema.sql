@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS events (
     wallet_total_withdrawn NUMERIC DEFAULT 0,          -- Total amount already disbursed to organizer
     scanner_pin TEXT NOT NULL DEFAULT '1234',           -- 4-digit PIN for gate security volunteers
     is_active BOOLEAN DEFAULT TRUE,
+    ticket_tiers JSONB DEFAULT '[]'::jsonb,             -- Multi-tier JSON: [{"id": "t1", "name": "VIP", "price": 800, "capacity": 100, "perks": "Front row"}]
+    scanner_staff JSONB DEFAULT '[]'::jsonb,            -- Scanner staff accounts: [{"id": "s1", "scanner_id": "GATE-1", "password_hash": "...", "assigned_gate": "Gate A", "is_active": true}]
     custom_fields JSONB DEFAULT '[]'::jsonb,            -- e.g., [{"name": "Class/Batch", "required": true}]
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
@@ -50,6 +52,8 @@ CREATE TABLE IF NOT EXISTS tickets (
     buyer_whatsapp TEXT NOT NULL,
     buyer_email TEXT,
     payment_mode TEXT DEFAULT 'ONLINE',                 -- 'ONLINE' (UPI/Card) or 'CASH_PROMOTER'
+    tier_id TEXT,                                       -- ID of selected tier e.g., 'tier-vip'
+    tier_name TEXT,                                     -- Name of selected tier e.g., 'VIP Stage Front Pass'
     quantity INTEGER DEFAULT 1,
     amount_paid NUMERIC NOT NULL,                       -- Total paid by buyer (e.g. 500 or 535)
     organizer_share NUMERIC NOT NULL,                   -- 93% share (or 100% if pass_fee_to_buyer)
@@ -62,6 +66,10 @@ CREATE TABLE IF NOT EXISTS tickets (
     qr_token TEXT UNIQUE NOT NULL,                      -- Cryptographic HMAC token inside QR code
     is_checked_in BOOLEAN DEFAULT FALSE,               -- Flips to TRUE on gate scan
     checked_in_at TIMESTAMPTZ,
+    scanned_by TEXT,                                    -- Scanner staff ID who admitted attendee (e.g. 'GATE-1-RAHUL')
+    scanned_at_gate TEXT,                               -- Physical gate turnstile (e.g. 'Main Gate Turnstile A')
+    is_settled BOOLEAN DEFAULT FALSE,                   -- Flips to TRUE when T+2 settled
+    settled_at TIMESTAMPTZ,
     custom_responses JSONB DEFAULT '{}'::jsonb,         -- Responses to custom fields (Roll No, Class, etc.)
     promoter_code TEXT,                                 -- Student affiliate promoter tracking
     created_at TIMESTAMPTZ DEFAULT now()
@@ -71,6 +79,7 @@ CREATE TABLE IF NOT EXISTS tickets (
 CREATE INDEX IF NOT EXISTS idx_tickets_qr_token ON tickets(qr_token);
 CREATE INDEX IF NOT EXISTS idx_tickets_event_id ON tickets(event_id);
 CREATE INDEX IF NOT EXISTS idx_tickets_buyer_whatsapp ON tickets(buyer_whatsapp);
+CREATE INDEX IF NOT EXISTS idx_tickets_settlement ON tickets(payment_status, is_settled, created_at);
 
 -- ------------------------------------------------------------------------------
 -- 3. Organizer Withdrawal Requests Table

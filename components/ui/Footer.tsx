@@ -66,16 +66,16 @@ export default function Footer() {
 
       {/* Main Footer Links */}
       <div className="max-w-[1340px] mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand Info (Prominent Logo Size) */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block">
               <Image
-                src="/brand/logos/wordmark-cropped.svg"
+                src="/brand/logos/wordmark-tilted-black-text.svg"
                 alt="GetMyShow Logo"
-                width={180}
-                height={48}
-                className="h-9 sm:h-10 w-auto object-contain"
+                width={220}
+                height={68}
+                className="h-10 sm:h-12 w-auto object-contain"
               />
             </Link>
             <p className="text-xs text-[#6F7287] leading-relaxed max-w-sm">
@@ -123,18 +123,37 @@ export default function Footer() {
             <ul className="space-y-2 text-xs text-[#6F7287]">
               <li><Link href="/organizer/create" className="hover:text-[#3659E3] transition font-semibold text-[#1E0A3C]">List Your Event (0% Fee)</Link></li>
               <li><Link href="/organizer" className="hover:text-[#3659E3] transition">Organizer Studio</Link></li>
+              <li><Link href="/staff/login" className="hover:text-[#3659E3] transition font-semibold text-[#1E0A3C]">Scanning Staff Portal</Link></li>
               <li><Link href="/scan/1" className="hover:text-[#3659E3] transition">Mobile Gate Scanner</Link></li>
               <li><span className="text-[#6F7287]">T+2 Bank Settlement</span></li>
               <li><span className="text-[#6F7287]">Cash Counter Desk</span></li>
             </ul>
           </div>
+
+          {/* Legal & Compliance (Mandatory for Razorpay Live KYC) */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold text-[#1E0A3C] uppercase tracking-wider">
+              Legal & Support
+            </h4>
+            <ul className="space-y-2 text-xs text-[#6F7287]">
+              <li><Link href="/terms" className="hover:text-[#3659E3] transition">Terms & Conditions</Link></li>
+              <li><Link href="/privacy" className="hover:text-[#3659E3] transition">Privacy Policy (DPDP)</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-[#3659E3] transition">Cancellation & Refunds</Link></li>
+              <li><Link href="/shipping-policy" className="hover:text-[#3659E3] transition">Digital Delivery Policy</Link></li>
+              <li><Link href="/contact" className="hover:text-[#3659E3] transition font-semibold text-[#1E0A3C]">Contact & Grievance</Link></li>
+            </ul>
+          </div>
         </div>
 
-        {/* Bottom Copyright & Disclaimer */}
+        {/* Bottom Copyright & Legal Trust Strip */}
         <div className="mt-12 pt-6 border-t border-[#EEEDF2] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6F7287]">
-          <p>© {new Date().getFullYear()} GetMyShow Platform. Built with pride in Sasaram, Bihar.</p>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
+          <p>© {new Date().getFullYear()} GetMyShow Platform. MSME Registered in Sasaram, Bihar.</p>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/terms" className="hover:underline">Terms</Link>
+            <Link href="/privacy" className="hover:underline">Privacy</Link>
+            <Link href="/refund-policy" className="hover:underline">Refunds</Link>
+            <Link href="/contact" className="hover:underline">Grievance Desk</Link>
+            <span className="flex items-center gap-1 pl-2">
               <span>Made with</span>
               <Heart size={14} weight="fill" className="text-[#F05537]" />
               <span>for Bihar</span>

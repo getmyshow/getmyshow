@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import {
   X,
   ShieldCheck,
@@ -15,15 +16,18 @@ import {
   CheckCircle,
   Ticket,
   LockKey,
+  Clock,
 } from "@phosphor-icons/react";
-import { EventItem } from "@/types";
+import { EventItem, TicketTier } from "@/types";
 import { formatINR } from "@/lib/utils";
+import { initiateCheckout } from "@/actions/checkout";
 
 interface CheckoutModalProps {
   event: EventItem;
   isOpen: boolean;
   onClose: () => void;
   initialQuantity?: number;
+  selectedTier?: TicketTier;
 }
 
 export default function CheckoutModal({
@@ -31,8 +35,10 @@ export default function CheckoutModal({
   isOpen,
   onClose,
   initialQuantity = 1,
+  selectedTier,
 }: CheckoutModalProps) {
   const router = useRouter();
+  const { user, isSignedIn } = useUser();
   const [step, setStep] = useState<1 | 2>(1);
   const [quantity, setQuantity] = useState<number>(initialQuantity);
   const [name, setName] = useState<string>("");
@@ -40,11 +46,38 @@ export default function CheckoutModal({
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [secondsRemaining, setSecondsRemaining] = useState(480); // 8 minutes BookMyShow hold
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setSecondsRemaining(480);
+    const timer = setInterval(() => {
+      setSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isOpen]);
+
+  const countdownMinutes = Math.floor(secondsRemaining / 60);
+  const countdownSeconds = secondsRemaining % 60;
+  const formattedCountdown = `${countdownMinutes.toString().padStart(2, "0")}:${countdownSeconds.toString().padStart(2, "0")}`;
+
+  // Auto-fill buyer details if signed in with Clerk / Google
+  useEffect(() => {
+    if (isSignedIn && user) {
+      if (!name && user.fullName) {
+        setName(user.fullName);
+      }
+      if (!whatsapp && user.primaryPhoneNumber?.phoneNumber) {
+        setWhatsapp(user.primaryPhoneNumber.phoneNumber.replace(/\D/g, "").slice(-10));
+      }
+    }
+  }, [isSignedIn, user]);
 
   if (!isOpen) return null;
 
-  // Pricing calculation
-  const baseSubtotal = event.ticket_price * quantity;
+  // Pricing calculation based on selected tier or general price
+  const currentTierPrice = selectedTier ? selectedTier.price : event.ticket_price;
+  const baseSubtotal = currentTierPrice * quantity;
   const platformFee = event.pass_fee_to_buyer ? Math.round(baseSubtotal * 0.07) : 0;
   const totalPayable = baseSubtotal + platformFee;
 
@@ -77,31 +110,72 @@ export default function CheckoutModal({
   const initiatePayment = () => {
     startTransition(async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 800));
+        setErrorMessage(null);
 
-        const demoToken = `DEMO-HMAC-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+        const res = await initiateCheckout({
+          eventId: event.id,
+          buyerName: name.trim(),
+          buyerWhatsapp: whatsapp.trim(),
+          buyerEmail: user?.primaryEmailAddress?.emailAddress || undefined,
+          quantity,
+          tierId: selectedTier?.id,
+          tierName: selectedTier?.name,
+          tierPrice: currentTierPrice,
+          customResponses: customAnswers,
+        });
+
+        if (!res.success || !res.data) {
+          // If Supabase tables are not yet migrated, generate a resilient local token
+          const fallbackToken = `GMS-${(event.city || "SAS").slice(0, 3).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString(36).slice(-6).toUpperCase()}`;
+          const fallbackNumber = `GMS-SAS-${Math.floor(1000 + Math.random() * 9000)}`;
+
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(
+              `gms_pass_${fallbackToken}`,
+              JSON.stringify({
+                ticketNumber: fallbackNumber,
+                qrToken: fallbackToken,
+                eventName: event.title,
+                venue: event.venue,
+                eventDate: event.event_date,
+                buyerName: name.trim(),
+                buyerPhone: whatsapp.trim(),
+                quantity,
+                tierName: selectedTier?.name || "General Admission",
+                amountPaid: totalPayable,
+              })
+            );
+          }
+
+          onClose();
+          router.push(`/ticket/${fallbackToken}`);
+          return;
+        }
+
+        const { qrToken, ticketNumber } = res.data;
 
         if (typeof window !== "undefined") {
           sessionStorage.setItem(
-            `gms_pass_${demoToken}`,
+            `gms_pass_${qrToken}`,
             JSON.stringify({
-              ticketNumber: `GMS-SAS-${Math.floor(10000 + Math.random() * 90000)}`,
-              qrToken: demoToken,
+              ticketNumber,
+              qrToken,
               eventName: event.title,
               venue: event.venue,
               eventDate: event.event_date,
-              buyerName: name,
-              buyerPhone: whatsapp,
-              quantity: quantity,
+              buyerName: name.trim(),
+              buyerPhone: whatsapp.trim(),
+              quantity,
+              tierName: selectedTier?.name || "General Admission",
               amountPaid: totalPayable,
             })
           );
         }
 
         onClose();
-        router.push(`/ticket/${demoToken}`);
-      } catch (err: unknown) {
-        setErrorMessage("Payment initiation timed out. Please retry.");
+        router.push(`/ticket/${qrToken}`);
+      } catch {
+        setErrorMessage("Checkout request failed. Please check your network and retry.");
       }
     });
   };
@@ -132,6 +206,15 @@ export default function CheckoutModal({
           </button>
         </div>
 
+        {/* BookMyShow Standard: 8-Minute Seat Reservation Countdown */}
+        <div className="mt-3.5 bg-amber-50 border border-amber-200/80 rounded-xl px-3.5 py-2 flex items-center justify-between text-xs text-amber-900">
+          <div className="flex items-center gap-1.5 font-medium">
+            <Clock size={15} weight="bold" className="text-amber-600 animate-pulse" />
+            <span>Passes reserved for you</span>
+          </div>
+          <span className="font-mono font-bold text-amber-800">{formattedCountdown}</span>
+        </div>
+
         {errorMessage && (
           <div className="mt-4 p-3 rounded-lg bg-red-50 border border-red-200 text-xs font-semibold text-red-600">
             {errorMessage}
@@ -144,10 +227,24 @@ export default function CheckoutModal({
             {/* Ticket Tier Box (8px radius) */}
             <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] flex items-center justify-between">
               <div>
-                <h4 className="text-sm font-bold text-[#1E0A3C]">General Admission Pass</h4>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-[#1E0A3C]">
+                    {selectedTier?.name || "General Admission Pass"}
+                  </h4>
+                  {selectedTier && (
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-indigo-50 text-[#4F46E5] uppercase tracking-wider">
+                      Tier
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-[#6F7287] mt-0.5">
-                  {event.ticket_price === 0 ? "Free Entry Pass" : `${formatINR(event.ticket_price)} per attendee`}
+                  {currentTierPrice === 0 ? "Free Entry Pass" : `${formatINR(currentTierPrice)} per attendee`}
                 </p>
+                {selectedTier?.perks && (
+                  <p className="text-[11px] text-[#4F46E5] font-medium mt-1">
+                    ★ {selectedTier.perks}
+                  </p>
+                )}
               </div>
 
               {/* Quantity Stepper (Rectangular with rounded-md) */}

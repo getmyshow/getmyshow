@@ -20,8 +20,9 @@ import {
   SealCheck,
   Minus,
   Plus,
+  CheckCircle,
 } from "@phosphor-icons/react";
-import { EventItem } from "@/types";
+import { EventItem, TicketTier } from "@/types";
 import { formatINR } from "@/lib/utils";
 import CheckoutModal from "@/components/checkout/CheckoutModal";
 
@@ -32,6 +33,24 @@ interface EventDetailViewProps {
 export default function EventDetailView({ event }: EventDetailViewProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ticketQuantity, setTicketQuantity] = useState(1);
+
+  // Synthesize available ticket tiers (multi-tier support with single-price fallback)
+  const availableTiers: TicketTier[] =
+    event.ticket_tiers && event.ticket_tiers.length > 0
+      ? event.ticket_tiers
+      : [
+          {
+            id: "tier-ga",
+            name: "General Admission",
+            price: event.ticket_price,
+            capacity: event.total_capacity,
+            tickets_sold: event.tickets_sold,
+            perks: "Standard entry • Open seating access",
+            badge_color: "indigo",
+          },
+        ];
+
+  const [selectedTier, setSelectedTier] = useState<TicketTier>(availableTiers[0]);
 
   const isAlmostFull =
     event.total_capacity > 0 &&
@@ -69,7 +88,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
   const monthShort = eventDateObj.toLocaleDateString("en-US", { month: "short", timeZone: "Asia/Kolkata" }).toUpperCase();
   const dayNum = eventDateObj.toLocaleDateString("en-US", { day: "2-digit", timeZone: "Asia/Kolkata" });
 
-  const subtotal = event.ticket_price * ticketQuantity;
+  const subtotal = selectedTier.price * ticketQuantity;
   const platformFee = event.pass_fee_to_buyer ? Math.round(subtotal * 0.07) : 0;
   const totalPayable = subtotal + platformFee;
 
@@ -164,10 +183,18 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
                 <div className="w-10 h-10 rounded-lg bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center shrink-0">
                   <CalendarBlank size={20} weight="bold" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="text-xs font-bold text-[#6F7287] uppercase tracking-wide">Date and Time</h4>
                   <p className="text-sm font-bold text-[#1E0A3C] mt-0.5">{formattedDate}</p>
                   <p className="text-xs text-[#6F7287]">{formattedTime} IST</p>
+                  <a
+                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${eventDateObj.toISOString().replace(/-|:|\.\d\d\d/g, "")}/${new Date(eventDateObj.getTime() + 3*60*60*1000).toISOString().replace(/-|:|\.\d\d\d/g, "")}&details=${encodeURIComponent(event.description || "")}&location=${encodeURIComponent(`${event.venue}, ${event.city}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] font-bold text-[#3659E3] hover:underline mt-1.5 inline-flex items-center gap-1"
+                  >
+                    + Add to Google Calendar
+                  </a>
                 </div>
               </div>
 
@@ -175,10 +202,18 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
                 <div className="w-10 h-10 rounded-lg bg-[#F05537]/10 text-[#F05537] flex items-center justify-center shrink-0">
                   <MapPinLine size={20} weight="bold" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="text-xs font-bold text-[#6F7287] uppercase tracking-wide">Location</h4>
                   <p className="text-sm font-bold text-[#1E0A3C] mt-0.5">{event.venue}</p>
                   <p className="text-xs text-[#6F7287]">{event.city}, Bihar</p>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue}, ${event.city}, Bihar`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] font-bold text-[#F05537] hover:underline mt-1.5 inline-flex items-center gap-1"
+                  >
+                    Get Directions in Google Maps →
+                  </a>
                 </div>
               </div>
             </div>
@@ -217,6 +252,138 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
               </div>
             </div>
 
+            {/* BookMyShow Standard: Multi-Tier Pass Selection Section */}
+            <div className="p-6 sm:p-8 rounded-xl bg-white border border-[#DBDAE3] space-y-4 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h2 className="text-xl font-bold text-[#1E0A3C]">Select Ticket Tier</h2>
+                  <p className="text-xs text-[#6F7287] mt-0.5">
+                    Choose your admission category. All passes include a verified HMAC QR code.
+                  </p>
+                </div>
+                <span className="text-xs font-bold text-[#4F46E5] bg-indigo-50 px-2.5 py-1 rounded-md self-start sm:self-auto">
+                  {availableTiers.length} Option{availableTiers.length > 1 ? "s" : ""} Available
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                {availableTiers.map((tier) => {
+                  const isSelected = selectedTier.id === tier.id;
+                  const remaining = Math.max(0, tier.capacity - tier.tickets_sold);
+                  const isSoldOut = tier.capacity > 0 && remaining === 0;
+
+                  return (
+                    <button
+                      key={tier.id}
+                      type="button"
+                      disabled={isSoldOut}
+                      onClick={() => setSelectedTier(tier)}
+                      className={`text-left p-4 rounded-xl border-2 transition-all relative flex flex-col justify-between ${
+                        isSelected
+                          ? "border-[#4F46E5] bg-indigo-50/30 shadow-xs ring-2 ring-[#4F46E5]/10"
+                          : "border-[#DBDAE3] bg-white hover:border-[#4F46E5]/40"
+                      } ${isSoldOut ? "opacity-50 cursor-not-allowed bg-slate-50" : ""}`}
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <span
+                              className={`text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ${
+                                tier.badge_color === "saffron"
+                                  ? "bg-orange-100 text-[#F97316]"
+                                  : tier.badge_color === "emerald"
+                                  ? "bg-emerald-100 text-emerald-700"
+                                  : "bg-indigo-100 text-[#4F46E5]"
+                              }`}
+                            >
+                              {tier.badge_color === "saffron"
+                                ? "VIP Pass"
+                                : tier.badge_color === "emerald"
+                                ? "Discount"
+                                : "Standard Entry"}
+                            </span>
+                            <h3 className="text-base font-bold text-[#1E0A3C] mt-1.5">
+                              {tier.name}
+                            </h3>
+                          </div>
+
+                          <div
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                              isSelected
+                                ? "border-[#4F46E5] bg-[#4F46E5]"
+                                : "border-[#DBDAE3]"
+                            }`}
+                          >
+                            {isSelected && (
+                              <CheckCircle size={18} weight="fill" className="text-white" />
+                            )}
+                          </div>
+                        </div>
+
+                        {tier.perks && (
+                          <p className="text-xs text-[#6F7287] leading-relaxed">
+                            ★ {tier.perks}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="pt-3.5 mt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                          <span className="text-lg font-black text-[#1E0A3C]">
+                            {tier.price === 0 ? "FREE" : formatINR(tier.price)}
+                          </span>
+                          <span className="text-[10px] text-[#6F7287] block">per person</span>
+                        </div>
+
+                        <span
+                          className={`text-xs font-semibold ${
+                            isSoldOut
+                              ? "text-red-500 font-bold"
+                              : remaining < 15
+                              ? "text-amber-600 font-bold"
+                              : "text-[#6F7287]"
+                          }`}
+                        >
+                          {isSoldOut ? "Sold Out" : `${remaining} passes left`}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* BookMyShow Standard: Event Guidelines & FAQs */}
+            <div className="p-6 sm:p-8 rounded-xl bg-white border border-[#DBDAE3] space-y-5 shadow-xs">
+              <h2 className="text-lg font-bold text-[#1E0A3C]">Venue Guidelines & FAQs</h2>
+              <div className="divide-y divide-slate-100 text-xs text-[#39364F] space-y-3">
+                <div className="pt-2">
+                  <strong className="text-sm font-bold text-[#0F172A] block mb-1">How will I receive my ticket pass?</strong>
+                  <p className="text-[#6F7287] leading-relaxed">
+                    Your digital pass renders immediately on-screen after payment. You can download it as a high-resolution PNG image or save as PDF. It also remains permanently accessible on your GetMyShow account under &ldquo;My Tickets&rdquo;.
+                  </p>
+                </div>
+                <div className="pt-3">
+                  <strong className="text-sm font-bold text-[#0F172A] block mb-1">What is the gate admission process?</strong>
+                  <p className="text-[#6F7287] leading-relaxed">
+                    Simply show the cryptographic QR code on your phone screen at the venue gate. The security team will scan it using the GetMyShow camera scanner in under 50 milliseconds.
+                  </p>
+                </div>
+                <div className="pt-3">
+                  <strong className="text-sm font-bold text-[#0F172A] block mb-1">What if the event is cancelled or rescheduled?</strong>
+                  <p className="text-[#6F7287] leading-relaxed">
+                    You are protected under GetMyShow&rsquo;s 100% Buyer Refund Guarantee. If an organizer cancels or postpones, full refunds are processed back to your original UPI account within 5–7 business days.
+                  </p>
+                </div>
+                <div className="pt-3">
+                  <strong className="text-sm font-bold text-[#0F172A] block mb-1">Can I transfer my pass to a friend?</strong>
+                  <p className="text-[#6F7287] leading-relaxed">
+                    Yes. Each pass is valid for the specified headcount. You may share your pass QR link or downloaded image via WhatsApp to the person attending in your place.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Tags Row */}
             <div className="space-y-2">
               <h3 className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Event Highlights</h3>
@@ -238,15 +405,26 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
           <div className="hidden lg:block">
             <div className="sticky top-28 p-6 sm:p-7 rounded-xl bg-white border border-[#DBDAE3] shadow-md space-y-6">
               <div>
-                <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Pass Pricing</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Pass Pricing</span>
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-50 text-[#4F46E5]">
+                    {selectedTier.name}
+                  </span>
+                </div>
                 <div className="flex items-baseline gap-2 mt-1">
                   <span className="text-3xl font-black text-[#1E0A3C]">
-                    {event.ticket_price === 0 ? "FREE" : formatINR(event.ticket_price)}
+                    {selectedTier.price === 0 ? "FREE" : formatINR(selectedTier.price)}
                   </span>
-                  {event.ticket_price > 0 && (
+                  {selectedTier.price > 0 && (
                     <span className="text-xs text-[#6F7287]">/ person</span>
                   )}
                 </div>
+                {selectedTier.perks && (
+                  <p className="text-xs text-[#6F7287] mt-1.5 flex items-center gap-1">
+                    <Sparkle size={13} weight="fill" className="text-[#F97316] shrink-0" />
+                    <span className="truncate">{selectedTier.perks}</span>
+                  </p>
+                )}
               </div>
 
               {/* Quantity Counter */}
@@ -309,22 +487,29 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
       </div>
 
       {/* Sticky Mobile Checkout Bar (Screens < 1024px) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#DBDAE3] p-4 shadow-xl">
-        <div className="max-w-md mx-auto flex items-center justify-between gap-4">
-          <div>
-            <span className="text-[11px] text-[#6F7287] font-semibold block">Total Price</span>
-            <span className="text-lg font-black text-[#1E0A3C]">
-              {event.ticket_price === 0 ? "FREE" : formatINR(event.ticket_price * ticketQuantity)}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#DBDAE3] px-4 py-3 shadow-2xl">
+        <div className="max-w-md mx-auto flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 truncate">
+              <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-[#4F46E5] shrink-0">
+                {selectedTier.name}
+              </span>
+              <span className="text-xs text-[#6F7287] font-semibold truncate">
+                {ticketQuantity} pass{ticketQuantity > 1 ? "es" : ""}
+              </span>
+            </div>
+            <span className="text-lg font-black text-[#1E0A3C] block leading-tight mt-0.5">
+              {selectedTier.price === 0 ? "FREE" : formatINR(selectedTier.price * ticketQuantity)}
             </span>
           </div>
 
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex-1 py-3 px-5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+            className="py-3 px-5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 shrink-0 min-h-[44px]"
           >
             <Ticket size={18} weight="bold" />
-            <span>Book Passes Now</span>
+            <span>Book Passes →</span>
           </button>
         </div>
       </div>
@@ -335,6 +520,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         initialQuantity={ticketQuantity}
+        selectedTier={selectedTier}
       />
     </div>
   );

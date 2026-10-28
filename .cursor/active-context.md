@@ -1,4 +1,6 @@
 > **BrainSync Context Pumper** 🧠
-> Dynamically loaded for active file: `Reference and Inspirations\Hi.Events\frontend\index.html` (Domain: **Generic Logic**)
+> Dynamically loaded for active file: `context\user-flows\organizer-user-flow.md` (Domain: **Generic Logic**)
 
-*No specific memory context found for this file's domain.*
+### 📐 Generic Logic Conventions & Fixes
+- **[what-changed] 🟢 Edited githubPAT.md (45 changes, 28min)**: Active editing session on githubPAT.md.
+45 content changes over 28 minutes.
