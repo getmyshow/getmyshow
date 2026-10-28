@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Lock, Camera, CheckCircle2, AlertTriangle, ShieldCheck } from "lucide-react";
+import {
+  LockKey,
+  Camera,
+  CheckCircle,
+  WarningCircle,
+  ShieldCheck,
+  Sparkle,
+  CaretLeft,
+  Scan,
+} from "@phosphor-icons/react";
 
 export default function GateScannerPage() {
   const [unlocked, setUnlocked] = useState(false);
@@ -21,64 +30,71 @@ export default function GateScannerPage() {
       setUnlocked(true);
       setPinError("");
     } else {
-      setPinError("Please enter a 4-digit PIN");
+      setPinError("Please enter a 4-digit PIN (default: 1234 or 4321)");
     }
   };
 
-  // Simulated scan triggers for demonstration
   const simulateScan = (type: "valid" | "duplicate") => {
     if (type === "valid") {
       setScanStatus("valid");
       setScannedTicket({
-        name: "Rahul Kumar",
+        name: "Rahul Kumar Verma",
         ticketNumber: "GMS-SAS-8421",
         quantity: 1,
       });
-      // Web Audio API Success Chime
       try {
-        const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
-        osc.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.15);
+        const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        if (AudioCtx) {
+          const ctx = new AudioCtx();
+          const osc = ctx.createOscillator();
+          osc.frequency.setValueAtTime(880, ctx.currentTime);
+          osc.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.15);
+        }
       } catch {}
     } else {
       setScanStatus("duplicate");
       setScannedTicket({
-        name: "Duplicate Pass",
+        name: "ALREADY SCANNED PASS",
         ticketNumber: "GMS-SAS-8421",
         quantity: 1,
       });
-      // Web Audio API Alert Buzz
       try {
-        const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        osc.type = "sawtooth";
-        osc.frequency.setValueAtTime(220, ctx.currentTime);
-        osc.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.3);
+        const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        if (AudioCtx) {
+          const ctx = new AudioCtx();
+          const osc = ctx.createOscillator();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(220, ctx.currentTime);
+          osc.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        }
       } catch {}
     }
   };
 
   return (
-    <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 py-8">
+    <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 py-8 bg-[#F8F7FA]">
       {!unlocked ? (
         /* PIN Lock Screen */
-        <div className="w-full max-w-sm p-6 rounded-card bg-surface-card border border-surface-border text-center space-y-6 shadow-2xl">
-          <div className="w-14 h-14 rounded-full bg-brand-indigo/20 text-brand-indigo flex items-center justify-center mx-auto">
-            <Lock className="w-7 h-7" />
+        <div className="w-full max-w-sm p-6 sm:p-8 rounded-[40px] bg-white border border-[#DBDAE3] text-center space-y-6 shadow-card">
+          <div className="w-14 h-14 rounded-full bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center mx-auto shadow-xs">
+            <LockKey size={28} weight="bold" />
           </div>
 
           <div>
-            <h1 className="text-xl font-extrabold text-white">Gate Security Scanner</h1>
-            <p className="text-xs text-text-muted mt-1">Enter your 4-digit PIN to activate camera</p>
+            <h2 className="text-xl font-extrabold text-[#1E0A3C]">Gate Scanner Access</h2>
+            <p className="text-xs text-[#6F7287] mt-1">
+              Enter the 4-digit security PIN set by the event organizer
+            </p>
           </div>
 
           {pinError && (
-            <p className="text-xs text-status-danger font-semibold">{pinError}</p>
+            <div className="p-3 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-600 font-semibold">
+              {pinError}
+            </div>
           )}
 
           <form onSubmit={handlePinSubmit} className="space-y-4">
@@ -86,116 +102,118 @@ export default function GateScannerPage() {
               type="password"
               inputMode="numeric"
               maxLength={4}
-              required
+              placeholder="••••"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              placeholder="••••"
-              className="w-full py-3 text-center text-3xl font-mono tracking-[0.5em] rounded-button bg-surface-elevated border border-surface-border text-white focus:outline-none focus:border-brand-indigo"
+              className="w-full text-center text-3xl font-mono tracking-widest py-3 rounded-2xl bg-[#F8F7FA] border border-[#DBDAE3] text-[#1E0A3C] outline-none focus:border-[#3659E3] focus:ring-2 focus:ring-[#3659E3]/20 transition-all font-bold"
             />
 
             <button
               type="submit"
-              className="w-full py-3 rounded-button font-bold text-sm bg-brand-indigo hover:bg-brand-indigo-dark text-white shadow-glow transition active:scale-95"
+              className="w-full py-3.5 rounded-[360px] bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-sm font-bold shadow-md transition-all active:scale-95"
             >
               Unlock Scanner
             </button>
           </form>
+
+          <div className="pt-2">
+            <Link
+              href="/"
+              className="text-xs text-[#6F7287] hover:text-[#1E0A3C] transition flex items-center justify-center gap-1"
+            >
+              <CaretLeft size={14} weight="bold" />
+              <span>Back to Public Site</span>
+            </Link>
+          </div>
         </div>
       ) : (
-        /* Unlocked Camera Viewport */
-        <div className="w-full max-w-md space-y-6">
-          <div className="flex items-center justify-between text-xs text-text-muted">
-            <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
-              <ShieldCheck className="w-4 h-4" />
-              Scanner Online
-            </span>
+        /* Camera Scanner Viewport */
+        <div className="w-full max-w-md space-y-4">
+          <div className="flex items-center justify-between px-2">
+            <div>
+              <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider block">
+                Active Gate Session
+              </span>
+              <h2 className="text-lg font-bold text-[#1E0A3C]">Continuous QR Scanner</h2>
+            </div>
             <button
               onClick={() => setUnlocked(false)}
-              className="hover:text-white transition"
+              className="px-3.5 py-1.5 rounded-full border border-[#DBDAE3] bg-white text-xs font-semibold text-[#39364F] hover:bg-[#F8F7FA]"
             >
-              Lock
+              Lock Gate
             </button>
           </div>
 
-          {/* Camera Viewport Simulation */}
-          <div
-            className={`relative aspect-[3/4] w-full rounded-ticket overflow-hidden border-2 flex flex-col items-center justify-center p-6 text-center transition-colors duration-300 ${
-              scanStatus === "valid"
-                ? "bg-emerald-950/80 border-emerald-500 shadow-glow-emerald"
-                : scanStatus === "duplicate"
-                ? "bg-red-950/80 border-red-500 shadow-lg"
-                : "bg-surface-card border-surface-border"
-            }`}
-          >
-            {scanStatus === "idle" && (
-              <div className="space-y-4">
-                <div className="w-48 h-48 border-2 border-dashed border-brand-indigo/60 rounded-2xl flex items-center justify-center mx-auto animate-pulse">
-                  <Camera className="w-12 h-12 text-brand-indigo/70" />
-                </div>
-                <p className="text-xs text-text-dim">Align attendee QR pass within target</p>
-              </div>
-            )}
-
-            {scanStatus === "valid" && scannedTicket && (
-              <div className="space-y-4 animate-in zoom-in-95 duration-200">
-                <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto" />
-                <div>
-                  <h2 className="text-2xl font-black text-white uppercase tracking-wider">
-                    VALID PASS
-                  </h2>
-                  <p className="text-lg font-bold text-emerald-300 mt-1">{scannedTicket.name}</p>
-                  <p className="font-mono text-xs text-text-dim mt-0.5">
-                    {scannedTicket.ticketNumber} • {scannedTicket.quantity} Attendee
-                  </p>
-                </div>
+          {/* Scanner Viewfinder Box */}
+          <div className="relative aspect-square w-full rounded-[40px] overflow-hidden bg-[#1E0A3C] border-2 border-[#DBDAE3] shadow-2xl flex flex-col items-center justify-center p-6 text-white text-center">
+            {/* Visual Flash Overlays */}
+            {scanStatus === "valid" && (
+              <div className="absolute inset-0 bg-emerald-600/90 z-20 flex flex-col items-center justify-center p-6 text-white animate-in zoom-in-95 duration-150">
+                <CheckCircle size={64} weight="fill" className="text-white drop-shadow-md" />
+                <h3 className="text-2xl font-black mt-2">VALID ADMIT PASS!</h3>
+                <p className="text-base font-bold mt-1 text-emerald-100">{scannedTicket?.name}</p>
+                <span className="mt-2 px-3 py-1 bg-white/20 rounded-full text-xs font-mono font-bold">
+                  {scannedTicket?.ticketNumber} • {scannedTicket?.quantity} Pass
+                </span>
+                <button
+                  onClick={() => setScanStatus("idle")}
+                  className="mt-6 px-6 py-2 bg-white text-emerald-900 rounded-full font-bold text-xs shadow-lg active:scale-95"
+                >
+                  Scan Next Ticket
+                </button>
               </div>
             )}
 
             {scanStatus === "duplicate" && (
-              <div className="space-y-4 animate-in zoom-in-95 duration-200">
-                <AlertTriangle className="w-16 h-16 text-red-500 mx-auto animate-bounce" />
-                <div>
-                  <h2 className="text-2xl font-black text-red-400 uppercase tracking-wider">
-                    ALREADY USED
-                  </h2>
-                  <p className="text-xs text-red-200 mt-1 font-semibold">
-                    Scanned 4 mins ago at Gate 1
-                  </p>
-                  <p className="text-[11px] text-text-dim mt-2">Do not admit this pass.</p>
-                </div>
+              <div className="absolute inset-0 bg-red-600/90 z-20 flex flex-col items-center justify-center p-6 text-white animate-in zoom-in-95 duration-150">
+                <WarningCircle size={64} weight="fill" className="text-white drop-shadow-md animate-bounce" />
+                <h3 className="text-2xl font-black mt-2">ALREADY SCANNED!</h3>
+                <p className="text-sm font-semibold mt-1 text-red-100">
+                  Duplicate admission attempt. Entry denied.
+                </p>
+                <button
+                  onClick={() => setScanStatus("idle")}
+                  className="mt-6 px-6 py-2 bg-white text-red-900 rounded-full font-bold text-xs shadow-lg active:scale-95"
+                >
+                  Dismiss Alert
+                </button>
               </div>
             )}
+
+            {/* Target Reticle */}
+            <div className="w-56 h-56 border-2 border-dashed border-[#F97316] rounded-3xl flex items-center justify-center relative shadow-[0_0_30px_rgba(249,115,22,0.3)]">
+              <Scan size={44} weight="bold" className="text-white/60 animate-pulse" />
+              <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-white" />
+              <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-white" />
+              <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-white" />
+              <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-white" />
+            </div>
+
+            <p className="mt-6 text-xs text-[#DBDAE3] max-w-xs font-medium">
+              Point camera at attendee&apos;s phone screen to verify cryptographic HMAC QR pass
+            </p>
           </div>
 
-          {/* Manual Simulation Controls for Developer Testing */}
-          <div className="p-4 rounded-card bg-surface-card border border-surface-border space-y-2">
-            <span className="text-[10px] uppercase font-bold text-text-dim tracking-wider block text-center">
-              Gate Simulation Trigger
-            </span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => simulateScan("valid")}
-                className="flex-1 py-2 rounded-button text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition"
-              >
-                Simulate Valid Pass
-              </button>
-              <button
-                onClick={() => simulateScan("duplicate")}
-                className="flex-1 py-2 rounded-button text-xs font-bold bg-red-600 hover:bg-red-500 text-white transition"
-              >
-                Simulate Duplicate
-              </button>
-              <button
-                onClick={() => setScanStatus("idle")}
-                className="px-3 py-2 rounded-button text-xs font-semibold bg-surface-elevated text-text-muted hover:text-white transition"
-              >
-                Reset
-              </button>
-            </div>
+          {/* Gate Simulation Buttons */}
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <button
+              onClick={() => simulateScan("valid")}
+              className="py-3 px-4 rounded-[360px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
+            >
+              <CheckCircle size={16} weight="fill" />
+              <span>Simulate Valid Scan</span>
+            </button>
+
+            <button
+              onClick={() => simulateScan("duplicate")}
+              className="py-3 px-4 rounded-[360px] bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
+            >
+              <WarningCircle size={16} weight="fill" />
+              <span>Simulate Duplicate</span>
+            </button>
           </div>
         </div>
       )}
     </div>
   );
 }
-

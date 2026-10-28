@@ -2,8 +2,21 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import QRCode from "qrcode";
-import { Download, Share2, ShieldCheck, MapPin, Calendar, CheckCircle2 } from "lucide-react";
+import {
+  DownloadSimple,
+  ShareNetwork,
+  ShieldCheck,
+  MapPinLine,
+  CalendarBlank,
+  CheckCircle,
+  Ticket,
+  Printer,
+  Sparkle,
+  WhatsappLogo,
+  Tag,
+} from "@phosphor-icons/react";
 import { formatINR, formatDateIST } from "@/lib/utils";
 
 interface QrPassCardProps {
@@ -30,13 +43,12 @@ export default function QrPassCard({
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
 
   useEffect(() => {
-    // Generate high-resolution QR with Error Correction Level 'H'
     QRCode.toDataURL(qrToken, {
       errorCorrectionLevel: "H",
       margin: 2,
-      width: 280,
+      width: 320,
       color: {
-        dark: "#0F172A",
+        dark: "#1E0A3C",
         light: "#FFFFFF",
       },
     })
@@ -45,153 +57,179 @@ export default function QrPassCard({
   }, [qrToken]);
 
   const handleShare = () => {
-    if (navigator.share) {
+    if (typeof navigator !== "undefined" && navigator.share) {
       navigator.share({
         title: `Entry Pass: ${eventName}`,
         text: `Here is my verified GetMyShow pass for ${eventName}!`,
         url: window.location.href,
       });
-    } else {
+    } else if (typeof navigator !== "undefined") {
       navigator.clipboard.writeText(window.location.href);
       alert("Ticket pass link copied to clipboard!");
     }
   };
 
+  const handlePrint = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
   return (
     <div className="max-w-md mx-auto space-y-6">
-      {/* Success Badge */}
-      <div className="text-center space-y-1">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">
-          <CheckCircle2 className="w-4 h-4" />
-          <span>Pass Confirmed & Verified</span>
+      {/* Success Confirmation Pill Banner */}
+      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-4 flex items-center gap-3.5">
+        <div className="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shrink-0">
+          <CheckCircle size={22} weight="fill" />
         </div>
-        <p className="text-xs text-text-dim">Show this QR pass at the entrance gate</p>
+        <div className="text-xs">
+          <h4 className="font-bold text-emerald-950 text-sm">Pass Confirmed & Active!</h4>
+          <p className="text-emerald-800 mt-0.5">
+            Cryptographically signed HMAC pass ready for gate entry.
+          </p>
+        </div>
       </div>
 
-      {/* 35mm Scalloped Cinema Pass Card */}
-      <div
-        id="ticket-pass-element"
-        className="ticket-scallop-card bg-surface-card border border-surface-border rounded-ticket shadow-2xl relative overflow-hidden"
-      >
-        <div className="ticket-notch-left" />
-        <div className="ticket-notch-right" />
+      {/* Pillow-Soft Container holding 35mm Cinema Pass */}
+      <div className="bg-white rounded-[40px] border border-[#DBDAE3] shadow-card overflow-hidden relative p-6 sm:p-7 space-y-6">
+        {/* Scalloped Pass Container */}
+        <div className="ticket-scallop-card bg-[#F8F7FA] border border-[#DBDAE3] rounded-3xl overflow-hidden relative">
+          <div className="ticket-notch-left" />
+          <div className="ticket-notch-right" />
 
-        {/* Pass Header */}
-        <div className="bg-brand-indigo px-6 py-4 flex items-center justify-between text-white">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold tracking-tight text-base">GetMyShow</span>
-            <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-semibold uppercase">
-              Gate Pass
+          {/* Top Brand Header */}
+          <div className="p-4 bg-white border-b border-[#DBDAE3] flex items-center justify-between">
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/brand/logos/wordmark-tilted-black-text-transparent.svg"
+                alt="GetMyShow"
+                width={120}
+                height={32}
+                className="h-7 w-auto object-contain"
+              />
+            </Link>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-600 text-white">
+              Official Admit
             </span>
           </div>
-          <span className="font-mono text-xs font-bold tracking-wider opacity-90">
-            {ticketNumber}
-          </span>
-        </div>
 
-        {/* Event Meta Body */}
-        <div className="p-6 space-y-4">
-          <div>
-            <span className="text-[10px] font-bold text-brand-saffron uppercase tracking-wider">
-              {quantity} Pass(es) Confirmed
-            </span>
-            <h2 className="text-xl font-extrabold text-white mt-0.5 line-clamp-1">{eventName}</h2>
-          </div>
-
-          <div className="space-y-1.5 text-xs text-text-muted">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-3.5 h-3.5 text-brand-indigo shrink-0" />
-              <span>{formatDateIST(eventDate)}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-3.5 h-3.5 text-brand-saffron shrink-0" />
-              <span className="line-clamp-1">{venue}</span>
-            </div>
-          </div>
-
-          {/* Attendee Details Grid */}
-          <div className="pt-3 border-t border-surface-border/70 grid grid-cols-2 gap-2 text-xs">
+          {/* Event Information */}
+          <div className="p-5 space-y-4">
             <div>
-              <span className="text-[10px] text-text-dim uppercase tracking-wider block">Attendee</span>
-              <span className="font-bold text-white">{buyerName}</span>
+              <span className="text-[10px] font-bold text-[#6F7287] uppercase tracking-wider block">
+                Event
+              </span>
+              <h2 className="text-base font-extrabold text-[#1E0A3C] mt-0.5 leading-snug">
+                {eventName}
+              </h2>
             </div>
-            <div className="text-right">
-              <span className="text-[10px] text-text-dim uppercase tracking-wider block">Amount Paid</span>
-              <span className="font-mono font-bold text-emerald-400">{formatINR(amountPaid)}</span>
+
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <span className="text-[10px] font-bold text-[#6F7287] uppercase tracking-wider block">
+                  Date
+                </span>
+                <p className="font-semibold text-[#1E0A3C] mt-0.5 flex items-center gap-1">
+                  <CalendarBlank size={14} weight="bold" className="text-[#3659E3]" />
+                  <span>{formatDateIST(eventDate)}</span>
+                </p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-[#6F7287] uppercase tracking-wider block">
+                  Passes
+                </span>
+                <p className="font-mono font-bold text-[#1E0A3C] mt-0.5 flex items-center gap-1">
+                  <Ticket size={14} weight="bold" className="text-[#F05537]" />
+                  <span>{quantity} Person{quantity > 1 ? "s" : ""}</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="text-xs">
+              <span className="text-[10px] font-bold text-[#6F7287] uppercase tracking-wider block">
+                Venue
+              </span>
+              <p className="font-medium text-[#39364F] mt-0.5 flex items-center gap-1">
+                <MapPinLine size={14} className="text-[#F05537]" />
+                <span>{venue}</span>
+              </p>
+            </div>
+
+            <div className="pt-2 border-t border-[#DBDAE3] flex items-center justify-between text-xs">
+              <div>
+                <span className="text-[10px] text-[#6F7287] block font-medium">Attendee</span>
+                <span className="font-bold text-[#1E0A3C]">{buyerName}</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-[#6F7287] block font-medium">Pass ID</span>
+                <span className="font-mono font-bold text-[#3659E3]">{ticketNumber}</span>
+              </div>
             </div>
           </div>
 
           {/* Perforation Line */}
-          <div className="relative py-2">
-            <div className="border-t-2 border-dashed border-slate-700/80 w-full" />
-          </div>
+          <div className="ticket-perforation my-1" />
 
-          {/* High-Contrast QR Code Stub */}
-          <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-white text-slate-900 shadow-inner">
-            {qrDataUrl ? (
-              <Image
-                src={qrDataUrl}
-                alt="Gate QR Code"
-                width={200}
-                height={200}
-                className="w-48 h-48 object-contain"
-                priority
-              />
-            ) : (
-              <div className="w-48 h-48 flex items-center justify-center text-xs text-slate-400 animate-pulse">
-                Generating Secure Pass...
-              </div>
-            )}
-            <span className="mt-2 font-mono text-[11px] font-bold text-slate-600 tracking-wider">
-              {qrToken}
-            </span>
-          </div>
+          {/* QR Stub & Quiet Zone */}
+          <div className="p-6 bg-white flex flex-col items-center justify-center space-y-3">
+            <div className="p-3 bg-white border border-[#DBDAE3] rounded-2xl shadow-xs">
+              {qrDataUrl ? (
+                <img
+                  src={qrDataUrl}
+                  alt={`QR Code Pass for ${ticketNumber}`}
+                  className="w-48 h-48 rounded-lg"
+                />
+              ) : (
+                <div className="w-48 h-48 bg-[#F8F7FA] animate-pulse rounded-lg flex items-center justify-center text-xs text-[#6F7287]">
+                  Generating Secure QR...
+                </div>
+              )}
+            </div>
 
-          {/* Hyperlocal Sponsor Ad Banner (Add-On #2) */}
-          <div className="p-3 rounded-button bg-surface-elevated border border-surface-border/80 flex items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-brand-saffron/20 flex items-center justify-center text-brand-saffron font-bold text-xs shrink-0">
-                15%
+            <div className="text-center space-y-1">
+              <span className="font-mono text-xs font-bold text-[#1E0A3C] tracking-widest block">
+                {qrToken.slice(0, 24)}...
+              </span>
+              <p className="text-[11px] text-[#6F7287] flex items-center justify-center gap-1">
+                <ShieldCheck size={14} weight="fill" className="text-emerald-600" />
+                <span>Show this QR at gate entrance for instant scan</span>
+              </p>
+            </div>
+
+            {/* Hyperlocal Local Sponsor Ad Banner */}
+            <div className="w-full mt-3 p-3 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-[#F97316] text-white flex items-center justify-center shrink-0">
+                <Tag size={16} weight="fill" />
               </div>
-              <div>
-                <p className="font-bold text-white">Cafe Royale Sasaram</p>
-                <p className="text-[10px] text-text-muted">Show this pass for 15% OFF your food bill</p>
+              <div className="text-[11px] leading-tight flex-1">
+                <span className="font-bold text-amber-950 block">Exclusive Event Partner Offer:</span>
+                <span className="text-amber-800">Flat 15% off at Maurya Royal Cafe, Sasaram on showing this pass!</span>
               </div>
             </div>
-            <span className="text-[10px] font-bold text-brand-saffron bg-brand-saffron/10 px-2 py-1 rounded">
-              Partner Offer
-            </span>
           </div>
         </div>
 
-        {/* Card Footer */}
-        <div className="bg-surface-elevated/80 px-6 py-2.5 border-t border-surface-border flex items-center justify-between text-[11px] text-text-dim">
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-brand-indigo" />
-            <span>Cryptographic HMAC Verified</span>
-          </div>
-          <span>Sasaram, Bihar</span>
-        </div>
-      </div>
+        {/* Action Suite Buttons */}
+        <div className="grid grid-cols-2 gap-3 pt-2">
+          <button
+            type="button"
+            onClick={handleShare}
+            className="py-3 px-4 rounded-[360px] bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95"
+          >
+            <WhatsappLogo size={16} weight="fill" />
+            <span>Share Ticket</span>
+          </button>
 
-      {/* Action Buttons */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => window.print()}
-          className="flex-1 py-3 rounded-button font-bold text-xs bg-surface-card hover:bg-surface-elevated border border-surface-border text-white transition flex items-center justify-center gap-2"
-        >
-          <Download className="w-4 h-4 text-brand-indigo" />
-          <span>Save Pass</span>
-        </button>
-        <button
-          onClick={handleShare}
-          className="flex-1 py-3 rounded-button font-bold text-xs bg-brand-indigo hover:bg-brand-indigo-dark text-white shadow-glow transition flex items-center justify-center gap-2"
-        >
-          <Share2 className="w-4 h-4" />
-          <span>Share WhatsApp</span>
-        </button>
+          <button
+            type="button"
+            onClick={handlePrint}
+            className="py-3 px-4 rounded-[360px] border border-[#DBDAE3] hover:border-[#39364F] text-[#39364F] hover:text-[#1E0A3C] text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 bg-white"
+          >
+            <Printer size={16} weight="bold" />
+            <span>Save / Print</span>
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-

@@ -22,6 +22,7 @@ dist/
 .env.test.local
 .env.production.local
 *.env
+.mcp.json
 githubPAT.md
 *PAT*
 

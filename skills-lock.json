@@ -1,0 +1,1013 @@
+{
+  "version": 1,
+  "skills": {
+    "academy-guide": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/academy-guide/SKILL.md",
+      "computedHash": "3850fdb589a7a5ba8c3fc5610b43751fef339ba8569a106e316a3b199f6426bc"
+    },
+    "access-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/identity/access-review/SKILL.md",
+      "computedHash": "ff623c5351fa158301d18d20f4b198817c7f8974971d12371243e52ba9fc925b"
+    },
+    "agent-md-refactor": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/agent-md-refactor/SKILL.md",
+      "computedHash": "11d1ffbb2d9f180d63dabfb0b6c63a4632b4c0e2e6be1660c7651cef0f3f1c07"
+    },
+    "agent-security": {
+      "source": "olanokhin/agent-security-skill",
+      "sourceType": "github",
+      "skillPath": "skills/agent-security/SKILL.md",
+      "computedHash": "0bfd8682f7d96ae2c82252c65f571e554bc18848c7fe86ced3182de566a84333"
+    },
+    "agent-security-audit": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-security-skills/skills/agent-security-audit/SKILL.md",
+      "computedHash": "c465ace3d25f583d17b6f25eec496d50603d88c1be1313bfc6bd8ad125ad7cd9"
+    },
+    "agentic-ai-risk-assess": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-security-skills/skills/agentic-ai-risk-assess/SKILL.md",
+      "computedHash": "4ee5a6e00130d949804efcdf20fda216f99d2ede6896a336ef487df22ff4ddbe"
+    },
+    "agentic-top-10": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/ai-security/agentic-top-10/SKILL.md",
+      "computedHash": "3747238882285d44dcec46190593859d6d99f82fc40471d93825cbe75d7d0ced"
+    },
+    "ai-data-privacy": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/ai-security/ai-data-privacy/SKILL.md",
+      "computedHash": "389da3c8bbced130e4bed0a6506138b19b0fcdbb919acbb666c85c01c4e5f791"
+    },
+    "ai-security-verification": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-security-skills/skills/ai-security-verification/SKILL.md",
+      "computedHash": "67d528ef178102fcf242c06e3a4d1dd05c203e79c382bea818553bd6f37d835a"
+    },
+    "alert-triage": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/secops/alert-triage/SKILL.md",
+      "computedHash": "33e0c78a7c576bc4d82f32703186e3d63333a803318641500f35ddaed03397fa"
+    },
+    "algorithmic-art": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/algorithmic-art/SKILL.md",
+      "computedHash": "987b24aa98171a0d3690420173b2cdb6eaafd57981ed716b5d50371affa82ea3"
+    },
+    "api-design": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/api-design/SKILL.md",
+      "computedHash": "b47443481e7333ebcbcc052efc7fa9d6a653f5f641c0d57601720730b891abd1"
+    },
+    "api-security": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/appsec/api-security/SKILL.md",
+      "computedHash": "c42875f190cd0c700bca33db7d78b56fee6fa348dd8b9db88f4659fbd445ef02"
+    },
+    "api-security-review": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/api-security-review/SKILL.md",
+      "computedHash": "fac03deef4e335dcae09bd9b7687489881261e8abdc6cbcb6e160cb81e571fda"
+    },
+    "architecture-designer": {
+      "source": "Jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/architecture-designer/SKILL.md",
+      "computedHash": "15ba13db2799f0ed2545e26c373bfc5fea5892a3bb1311a71bacb2f3864a2ad5"
+    },
+    "architecture-diagram": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/architecture-diagram/SKILL.md",
+      "computedHash": "882b5c493dd2445770294fae14ed82b29f407c5b75f135d3cad8e0b29d152375"
+    },
+    "aws-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/cloud/aws-review/SKILL.md",
+      "computedHash": "1472ac277ea4e53830318201e61b77df52cb322f0f38a26e10708115172417b4"
+    },
+    "azure-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/cloud/azure-review/SKILL.md",
+      "computedHash": "272678889fbdfe2b14657161ad847ed8f228b00ce33529a248f3459aa4d37403"
+    },
+    "backend-to-frontend-handoff-docs": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/backend-to-frontend-handoff-docs/SKILL.md",
+      "computedHash": "7c43829a6f1731fca5bd4f4341254016fff31b4130c3208b2e9f0dce2660283d"
+    },
+    "banner-design": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/banner-design/SKILL.md",
+      "computedHash": "0645bfc33632c7b332e649e35738ea807e1571436289cdaf86bebe6660c693ec"
+    },
+    "baseline-ui": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/baseline-ui/SKILL.md",
+      "computedHash": "016ad266e4e3bfd058096bb032ae890b09973267a547048414a371f5b1b266de"
+    },
+    "blob-store": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/blob-store/SKILL.md",
+      "computedHash": "4d5b611d2344d4c92c41eb45584aeb8bb076e52c8218d44fd7191c7c4cf34c58"
+    },
+    "brand": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/brand/SKILL.md",
+      "computedHash": "105287ad08d5baa5948522df45ba6d291b5ccfacc4b5a8ae3282b1e92b412496"
+    },
+    "brand-guidelines": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/brand-guidelines/SKILL.md",
+      "computedHash": "c82f0b24cdcc7e2693a963d30c810558b7bb89ed84508b2328228d21256ef865"
+    },
+    "c4-architecture": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/c4-architecture/SKILL.md",
+      "computedHash": "9192b5d6be529478a70d1a73f3d4ce83db12c2052c4e6df4accd445f21e906d4"
+    },
+    "caching": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/caching/SKILL.md",
+      "computedHash": "579aff5b6cfc67ed87a8412b3b7b0df66fbb6bc3f3da7d871f352582e92cb6a4"
+    },
+    "canvas-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/canvas-design/SKILL.md",
+      "computedHash": "4e8bbc31d3b159efdd32d31a63ba8cd5a44d84911e924c1f2c709c50cbcdd0ec"
+    },
+    "claude-api": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/claude-api/SKILL.md",
+      "computedHash": "148a06f190cb71885f74eb401aa732d1eb7bc56b0d94517d526380e043298f8b"
+    },
+    "code-review-security": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/code-review-security/SKILL.md",
+      "computedHash": "1d4ca3f0c384b938faaef2493cf0da2aaa011f9b522905373d5294d11bf41db8"
+    },
+    "codeguard": {
+      "source": "cosai-oasis/project-codeguard",
+      "sourceType": "github",
+      "skillPath": "skills/codeguard/SKILL.md",
+      "computedHash": "a4b1c5b8e9ebfd64160b7ab55cbad9ea5a4bab8f6ee4071ab55675431c98170d"
+    },
+    "codex": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/codex/SKILL.md",
+      "computedHash": "36d06fc81796999e18ca611c03ff7787c618a7ea744761093995962e147ccdf7"
+    },
+    "command-creator": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/command-creator/SKILL.md",
+      "computedHash": "0808dd1c7ddc68f07c072e090d1864decda125ce6dbdfc5122e6477eb1428fb8"
+    },
+    "commit-work": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/commit-work/SKILL.md",
+      "computedHash": "c9362cbf8d20af2fba1789a57c27e94cf063c0cbe659f40898d31d2afa3b1cb8"
+    },
+    "component-canvas": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/component-canvas/SKILL.md",
+      "computedHash": "cf9589f0b82135b17a6ca0952b6247f949654bb029a01185fe7c95ed1c73a47a"
+    },
+    "consistency-coordination": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/consistency-coordination/SKILL.md",
+      "computedHash": "aec1f68dd6d04468b5e40deaa9134aa54c264f894b460fe2732ffd2159a94dc5"
+    },
+    "container-security": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/cloud/container-security/SKILL.md",
+      "computedHash": "95b8d8655dbd179ca52d1cb72ee98c4566af15e6d925be4579d66eb2d7957236"
+    },
+    "containment": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/incident-response/containment/SKILL.md",
+      "computedHash": "9585216ca2d452381cf24129fb3ac975f96542e2cc3c1a93b5ef9fe035becdbc"
+    },
+    "content-delivery": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/content-delivery/SKILL.md",
+      "computedHash": "2173847e0956ff121e15975aa5f5da63745b8bf66f2f65c211848f47bfe10678"
+    },
+    "crafting-effective-readmes": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/crafting-effective-readmes/SKILL.md",
+      "computedHash": "cb11facecbb4a15f7ca6cfac2e740ac66798676c246c057879a71babb27c9a4f"
+    },
+    "create-canvas": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/create-canvas/SKILL.md",
+      "computedHash": "0a5fd0e02fd787f199ab45b87b87f6109af9a388386a960d545ec0c8ad457d24"
+    },
+    "create-design-md": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/create-design-md/SKILL.md",
+      "computedHash": "67691b3fe0bea438415652a8743c60ae77f41a70cdaff893fb50cc2da43e2a59"
+    },
+    "cve-triage": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/vuln-management/cve-triage/SKILL.md",
+      "computedHash": "ac3742f98254ae8741332691ab571e27e95f199935c1d0cb71b09a10f4d4c446"
+    },
+    "daily-meeting-update": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/daily-meeting-update/SKILL.md",
+      "computedHash": "a01be54c92bdfd8aa40ce77e7ff168531fe43543319850b8dc5824fd568fc68d"
+    },
+    "dast-config": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/devsecops/dast-config/SKILL.md",
+      "computedHash": "743d73584940747807e591062b69bc672c15417783809e399002157274e3dfaf"
+    },
+    "data-storage": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-storage/SKILL.md",
+      "computedHash": "ba3a315c10a028d2101b045d8ea2099a91b793b0a5b87331d907f1f3f0d0b51c"
+    },
+    "database-schema-designer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/database-schema-designer/SKILL.md",
+      "computedHash": "f23c909d45c6207e974dbce0db4c648de13d586abb37057cfec34d62f25bb526"
+    },
+    "datadog-cli": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/datadog-cli/SKILL.md",
+      "computedHash": "11b87a7b2610755693e0d21aa626c96ec536daa869c6f178ccfb170bfba404d6"
+    },
+    "dependency-scanning": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/appsec/dependency-scanning/SKILL.md",
+      "computedHash": "ff7e8b5697409ffa26e32b501447ffb6f2b0142b2563e9c12d9ce5ee539c57fe"
+    },
+    "dependency-updater": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/dependency-updater/SKILL.md",
+      "computedHash": "3fc648ed28dfce104c7749318489af2c388de99dde2d85c145a4e028d994db41"
+    },
+    "design": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/design/SKILL.md",
+      "computedHash": "d1cbc4bc8f0bd4273fae84014c6576615b13508743cd9c5240d721dc5143dc83"
+    },
+    "design-system": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/design-system/SKILL.md",
+      "computedHash": "a8d1f1cd0f55979a872a2ce9717d3c33df23b0c378738b8d6adb574bfb266c77"
+    },
+    "design-system-starter": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/design-system-starter/SKILL.md",
+      "computedHash": "e6df3b8d53a8333f44db1da91a10570488e46c3aea899476875aad894858a3b0"
+    },
+    "detection-engineering": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/secops/detection-engineering/SKILL.md",
+      "computedHash": "90ce817c76225761d0c65f7d3fc475f6bb49aa2325ed114853f428e302909f3a"
+    },
+    "difficult-workplace-conversations": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/difficult-workplace-conversations/SKILL.md",
+      "computedHash": "e37c79cdcb3569a3f2c2eb875d993c495c6313165036d75b9b2fa5f117d802b2"
+    },
+    "discernment-nudge": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/discernment-nudge/SKILL.md",
+      "computedHash": "80db132d056a73d1ff7b209c4fba8e414285ff20ccc2d3e9e6803e6283b3b931"
+    },
+    "distributed-logging": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/distributed-logging/SKILL.md",
+      "computedHash": "453d9bbb438418f6fcb7f60462aa7b37551fd7bbf749432cd9ee10af21d5e1c7"
+    },
+    "distributed-search": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/distributed-search/SKILL.md",
+      "computedHash": "b3a9ca270d6d68c80f6664e53d7260b7cb77cd404b0f9159d5526775ad501680"
+    },
+    "dns": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/dns/SKILL.md",
+      "computedHash": "8fd3293d53077bb5fb01a95ef945d69928c42b5abfc8f2b91ea0ea0ed1f9f13e"
+    },
+    "dns-security": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/network/dns-security/SKILL.md",
+      "computedHash": "ce4ae58b55c033827362e06e2a8473c41fd9214db1aff2a344e132ec6db33659"
+    },
+    "doc-coauthoring": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/doc-coauthoring/SKILL.md",
+      "computedHash": "62cd7744438ee2aecc986c520bb603988a78ff6aaaf70a471bf4584fe0b78dae"
+    },
+    "docx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/docx/SKILL.md",
+      "computedHash": "3b8f8cf1ca7a427607c78312655e95e21b5f8f2b06a1aad4dc5554cc90eb095c"
+    },
+    "domain-name-brainstormer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/domain-name-brainstormer/SKILL.md",
+      "computedHash": "d8cdaa1279f4447fdd766bed9a566346ff2e72db822b4b3695fe033701903af6"
+    },
+    "draw-io": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/draw-io/SKILL.md",
+      "computedHash": "f7318f5fd5207c3386eea323fe83398a6f126bb662b373e168566dc39470cb01"
+    },
+    "excalidraw": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/excalidraw/SKILL.md",
+      "computedHash": "f7d76efd72bebb97e2a398cd7fe2924927fcdab24d586bda2fcc867396b740c0"
+    },
+    "feedback-mastery": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/feedback-mastery/SKILL.md",
+      "computedHash": "29e2af48dc587059f389287ae51ba0ecd7b9c853223ddb9f679834edd91e5cae"
+    },
+    "firewall-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/network/firewall-review/SKILL.md",
+      "computedHash": "979e47c6a365709cc5796bcc0a14179fed5949fc00be0ca0179876f4df76bdb7"
+    },
+    "fixing-accessibility": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fixing-accessibility/SKILL.md",
+      "computedHash": "f8ddcb0a8c7b8728105eab18e17223e41d74fb8649becba58a6deb90c6a5ce8d"
+    },
+    "fixing-metadata": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fixing-metadata/SKILL.md",
+      "computedHash": "10047222b01c2c9b6e904ef90079880d9dbc09de3241df7f311b238dbcb7869a"
+    },
+    "fixing-motion-performance": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fixing-motion-performance/SKILL.md",
+      "computedHash": "c1aca76fe18e8594f401cf78e5e76be24f182ce63167a398bdd4458f2a07639f"
+    },
+    "forensics-checklist": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/incident-response/forensics-checklist/SKILL.md",
+      "computedHash": "66fa9aacbe13eb8417a60c49efcb64bfbe5aee4802bd1cfe5582af1ceed439e5"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "106acf230014cbb43ca34e6410371321b56ca742f9ee0442e8ec05bf02eb0384"
+    },
+    "frontend-to-backend-requirements": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-to-backend-requirements/SKILL.md",
+      "computedHash": "8c887221cfcf9f4cf25a8acc72798e911e0ce1c952f99fe75ed5b2554b48ea40"
+    },
+    "game-changing-features": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/game-changing-features/SKILL.md",
+      "computedHash": "957248a5654c01fe82186b4b31199b0c618a9375c1d0024fd66568afbe12c48f"
+    },
+    "gcp-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/cloud/gcp-review/SKILL.md",
+      "computedHash": "8c6e0b616c316998defef7893f65741e717e7062841ac274241695e4985245c3"
+    },
+    "gemini": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/gemini/SKILL.md",
+      "computedHash": "feed23504518537af26b18b25ea80ea1ceb6d06084b1deeb3784d63ed151e6b4"
+    },
+    "gepetto": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/gepetto/SKILL.md",
+      "computedHash": "76fa67fd2eac92fd8d4d22be2adaff981791f2009248b1813db9a8e0ab245dd8"
+    },
+    "hipaa-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/compliance/hipaa-review/SKILL.md",
+      "computedHash": "d6bf083211a9342af2d4e175dac741585dc097229e4b58a8db78cdb271e54103"
+    },
+    "humanizer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/humanizer/SKILL.md",
+      "computedHash": "c948e831d5fdfbe2e1fbbba1ebf8ab410a8f077ba529ddd522fd9ae40e6cc653"
+    },
+    "iac-security": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/cloud/iac-security/SKILL.md",
+      "computedHash": "9415cc3c6d4cc2ed3be05e9dce9c87ac65b7b1606793ad40c92381f4042addd2"
+    },
+    "iac-security-review": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/iac-security-review/SKILL.md",
+      "computedHash": "acc11b881a69c81ad8c08eb7e67cf998ecda57bf6077a97591744328f191e6fb"
+    },
+    "iam-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/identity/iam-review/SKILL.md",
+      "computedHash": "69ef8f459291c79b229e7b1b049edb82a020efcd625200c0b5d7e9a9f26c6c8b"
+    },
+    "improve-ui": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/improve-ui/SKILL.md",
+      "computedHash": "31c09b79a1c196adccb1637a225cef54f537da87430fda0ba309ef83e78f10e5"
+    },
+    "internal-comms": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/internal-comms/SKILL.md",
+      "computedHash": "cf3dba93fd569d7380505db211f89a467869c1a2ef301941148d06f33ed17332"
+    },
+    "ir-playbook": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/incident-response/ir-playbook/SKILL.md",
+      "computedHash": "5857d74f907c5e048c228e8d39b13426624f8dfda48f27ae94c368b0ea613afd"
+    },
+    "iso27001-gap": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/compliance/iso27001-gap/SKILL.md",
+      "computedHash": "deef89cc01909e1d0028eb413742a7756a68369386c720eb68cd8a3c979e561c"
+    },
+    "jira": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/jira/SKILL.md",
+      "computedHash": "8977d5956e0254ddef59889758353c28f919853ddb13c3b34be018a799154c4c"
+    },
+    "lesson-learned": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/lesson-learned/SKILL.md",
+      "computedHash": "58e2a4062f3f113177658ef822dfc52ca10997a41b71098a6ae809b8f5ab316c"
+    },
+    "llm-risk-assess": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-security-skills/skills/llm-risk-assess/SKILL.md",
+      "computedHash": "c1380a619302e71bf5d6e33a88706fa90b1030e2957eaee31d8840aa07c3f111"
+    },
+    "llm-top-10": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/ai-security/llm-top-10/SKILL.md",
+      "computedHash": "6310752ab2a4cc619e05af71fb9794d104ddcf16d166a1f83060c6e3eb2d48da"
+    },
+    "load-balancing": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/load-balancing/SKILL.md",
+      "computedHash": "e0c0da2a6220d877da58250a032fda009ba5f9f845ad66f4b2a6070864988f7c"
+    },
+    "log-analysis": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/secops/log-analysis/SKILL.md",
+      "computedHash": "8b51e6998b770f04edef99d1772fb18ed383cf3b3ec3c09a2f8d2728249053a2"
+    },
+    "marp-slide": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/marp-slide/SKILL.md",
+      "computedHash": "73f1da9e6938b404525a6e33fb19033dcda3358a79d5b9aeecde73a13c049831"
+    },
+    "mcp-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/mcp-builder/SKILL.md",
+      "computedHash": "6498a736a8dc5c645047c8a875b8ea7417e2ad97146f005200e50d20a9337ada"
+    },
+    "mcp-server-review": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-security-skills/skills/mcp-server-review/SKILL.md",
+      "computedHash": "6b54fe771d2ab6b8f603d8da9f5d7f61c38911e6f147d3a158d84fdcd663bfa3"
+    },
+    "meme-factory": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/meme-factory/SKILL.md",
+      "computedHash": "a746b66da0219bd23de2a91ed5a21d2e951b92a56d89dd0193866950e927589f"
+    },
+    "mermaid-diagrams": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/mermaid-diagrams/SKILL.md",
+      "computedHash": "b6c206a3cab0333a1d3d3cf27114099d0d5f25eb07d86c8f12472b7aa7d59a4c"
+    },
+    "messaging-streaming": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/messaging-streaming/SKILL.md",
+      "computedHash": "44962b3def582a404f817688915d666d7b5a138c756c25f1dd4a414557fdaa9e"
+    },
+    "mobile-code-review": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/mobile-code-review/SKILL.md",
+      "computedHash": "af4870bf9ca85c657bf7b45a6bbeaa9e3515a54af5f05054928714f147a38968"
+    },
+    "model-supply-chain": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/ai-security/model-supply-chain/SKILL.md",
+      "computedHash": "f5816ee2348a54654ac0f14478d19ee99a94fe7361df5b6352004e648e7af119"
+    },
+    "mui": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/mui/SKILL.md",
+      "computedHash": "363bda5252637c682d30907de02efe538abc42843d1d20624d1e5e35823e996c"
+    },
+    "multi-agentic-threat-model": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/multi-agentic-threat-model/SKILL.md",
+      "computedHash": "f93b4aec28e678ccd7e7633c9e81bb4d20b82d2fca480260fff39cf205a58716"
+    },
+    "naming-analyzer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/naming-analyzer/SKILL.md",
+      "computedHash": "0200d6f4b2edfe342c255c49f9c46b0937c079899f3c5255c2a624686777ca51"
+    },
+    "nist-csf-assessment": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/compliance/nist-csf-assessment/SKILL.md",
+      "computedHash": "76e3217d57ecce639687d190dc54852ac8be2c1602747750ee5cde0c854c934f"
+    },
+    "observability": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/observability/SKILL.md",
+      "computedHash": "464c55a0d0e23131000c1b5ac44682f108b79f95e26ad35b6c38254bbe33fdd6"
+    },
+    "openapi-to-typescript": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/openapi-to-typescript/SKILL.md",
+      "computedHash": "703ab2a30b2113c9c18bf7982905c0b0f711f7476128ce30aa086585476af277"
+    },
+    "owasp-top-10-web": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/appsec/owasp-top-10-web/SKILL.md",
+      "computedHash": "dd4daffd73131d76699541fe3239c10b254722688b06cdbdcba6220fd1cde7b1"
+    },
+    "patch-prioritization": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/vuln-management/patch-prioritization/SKILL.md",
+      "computedHash": "ddf9789707cc5bfe1afc3d52df47b70f9650452015c4d8644e4661dbeaf033e9"
+    },
+    "pci-dss-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/compliance/pci-dss-review/SKILL.md",
+      "computedHash": "eb6b8925b8808c4c13ea67e95b89b90966197680173998f0a0f9ec73a05d9969"
+    },
+    "pdf": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pdf/SKILL.md",
+      "computedHash": "37226d4220d844377e6b2a386c51a011df4cd130855ff0b80bcc22f9c28abd57"
+    },
+    "perplexity": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/perplexity/SKILL.md",
+      "computedHash": "1d32fbce001646737afa8208adaae6e8b1b6c74bd85eae492a9b89901e8c1668"
+    },
+    "pipeline-security": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/devsecops/pipeline-security/SKILL.md",
+      "computedHash": "bd738557b90003862bc64d39d4954ad725c52d3a1eaf9f8e7a86fe9c59f6bd53"
+    },
+    "plugin-forge": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/plugin-forge/SKILL.md",
+      "computedHash": "6b8eaac56d39fad5f79a2495b506edbebf46d23d9b596aafc2428566c8f76bd7"
+    },
+    "post-incident-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/incident-response/post-incident-review/SKILL.md",
+      "computedHash": "6b9ead930e642ec4b892d46c8c4c2c9c0f7d2f8ed0d4a1e9197a54301ba61e61"
+    },
+    "pptx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pptx/SKILL.md",
+      "computedHash": "d6198c2f85d5d1c737d451b98ebacc3bbc187730c9a79252aa738ddb8d818455"
+    },
+    "prd-securability-enhancement": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/prd-securability-enhancement/SKILL.md",
+      "computedHash": "f2b3acf0777f3a91c1e6b7e57087839fbf8942e54879fcbba1b4565f78ce367f"
+    },
+    "privileged-access": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/identity/privileged-access/SKILL.md",
+      "computedHash": "5975850cf21a50cae35843b5e4fe2c3ef64086ece9cd5fff6b03e8bfa719a58b"
+    },
+    "professional-communication": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/professional-communication/SKILL.md",
+      "computedHash": "80bc71b76f37e46ae5628205c004a02c696d808ea63539ef7260c92222e1de98"
+    },
+    "prompt-injection": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/ai-security/prompt-injection/SKILL.md",
+      "computedHash": "631751e6c02a7fceace570af27b0fac7ea8a21828aa3c794674109f1f6d7f7bc"
+    },
+    "prompt-injection-test": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-security-skills/skills/prompt-injection-test/SKILL.md",
+      "computedHash": "88ca5b6c1882bd42c768558aabef7aefe3779c182f8e1d01b2f18d00082029a5"
+    },
+    "qa-test-planner": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/qa-test-planner/SKILL.md",
+      "computedHash": "8ee0d30acc14528eff0cf0b953f5adb6185a8ed65a72a489ae9297ddfee000b0"
+    },
+    "rbac-design": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/identity/rbac-design/SKILL.md",
+      "computedHash": "a2ca0f94b2ebdcff64fc5d161f81db58711fcd06cc248df9ea51cea3acc72a6d"
+    },
+    "react-dev": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/react-dev/SKILL.md",
+      "computedHash": "da3caa5f2bfd7274fad3f08524ff3ad4f427978773c3e77e7b14e44aaac31d78"
+    },
+    "react-useeffect": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/react-useeffect/SKILL.md",
+      "computedHash": "1fdf524f8335afac6f44d3460d6d20e71db9c1d14643e4a31ea17d6463504447"
+    },
+    "reducing-entropy": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/reducing-entropy/SKILL.md",
+      "computedHash": "9e43d852830ac1fac136bb6a961dc843be4b3c977157b44432eb599337270ac3"
+    },
+    "requirements-clarity": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/requirements-clarity/SKILL.md",
+      "computedHash": "a23371d1cd5d8cfdd62af76ce0cd462095d35dfd612587ed30528b4a54105771"
+    },
+    "requirements-scoping": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/requirements-scoping/SKILL.md",
+      "computedHash": "001330d03744fbfdd8d2a7e0650c685edacffb462be0d199af5ec7e77851a09c"
+    },
+    "resilience-failure": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/resilience-failure/SKILL.md",
+      "computedHash": "e0e26d876fcbd03149e0376fd4298df946cc68984789e1c6778d8b4b2289e66e"
+    },
+    "sast-config": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/devsecops/sast-config/SKILL.md",
+      "computedHash": "aa81404c1ff53576f17fda192ff368fadec098402a2338af5bd24ab667310d97"
+    },
+    "sbom-analysis": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/vuln-management/sbom-analysis/SKILL.md",
+      "computedHash": "fad4556b486c8cb1dc21cb56e149b6190745fc4f45cf8acb4ca5a86b4d34cf7d"
+    },
+    "sca-audit": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/sca-audit/SKILL.md",
+      "computedHash": "2653082ff85d1ff48679561dfdd548638f5b90836ee052f98f66ba4cdb26a6aa"
+    },
+    "scaling-evolution": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/scaling-evolution/SKILL.md",
+      "computedHash": "f0e570511ed6fefdbd6f63c214d744eb0550aa53c50615a217ec14963268bdfe"
+    },
+    "scanner-tuning": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/vuln-management/scanner-tuning/SKILL.md",
+      "computedHash": "8663c20575c999a4157c26442e0aceda99ebecf0858d9b47192ede95a75f487a"
+    },
+    "secrets-management": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/devsecops/secrets-management/SKILL.md",
+      "computedHash": "b3063fccd6198c506113fcdf2149992f1a045405b2c9c1d76759d2a7eca5a3d0"
+    },
+    "secrets-scan": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/secrets-scan/SKILL.md",
+      "computedHash": "a23315e493dbc8dcf31deef2effc670661a1ed58de4afd10db66269c4d6df64a"
+    },
+    "securability-engineering": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/securability-engineering/SKILL.md",
+      "computedHash": "239cfcfdb575d592888ae18685ecb4aa1262225bd8b1b3e77421f3ba4f96bfbc"
+    },
+    "securability-engineering-review": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/securability-engineering-review/SKILL.md",
+      "computedHash": "09d97983348257b9fa05ceab34013b4477db5a2549aa5802a6d415f58bbbc21a"
+    },
+    "secure-code-review": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/appsec/secure-code-review/SKILL.md",
+      "computedHash": "919f1941e9edcd0ce0f5fd5dfe39dce16290d399618defa19f3301665df12b61"
+    },
+    "security-guidance": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/security-guidance/SKILL.md",
+      "computedHash": "40ae24f8f851fee60298d840a578e0e0e2014fb3648d3010ad8abc8ecca54ec2"
+    },
+    "segmentation": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/network/segmentation/SKILL.md",
+      "computedHash": "6e7f29194d0583bfd42b58a601dc07dbb8a7eb1907618b502f05550c4a0c05f5"
+    },
+    "sequencer": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/sequencer/SKILL.md",
+      "computedHash": "6cfee914854d03e39ed8ebb2640ebdf9e09f537382558b7235ec95c5e6a1aa82"
+    },
+    "service-decomposition": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/service-decomposition/SKILL.md",
+      "computedHash": "f45af5083b5988a0c972559f006413f9227b1c0f0ad2908f728ed04f324112fc"
+    },
+    "session-handoff": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/session-handoff/SKILL.md",
+      "computedHash": "6401b3a156f4f756bb6faf54a633b3d092aea822115ef26858a8a6ce60b58a8e"
+    },
+    "sharded-counters": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/sharded-counters/SKILL.md",
+      "computedHash": "a96ad1333b5f5cd1f91a3c817bc47a0f7855631e885653f1988c434e48762ebf"
+    },
+    "ship-learn-next": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/ship-learn-next/SKILL.md",
+      "computedHash": "4df93407ee5223f5905178f134839dd0e100a5ddaba88c0e6a408dacb468d942"
+    },
+    "siem-rules": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/secops/siem-rules/SKILL.md",
+      "computedHash": "10eed8104276d942080d9467cd0c7b403a8b51f01da22ab9ca1238e4e66c592c"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "computedHash": "7e3c9cd74e9e2b4828527a857170e86310f2dab5ea8030a9043df2c7e6c88857"
+    },
+    "skill-judge": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/skill-judge/SKILL.md",
+      "computedHash": "14aa05080e7bb08f1da33a32c6e65e41ae67375f09747ab0a3432e3ffbf8506a"
+    },
+    "slack-gif-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/slack-gif-creator/SKILL.md",
+      "computedHash": "a36e1ceb3f07eb37bdc259f1bfb18e48cc0e809b2e1651cb2369286cd66b2107"
+    },
+    "slides": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/slides/SKILL.md",
+      "computedHash": "c27a4e6f6101cb45f9a717888784aba649c1c516cd1a1e9871f630ab15ad1800"
+    },
+    "soc2-gap": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/compliance/soc2-gap/SKILL.md",
+      "computedHash": "d4e52f0c3472c58851eaa27b56fc3a5913cd1cc3008dd1cdb30930ae032c7e31"
+    },
+    "system-design": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/system-design/SKILL.md",
+      "computedHash": "141a8d0e477db1ebea9be5abb8a11c6818311c21055475bccdf53104d51feee6"
+    },
+    "task-scheduling": {
+      "source": "proyecto26/system-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/task-scheduling/SKILL.md",
+      "computedHash": "9658936bb71f30523ae2bfcd4e31035db583b6773467ce3be8ad185d7f9be41b"
+    },
+    "template-skill": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "template/SKILL.md",
+      "computedHash": "daf176f2cd0030d321982d3e813fd1a794a0b4744c5a92d2931a37001bb40fb9"
+    },
+    "theme-factory": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/theme-factory/SKILL.md",
+      "computedHash": "e9ec1fe85faa729e9f3d1731cd7e4e485f98c099ccc7c1c0d198f473aa4b654a"
+    },
+    "threat-modeling": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/appsec/threat-modeling/SKILL.md",
+      "computedHash": "de023ae37c6f953c1313bb50cf72399184aa0d7d298a2d485a62e1c79a8a02eb"
+    },
+    "transitions-dev": {
+      "source": "Jakubantalik/transitions.dev",
+      "sourceType": "github",
+      "skillPath": "skills/transitions-dev/SKILL.md",
+      "computedHash": "b8f0f695498eec44440f3c00a5a0cf8dcc9e1b4d5b519665bf789cff683aa7c5"
+    },
+    "transitions-polish": {
+      "source": "Jakubantalik/transitions.dev",
+      "sourceType": "github",
+      "skillPath": "skills/transitions-polish/SKILL.md",
+      "computedHash": "e456d8cc8ef3b18ae9d1f5be41ea92b0b14abeb8cf8cf7eff2da09966b15a785"
+    },
+    "ui-skills-root": {
+      "source": "ibelick/ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ui-skills-root/SKILL.md",
+      "computedHash": "76a520772c9532b141562d2b2e659f4e6636cf04d2f2c9b9cf5828702f0ad048"
+    },
+    "ui-styling": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-styling/SKILL.md",
+      "computedHash": "fa6d85097b0c131fb8708a6e7e08aff2af12fd2966cfe0a73bd258dcac99ea5b"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "computedHash": "bf7fef75af567d1f5be7bcb98b4af1f9b38a68ad26d71b513f629896747ee190"
+    },
+    "web-artifacts-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-artifacts-builder/SKILL.md",
+      "computedHash": "fdddbe9bb720ea1aea9292ee513ec10b2a8f4912e2c343bdc246ab3febd7c9b3"
+    },
+    "web-security-review": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/web-security-review/SKILL.md",
+      "computedHash": "26e11a326ea825f8389ee554c8ce049f908e03ab3a71fae8fb949b5a849b977c"
+    },
+    "web-to-markdown": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/web-to-markdown/SKILL.md",
+      "computedHash": "673a5f2d7a2917b0cb4c9f54e8b130f56de336c1562349310555ca2b0f1e7d42"
+    },
+    "webapp-testing": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/webapp-testing/SKILL.md",
+      "computedHash": "3f14af7f5690695209c22fbf8c8d133769a86d64892602c09bb13f135e14e857"
+    },
+    "writing-clearly-and-concisely": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/writing-clearly-and-concisely/SKILL.md",
+      "computedHash": "8941c21d5127d6f7d87cefd9b5175b96c9e0dec0c20c663d68b9cb4331847d0a"
+    },
+    "xlsx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/xlsx/SKILL.md",
+      "computedHash": "cbaaabead69c5e03643f116cde6a396ad53f6da058da6eaa7bad6c4fbafe6026"
+    },
+    "your-skill-name": {
+      "source": "OWASP/secure-agent-playbook",
+      "sourceType": "github",
+      "skillPath": "template/SKILL.md",
+      "computedHash": "a7e2cbde1d7d315009fb72d8b17e1a475c8140f465e14091a460186ee7032184"
+    },
+    "zero-trust-assessment": {
+      "source": "UnitOneAI/SecuritySkills",
+      "sourceType": "github",
+      "skillPath": "skills/identity/zero-trust-assessment/SKILL.md",
+      "computedHash": "847afdc7a1fa58ab6c2bda183e6d71f222872995a60fc2b2dcfebe5b048664f2"
+    }
+  }
+}

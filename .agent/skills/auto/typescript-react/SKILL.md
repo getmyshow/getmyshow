@@ -1,6 +1,6 @@
 ---
 name: typescript-react
-description: "Typescript React for Get My Show Platform. 2 conventions."
+description: "Typescript React for getmyshow. 2 conventions."
 domain: typescript-react
 composesFrom:
   - react
@@ -12,7 +12,7 @@ enabled: true
 
 # Typescript React
 
-Auto-compiled from **2 real patterns** in **Get My Show Platform**. This skill is auto-routed to agents when working on typescript-react files.
+Auto-compiled from **2 real patterns** in **getmyshow**. This skill is auto-routed to agents when working on typescript-react files.
 
 ## 📐 Conventions & Best Practices
 

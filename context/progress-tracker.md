@@ -35,13 +35,16 @@
 
 ---
 
-## 3. Phase 3: Public Event Discovery & Detail Experience
-- [x] Build Header navigation bar with brand mark, location selector (Sasaram/Rohtas), and "List Event" CTA
-- [x] Build Homepage (`app/page.tsx`) with curated Bihar events grid
-- [x] Build Event Card component (`components/ui/EventCard.tsx`) with 35mm scalloped cinema ticket layout
-- [x] Build Single-Scroll Event Detail Page (`app/e/[slug]/page.tsx`)
+## 3. Phase 3: Public Event Discovery & Detail Experience (Eventbrite-Inspired Overhaul)
+- [x] Overhaul design tokens (`tailwind.config.ts`, `globals.css`) with Eventbrite palette (`#F8F7FA` Warm Linen, `#1E0A3C` Plum Depth, `#F05537` Ember Orange, 40px rounded pillow-cards)
+- [x] Install and configure `@phosphor-icons/react` across all UI components
+- [x] Build Header navigation bar with 100px pill search bar, Bihar city switcher, and circular Ember Orange submit button
+- [x] Build Category Circle Row (`components/discovery/CategoryCircleRow.tsx`) with 80px circles and duotone Phosphor icons
+- [x] Build Homepage (`app/page.tsx`) with full-bleed stage hero banner, floating overlay CTA card, and 4-column discovery grid
+- [x] Build Event Card component (`components/ui/EventCard.tsx`) with 40px pillow-soft corners, floating save toggle, and price badges
+- [x] Build Single-Scroll Event Detail Page (`app/e/[slug]/page.tsx` & `components/event/EventDetailView.tsx`) with 16:9 hero, verified organizer card, and sticky mobile booking bar
+- [x] Build Rich Footer (`components/ui/Footer.tsx`) with Bihar city directory, organizer links, and trust strip
 - [x] Add OpenGraph meta tags generator for WhatsApp rich link cards
-- [x] Implement Mobile Sticky Bottom Bar for instant pass booking
 
 ---
 

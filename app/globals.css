@@ -5,45 +5,77 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
+  /* Eventbrite Discovery Tokens */
+  --color-warm-linen: #F8F7FA;          /* Warm off-white canvas, never sterile */
+  --color-pure-white: #FFFFFF;          /* Pure White elevated surface */
+  --color-aubergine-ink: #39364F;       /* Structural text, dividers, icon strokes */
+  --color-plum-depth: #1E0A3C;          /* Deep titles & headlines */
+  --color-smoke: #6F7287;               /* Muted secondary descriptions & timestamps */
+  --color-soft-mist: #DBDAE3;           /* 1px hairline card borders & separators */
+  --color-cloud-veil: #EEEDF2;          /* Secondary card washes & image placeholders */
+  --color-pale-silver: #BEC0C6;         /* Secondary border on hover */
+  --color-electric-iris: #3659E3;       /* Interactive action borders, links, badges */
+  --color-ember-orange: #F05537;        /* Brand accents & search submit button */
+
+  /* Brand Core Colors (GetMyShow Hyperlocal) */
   --color-indigo: #4F46E5;
-  --color-indigo-dark: #6366F1;
+  --color-indigo-dark: #4338CA;
   --color-charcoal: #0F172A;
-  --color-saffron: #F97316;
+  --color-saffron: #F97316;              /* Sunset Saffron: Live play symbol (▶), VIP */
   --color-white: #FFFFFF;
 
-  --bg-app: #0A0D14;
-  --surface-card: #111622;
-  --surface-elevated: #182030;
-  --surface-border: #1E293B;
+  /* Surface Mapping */
+  --bg-app: #F8F7FA;                     /* Warm Linen Page Canvas */
+  --surface-card: #FFFFFF;               /* Pure White Elevated Card */
+  --surface-elevated: #F4F3F7;           /* Hover / Secondary Wash */
+  --surface-border: #DBDAE3;             /* 1px Hairline Mist */
 
-  --text-primary: #F8FAFC;
-  --text-muted: #94A3B8;
-  --text-dim: #64748B;
+  /* Typography Colors */
+  --text-primary: #1E0A3C;               /* Plum Depth Headings */
+  --text-body: #39364F;                  /* Aubergine Ink Primary Body */
+  --text-muted: #6F7287;                 /* Smoke Secondary */
+  --text-dim: #94A3B8;                   /* Dim captions */
 
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
+  /* Semantic State Colors */
+  --color-success: #10B981;              /* Gate Valid Check-In, Settled Wallet */
+  --color-warning: #F59E0B;              /* Pending T+2 */
+  --color-danger: #EF4444;               /* Already Scanned duplicate alert */
 
-  --glow-indigo: rgba(79, 70, 229, 0.25);
-  --glow-saffron: rgba(249, 115, 22, 0.25);
-  --glow-emerald: rgba(16, 185, 129, 0.25);
+  /* Subtle Modern Accents */
+  --glow-indigo: rgba(79, 70, 229, 0.16);
+  --glow-saffron: rgba(249, 115, 22, 0.16);
+  --glow-iris: rgba(54, 89, 227, 0.16);
 }
 
 body {
-  background-color: var(--bg-app);
-  color: var(--text-primary);
+  background-color: var(--color-warm-linen);
+  color: var(--color-aubergine-ink);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Authentic Scalloped Ticket Cutout Geometry */
+/* Eventbrite 40px Pillow-Soft Card */
+.pillow-card {
+  background-color: #FFFFFF;
+  border-radius: 40px;
+  border: 1px solid var(--color-soft-mist);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pillow-card:hover {
+  border-color: var(--color-pale-silver);
+  box-shadow: 0 4px 20px -2px rgba(30, 10, 60, 0.05);
+}
+
+/* Authentic Scalloped Ticket Cutout Geometry (Light Theme) */
 .ticket-scallop-card {
   position: relative;
-  background: var(--surface-card);
-  border: 1px solid var(--surface-border);
-  border-radius: 20px;
+  background: #FFFFFF;
+  border: 1px solid var(--color-soft-mist);
+  border-radius: 24px;
   overflow: hidden;
+  box-shadow: 0 4px 20px -2px rgba(30, 10, 60, 0.05);
 }
 
 .ticket-notch-left,
@@ -52,19 +84,32 @@ body {
   top: 50%;
   width: 24px;
   height: 24px;
-  background: var(--bg-app);
+  background: var(--color-warm-linen);
   border-radius: 50%;
   transform: translateY(-50%);
   z-index: 10;
+  box-shadow: inset 0 0 0 1px var(--color-soft-mist);
 }
 
 .ticket-notch-left {
   left: -12px;
-  border-right: 1px solid var(--surface-border);
 }
 
 .ticket-notch-right {
   right: -12px;
-  border-left: 1px solid var(--surface-border);
 }
 
+/* Scalloped Perforation Line */
+.ticket-perforation {
+  border-top: 2px dashed var(--color-soft-mist);
+  position: relative;
+}
+
+/* Custom Scrollbar for Horizontal Filter Pills */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

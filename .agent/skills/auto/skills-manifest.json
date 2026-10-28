@@ -1,24 +1,24 @@
 {
   "project": {
     "enabled": true,
-    "lastGenerated": "2026-10-28T11:21:41.389Z",
-    "observationCount": 448,
+    "lastGenerated": "2026-10-28T14:25:15.046Z",
+    "observationCount": 454,
     "skillCount": 0,
     "domain": "project",
     "triggerGlobs": [
       "**/*"
     ],
-    "description": "Project for Get My Show Platform. 19 gotchas, 427 conventions."
+    "description": "Project for getmyshow. 19 gotchas, 427 conventions, 1 fixes."
   },
   "typescript-react": {
     "enabled": true,
-    "lastGenerated": "2026-10-28T11:21:41.390Z",
+    "lastGenerated": "2026-10-28T14:25:15.049Z",
     "observationCount": 2,
     "skillCount": 0,
     "domain": "typescript-react",
     "triggerGlobs": [
       "**/*.tsx"
     ],
-    "description": "Typescript React for Get My Show Platform. 2 conventions."
+    "description": "Typescript React for getmyshow. 2 conventions."
   }
 }
