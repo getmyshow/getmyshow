@@ -9,6 +9,12 @@ coverage/
 # Reference Repositories
 Reference and Inspirations/
 
+# Next.js Build Output
+.next/
+out/
+build/
+dist/
+
 # Environment Variables & Secrets (CRITICAL)
 .env
 .env.local

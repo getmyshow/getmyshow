@@ -1,0 +1,70 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-indigo: #4F46E5;
+  --color-indigo-dark: #6366F1;
+  --color-charcoal: #0F172A;
+  --color-saffron: #F97316;
+  --color-white: #FFFFFF;
+
+  --bg-app: #0A0D14;
+  --surface-card: #111622;
+  --surface-elevated: #182030;
+  --surface-border: #1E293B;
+
+  --text-primary: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+
+  --glow-indigo: rgba(79, 70, 229, 0.25);
+  --glow-saffron: rgba(249, 115, 22, 0.25);
+  --glow-emerald: rgba(16, 185, 129, 0.25);
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Authentic Scalloped Ticket Cutout Geometry */
+.ticket-scallop-card {
+  position: relative;
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.ticket-notch-left,
+.ticket-notch-right {
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  background: var(--bg-app);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.ticket-notch-left {
+  left: -12px;
+  border-right: 1px solid var(--surface-border);
+}
+
+.ticket-notch-right {
+  right: -12px;
+  border-left: 1px solid var(--surface-border);
+}
+
