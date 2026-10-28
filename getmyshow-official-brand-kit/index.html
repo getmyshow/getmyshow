@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GetMyShow — Official Brand Identity & Design System</title>
+  <link rel="icon" href="favicons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="favicons/favicon.svg">
+  <link rel="apple-touch-icon" href="favicons/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#4F46E5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A0D14;
+      --surface: #111622;
+      --surface-elevated: #182030;
+      --border: #1E293B;
+      --indigo: #4F46E5;
+      --indigo-glow: rgba(79, 70, 229, 0.25);
+      --charcoal: #0F172A;
+      --saffron: #F97316;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 80px;
+    }
+    header.nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(10, 13, 20, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo-sq {
+      width: 34px;
+      height: 34px;
+      background: var(--indigo);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-title h1 { font-size: 18px; font-weight: 700; color: #fff; }
+    .brand-title .badge {
+      background: rgba(79, 70, 229, 0.25);
+      border: 1px solid rgba(79, 70, 229, 0.5);
+      color: #C7D2FE;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .nav-btn {
+      background: var(--surface-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .nav-btn:hover { background: var(--indigo); border-color: var(--indigo); transform: translateY(-1px); }
+    .nav-btn.primary { background: var(--indigo); border-color: var(--indigo); }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 40px 24px; }
+
+    .hero { text-align: center; margin-bottom: 40px; }
+    .hero-tag {
+      display: inline-block;
+      padding: 5px 14px;
+      background: rgba(79, 70, 229, 0.15);
+      border: 1px solid rgba(79, 70, 229, 0.35);
+      border-radius: 20px;
+      color: #818CF8;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .hero h2 {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p { color: var(--text-muted); font-size: 16px; max-width: 720px; margin: 0 auto; }
+
+    /* Stage */
+    .stage-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 48px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .stage-header {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .pills {
+      display: flex;
+      background: rgba(0,0,0,0.3);
+      padding: 4px;
+      border-radius: 12px;
+      gap: 4px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .pill {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pill.active { background: var(--indigo); color: #fff; }
+    .stage-viewport {
+      min-height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      transition: background 0.3s ease;
+      position: relative;
+    }
+    .stage-viewport.light { background: #FFFFFF; }
+    .stage-viewport.dark { background: #0F172A; }
+    .stage-viewport.blueprint {
+      background: #0B132B;
+      background-image: 
+        linear-gradient(rgba(79, 70, 229, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 70, 229, 0.15) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .stage-viewport.mono { background: #4F46E5; }
+    .stage-viewport svg {
+      max-width: 90%;
+      height: auto;
+      max-height: 200px;
+      filter: drop-shadow(0 10px 25px rgba(0,0,0,0.12));
+    }
+
+    .section-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+    .section-desc { color: var(--text-muted); font-size: 15px; margin-bottom: 24px; }
+
+    /* Touchpoints */
+    .touchpoints-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+    .touch-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .touch-display {
+      height: 270px;
+      background: var(--surface-elevated);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    .touch-info { padding: 16px 20px; border-top: 1px solid var(--border); }
+    .touch-info h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .touch-info p { font-size: 12px; color: var(--text-dim); }
+
+    /* Cinema Ticket Pass Mockup */
+    .cinema-pass {
+      width: 280px;
+      background: #FFFFFF;
+      border-radius: 14px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      color: #0F172A;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .cinema-pass-top {
+      background: #4F46E5;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cinema-pass-top .logotxt { font-weight: 800; color: #fff; font-size: 13px; letter-spacing: -0.02em; }
+    .cinema-pass-top .vipbadge {
+      background: #F97316;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .cinema-pass-body { padding: 16px; }
+    .cinema-pass-body .movtitle { font-size: 15px; font-weight: 800; color: #0F172A; margin-bottom: 2px; }
+    .cinema-pass-body .movmeta { font-size: 10px; color: #64748B; margin-bottom: 12px; }
+    .cinema-pass-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: #F1F5F9;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .cinema-pass-grid .cell b { display: block; font-size: 12px; font-weight: 800; color: #4F46E5; }
+    .cinema-pass-grid .cell span { font-size: 9px; color: #64748B; text-transform: uppercase; }
+    .ticket-stub-line {
+      position: relative;
+      height: 1px;
+      border-top: 2px dashed #CBD5E1;
+      margin: 12px -16px;
+    }
+    .ticket-stub-line::before, .ticket-stub-line::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--surface-elevated);
+    }
+    .ticket-stub-line::before { left: -10px; }
+    .ticket-stub-line::after { right: -10px; }
+    .cinema-pass-qr { display: flex; align-items: center; justify-content: space-between; padding-top: 4px; }
+    .qr-box {
+      width: 42px;
+      height: 42px;
+      background: #0F172A;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 8px;
+      font-family: monospace;
+      padding: 2px;
+      text-align: center;
+    }
+    .booking-id { font-size: 10px; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #334155; }
+
+    /* Color Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+    .color-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      padding: 16px;
+    }
+    .color-swatch { height: 60px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.08); }
+    .color-card h5 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .color-card .hex {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #818CF8;
+      cursor: pointer;
+    }
+    .color-card .role { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    /* Table */
+    .asset-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+    .asset-table th, .asset-table td {
+      padding: 14px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 13.5px;
+    }
+    .asset-table th {
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+    }
+    .asset-table tr:hover td { background: rgba(79, 70, 229, 0.05); }
+    .file-link { color: #818CF8; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 12.5px; }
+    .file-link:hover { text-decoration: underline; }
+    .badge-fmt {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.08);
+      color: #CBD5E1;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #10B981;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 99999;
+      animation: fadeIn 0.2s ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 900px) {
+      .touchpoints-grid, .color-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="brand-title">
+      <div class="brand-logo-sq">
+        <svg width="22" height="22" viewBox="0 0 512 512" fill="white">
+          <path d="M 86 132 H 426 A 22 22 0 0 1 448 154 V 224 A 32 32 0 0 0 448 288 V 358 A 22 22 0 0 1 426 380 H 86 A 22 22 0 0 1 64 358 V 288 A 32 32 0 0 0 64 224 V 154 A 22 22 0 0 1 86 132 Z"/>
+        </svg>
+      </div>
+      <h1>GetMyShow</h1>
+      <span class="badge">Official Brand Kit · v5.0 Final</span>
+    </div>
+    <div class="nav-actions">
+      <a href="presentation.html" class="nav-btn primary">📺 Launch 5-Slide Deck</a>
+      <a href="brand-guidelines.md" class="nav-btn">📖 Brand Guidelines</a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <span class="hero-tag">Official Brand Package · Edition 5.0</span>
+      <h2>Cinema Sprocket Scalloped System</h2>
+      <p>Clean, authentic, and built for high-trust entertainment ticketing. Features 35mm cinema roll pin-feed scallops, clean perforated stub line, and zero accidental particles.</p>
+    </section>
+
+    <!-- INTERACTIVE STAGE -->
+    <section class="stage-card">
+      <div class="stage-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <strong style="font-size:14px;color:#fff;">Master Vector Stage</strong>
+          <span style="font-size:12px;color:var(--text-dim);">Clean SVG (No Dots)</span>
+        </div>
+        <div class="pills">
+          <button class="pill active" onclick="switchTheme('light', 'wordmark')">☀️ Primary (Light)</button>
+          <button class="pill" onclick="switchTheme('light', 'black-text')">🖤 Black Text Bookends</button>
+          <button class="pill" onclick="switchTheme('dark', 'wordmark-dark')">🌙 Cinema Dark</button>
+          <button class="pill" onclick="switchTheme('light', 'white-badge')">🎟️ White Ticket Badge</button>
+          <button class="pill" onclick="switchTheme('mono', 'mono')">🎨 Indigo Mono</button>
+          <button class="pill" onclick="switchTheme('dark', 'app-tilted')">📱 Hero App Icon</button>
+          <button class="pill" onclick="switchTheme('blueprint', 'wordmark-dark')">📐 Blueprint</button>
+        </div>
+      </div>
+      <div class="stage-viewport light" id="stage-viewport">
+        <div id="svg-container">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" width="860" height="240">
+  <defs>
+    <filter id="ticket_shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#4F46E5" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <path fill="#0F172A" d="M1212 143Q1212 -152 1026.5 -316.5Q841 -481 485 -481Q389 -481 299.0 -466.0Q209 -451 170 -432V-98Q234 -138 320.0 -162.0Q406 -186 473 -186Q616 -186 702.0 -117.0Q788 -48 788 66V129H784Q738 59 657.5 17.0Q577 -25 485 -25Q287 -25 172.0 112.5Q57 250 57 492Q57 658 117.0 785.0Q177 912 284.0 980.5Q391 1049 520 1049Q697 1049 784 918H788V1024H1212ZM795 541Q795 631 754.5 684.0Q714 737 647 737Q575 737 532.0 673.0Q489 609 489 502Q489 403 525.0 345.0Q561 287 639 287Q712 287 753.5 346.5Q795 406 795 506Z" transform="translate(194,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M469 391Q480 325 545.0 287.5Q610 250 717 250Q866 250 999 307V37Q844 -25 623 -25Q355 -25 206.0 112.0Q57 249 57 489Q57 654 122.5 780.0Q188 906 316.5 977.5Q445 1049 600 1049Q759 1049 872.0 987.0Q985 925 1043.5 813.0Q1102 701 1102 551V391ZM725 614Q725 791 598 791Q545 791 509.0 742.5Q473 694 467 614Z" transform="translate(236.38,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M823 14Q794 0 728.0 -12.5Q662 -25 569 -25Q391 -25 290.5 73.0Q190 171 190 352V729H29V1024H190V1225L610 1341V1024H823V729H610V422Q610 287 717 287Q767 287 823 309Z" transform="translate(273.34,142) scale(0.0322,-0.0322)"/>
+  <g transform="translate(398.50, 118.00) rotate(-8)" filter="url(#ticket_shadow)">
+    <path fill="#4F46E5" d="M -69.50 -50.00 H -52.33 A 6.00 6.00 0 0 0 -40.33 -50.00 H -6.00 A 6.00 6.00 0 0 0 6.00 -50.00 H 40.33 A 6.00 6.00 0 0 0 52.33 -50.00 H 69.50 A 8.00 8.00 0 0 1 77.50 -42.00 V -13.00 A 13.00 13.00 0 0 0 77.50 13.00 V 42.00 A 8.00 8.00 0 0 1 69.50 50.00 H 52.33 A 6.00 6.00 0 0 0 40.33 50.00 H 6.00 A 6.00 6.00 0 0 0 -6.00 50.00 H -40.33 A 6.00 6.00 0 0 0 -52.33 50.00 H -69.50 A 8.00 8.00 0 0 1 -77.50 42.00 V 13.00 A 13.00 13.00 0 0 0 -77.50 -13.00 V -42.00 A 8.00 8.00 0 0 1 -69.50 -50.00 Z"/>
+    <line x1="-46.33" y1="-42.0" x2="-46.33" y2="42.0" stroke="#FFFFFF" stroke-opacity="0.38" stroke-width="2.5" stroke-dasharray="4.5 4" stroke-linecap="round"/>
+    <path fill="#FFFFFF" d="M1430 0V590Q1430 664 1403.5 700.5Q1377 737 1317 737Q1258 737 1225.0 692.5Q1192 648 1192 569V0H766V580Q766 737 659 737Q594 737 561.0 691.5Q528 646 528 561V0H102V1024H528V862H532Q556 905 608.5 949.5Q661 994 727.0 1021.5Q793 1049 870 1049Q979 1049 1053.5 1006.0Q1128 963 1178 870Q1232 956 1322.0 1002.5Q1412 1049 1522 1049Q1683 1049 1769.0 944.0Q1855 839 1855 641V0Z" transform="translate(-32,14) scale(0.0234,-0.0234)"/>
+  <path fill="#FFFFFF" d="M301 -481Q241 -481 172.0 -470.5Q103 -460 49 -440V-119Q74 -138 123.5 -154.0Q173 -170 217 -170Q336 -170 375 -76L408 4L-20 1024H451L575 530Q611 392 614 344H618Q621 366 626.5 393.0Q632 420 782 1024H1196L819 -29Q734 -271 608.5 -376.0Q483 -481 301 -481Z" transform="translate(13.61,14) scale(0.0234,-0.0234)"/>
+    <path d="M 46 -7 L 56 0 L 46 7 Z" fill="#F97316"/>
+  </g>
+  <path fill="#4F46E5" d="M934 340Q934 166 801.5 70.5Q669 -25 432 -25Q363 -25 261.5 -11.0Q160 3 96 23V322Q285 238 412 238Q537 238 537 303Q537 330 508.0 347.5Q479 365 356 406Q220 449 158.0 520.0Q96 591 96 705Q96 864 222.5 956.5Q349 1049 578 1049Q712 1049 862 1010V723Q799 750 724.0 768.0Q649 786 598 786Q556 786 531.0 772.0Q506 758 506 733Q506 704 533.0 686.0Q560 668 641 643Q798 597 866.0 525.0Q934 453 934 340Z" transform="translate(496,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M762 0V584Q762 737 645 737Q588 737 558.0 693.5Q528 650 528 582V0H102V1516H528V885H532Q587 964 665.5 1006.5Q744 1049 834 1049Q1000 1049 1087.0 942.5Q1174 836 1174 629V0Z" transform="translate(527.87,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M1241 530Q1241 271 1084.5 123.0Q928 -25 647 -25Q368 -25 212.5 119.5Q57 264 57 518Q57 681 130.0 801.0Q203 921 338.0 985.0Q473 1049 649 1049Q831 1049 964.5 982.0Q1098 915 1169.5 796.0Q1241 677 1241 530ZM809 528Q809 737 649 737Q489 737 489 518Q489 287 651 287Q809 287 809 528Z" transform="translate(568.61,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M1430 0H987L885 498Q866 588 866 657H860Q849 551 838 504L727 0H285L14 1024H442L530 428L545 295H551Q564 412 569 432L700 1024H1106L1219 432L1228 361L1233 297H1239L1242 326L1333 1024H1716Z" transform="translate(610.44,142) scale(0.0322,-0.0322)"/>
+</svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOUCHPOINTS -->
+    <section>
+      <h3 class="section-title">Real-World Touchpoints</h3>
+      <p class="section-desc">How GetMyShow performs across physical cinema passes, mobile applications, and icons.</p>
+
+      <div class="touchpoints-grid">
+        
+        <!-- Cinema Ticket Pass -->
+        <div class="touch-card">
+          <div class="touch-display">
+            <div class="cinema-pass">
+              <div class="cinema-pass-top">
+                <span class="logotxt">get [my ▶] show</span>
+                <span class="vipbadge">VIP GOLD</span>
+              </div>
+              <div class="cinema-pass-body">
+                <div class="movtitle">Avengers: Secret Wars</div>
+                <div class="movmeta">SASARAM CINEPLEX • AUDI 02 • 7:30 PM</div>
+                <div class="cinema-pass-grid">
+                  <div class="cell"><span>DATE</span><b>28 OCT</b></div>
+                  <div class="cell"><span>ROW</span><b>E</b></div>
+                  <div class="cell"><span>SEATS</span><b>14, 15</b></div>
+                </div>
+                <div class="ticket-stub-line"></div>
+                <div class="cinema-pass-qr">
+                  <div class="booking-id">GMS-8942-01<br><span style="font-size:8px;color:#94A3B8;">SCAN AT TURNSTILE</span></div>
+                  <div class="qr-box">QR<br>PASS</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="touch-info">
+            <h4>Cinema Booking Pass Stub</h4>
+            <p>Physical & digital m-ticket with authentic cinema roll sprocket notches and tear-off stub line.</p>
+          </div>
+        </div>
+
+        <!-- App Icons -->
+        <div class="touch-card">
+          <div class="touch-display" style="gap:24px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <img src="app-icons/app-icon-tilted-128.png" width="96" height="96" style="border-radius:22px;box-shadow:0 12px 26px rgba(79,70,229,0.4);" alt="Tilted Icon"/>
+              <span style="font-size:11px;color:var(--text-muted);font-weight:600;">Hero Tilted</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <img src="app-icons/app-icon-straight-128.png" width="96" height="96" style="border-radius:22px;box-shadow:0 12px 26px rgba(79,70,229,0.3);" alt="Straight Icon"/>
+              <span style="font-size:11px;color:var(--text-muted);font-weight:600;">Straight Pass</span>
+            </div>
+          </div>
+          <div class="touch-info">
+            <h4>Hero App Icon (Clean Perforation Stub)</h4>
+            <p>Fills ~80% of canvas with ultra-bold 'my' and zero colliding dots.</p>
+          </div>
+        </div>
+
+        <!-- Standalone Transparent Symbol -->
+        <div class="touch-card">
+          <div class="touch-display">
+            <img src="app-icons/symbol-ticket-transparent.png" width="220" style="filter:drop-shadow(0 10px 20px rgba(0,0,0,0.3));" alt="Transparent Ticket Symbol"/>
+          </div>
+          <div class="touch-info">
+            <h4>Standalone Ticket Pass Symbol</h4>
+            <p>Transparent vector symbol for watermarks, QR scan stamps, and letterheads.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COLOR TOKENS -->
+    <section>
+      <h3 class="section-title">Color System & Design Tokens</h3>
+      <p class="section-desc">Streamlined 3-color palette calibrated for WCAG AAA contrast ratio.</p>
+
+      <div class="color-grid">
+        <div class="color-card">
+          <div class="color-swatch" style="background:#4F46E5;"></div>
+          <h5>Electric Indigo</h5>
+          <div class="hex" onclick="copyText('#4F46E5')">#4F46E5 📋</div>
+          <div class="role">Ticket pass body, 'show' typography, app icon</div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#0F172A;"></div>
+          <h5>Midnight Charcoal</h5>
+          <div class="hex" onclick="copyText('#0F172A')">#0F172A 📋</div>
+          <div class="role">'get' wordmark typography, dark backgrounds</div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#F97316;"></div>
+          <h5>Sunset Saffron</h5>
+          <div class="hex" onclick="copyText('#F97316')">#F97316 📋</div>
+          <div class="role">Live stage play triangle (▶), VIP accents</div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#FFFFFF;"></div>
+          <h5>Pure White</h5>
+          <div class="hex" onclick="copyText('#FFFFFF')">#FFFFFF 📋</div>
+          <div class="role">'my' lettering, dark mode typography</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASSET INVENTORY -->
+    <section>
+      <h3 class="section-title">Official File Inventory</h3>
+      <p class="section-desc">All production assets generated without dots, in SVG, PNG, and multi-res ICO formats.</p>
+
+      <table class="asset-table">
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Format & Resolution</th>
+            <th>Use Case</th>
+            <th>Download Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Primary Wordmark</strong></td>
+            <td><span class="badge-fmt">SVG</span> <span class="badge-fmt">1200px PNG</span></td>
+            <td>Website navbar, app headers, invoices</td>
+            <td><a class="file-link" href="logos/wordmark-primary.svg" download>logos/wordmark-primary.svg</a></td>
+          </tr>
+          <tr>
+            <td><strong>Cinema Dark Wordmark</strong></td>
+            <td><span class="badge-fmt">SVG</span> <span class="badge-fmt">1200px PNG</span></td>
+            <td>Night mode apps, cinema screen projections</td>
+            <td><a class="file-link" href="logos/wordmark-dark.svg" download>logos/wordmark-dark.svg</a></td>
+          </tr>
+          <tr>
+            <td><strong>1:1 White Badge Wordmark</strong></td>
+            <td><span class="badge-fmt">SVG</span> <span class="badge-fmt">1200px PNG</span></td>
+            <td>Print stationery, tickets, merchandise</td>
+            <td><a class="file-link" href="logos/wordmark-white-badge.svg" download>logos/wordmark-white-badge.svg</a></td>
+          </tr>
+          <tr>
+            <td><strong>Black Text Bookends Wordmark</strong></td>
+            <td><span class="badge-fmt">SVG</span> <span class="badge-fmt">1200px PNG</span></td>
+            <td>Both 'get' & 'show' in solid black; ticket in Electric Indigo</td>
+            <td><a class="file-link" href="logos/wordmark-tilted-black-text.svg" download>logos/wordmark-tilted-black-text.svg</a></td>
+          </tr>
+          <tr>
+            <td><strong>Hero App Icon (Tilted)</strong></td>
+            <td><span class="badge-fmt">SVG</span> <span class="badge-fmt">32-1024px PNG</span></td>
+            <td>iOS App Store, Google Play, Android home screen</td>
+            <td><a class="file-link" href="app-icons/app-icon-tilted-1024.png" download>app-icons/app-icon-tilted-1024.png</a></td>
+          </tr>
+          <tr>
+            <td><strong>Favicon Multi-Resolution</strong></td>
+            <td><span class="badge-fmt">ICO</span> <span class="badge-fmt">16, 32, 48px</span></td>
+            <td>Browser tabs, Windows taskbar, shortcuts</td>
+            <td><a class="file-link" href="favicons/favicon.ico" download>favicons/favicon.ico</a></td>
+          </tr>
+          <tr>
+            <td><strong>Apple Touch Icon</strong></td>
+            <td><span class="badge-fmt">180px PNG</span></td>
+            <td>iOS Home Screen shortcut</td>
+            <td><a class="file-link" href="favicons/apple-touch-icon.png" download>favicons/apple-touch-icon.png</a></td>
+          </tr>
+          <tr>
+            <td><strong>PWA Android Splash</strong></td>
+            <td><span class="badge-fmt">192 & 512px PNG</span></td>
+            <td>PWA home screen install & splash screen</td>
+            <td><a class="file-link" href="favicons/icon-512.png" download>favicons/icon-512.png</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <div id="toast">Copied to clipboard!</div>
+
+  <script>
+    const assets = {
+      'wordmark': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" width="860" height="240">
+  <defs>
+    <filter id="ticket_shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#4F46E5" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <path fill="#0F172A" d="M1212 143Q1212 -152 1026.5 -316.5Q841 -481 485 -481Q389 -481 299.0 -466.0Q209 -451 170 -432V-98Q234 -138 320.0 -162.0Q406 -186 473 -186Q616 -186 702.0 -117.0Q788 -48 788 66V129H784Q738 59 657.5 17.0Q577 -25 485 -25Q287 -25 172.0 112.5Q57 250 57 492Q57 658 117.0 785.0Q177 912 284.0 980.5Q391 1049 520 1049Q697 1049 784 918H788V1024H1212ZM795 541Q795 631 754.5 684.0Q714 737 647 737Q575 737 532.0 673.0Q489 609 489 502Q489 403 525.0 345.0Q561 287 639 287Q712 287 753.5 346.5Q795 406 795 506Z" transform="translate(194,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M469 391Q480 325 545.0 287.5Q610 250 717 250Q866 250 999 307V37Q844 -25 623 -25Q355 -25 206.0 112.0Q57 249 57 489Q57 654 122.5 780.0Q188 906 316.5 977.5Q445 1049 600 1049Q759 1049 872.0 987.0Q985 925 1043.5 813.0Q1102 701 1102 551V391ZM725 614Q725 791 598 791Q545 791 509.0 742.5Q473 694 467 614Z" transform="translate(236.38,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M823 14Q794 0 728.0 -12.5Q662 -25 569 -25Q391 -25 290.5 73.0Q190 171 190 352V729H29V1024H190V1225L610 1341V1024H823V729H610V422Q610 287 717 287Q767 287 823 309Z" transform="translate(273.34,142) scale(0.0322,-0.0322)"/>
+  <g transform="translate(398.50, 118.00) rotate(-8)" filter="url(#ticket_shadow)">
+    <path fill="#4F46E5" d="M -69.50 -50.00 H -52.33 A 6.00 6.00 0 0 0 -40.33 -50.00 H -6.00 A 6.00 6.00 0 0 0 6.00 -50.00 H 40.33 A 6.00 6.00 0 0 0 52.33 -50.00 H 69.50 A 8.00 8.00 0 0 1 77.50 -42.00 V -13.00 A 13.00 13.00 0 0 0 77.50 13.00 V 42.00 A 8.00 8.00 0 0 1 69.50 50.00 H 52.33 A 6.00 6.00 0 0 0 40.33 50.00 H 6.00 A 6.00 6.00 0 0 0 -6.00 50.00 H -40.33 A 6.00 6.00 0 0 0 -52.33 50.00 H -69.50 A 8.00 8.00 0 0 1 -77.50 42.00 V 13.00 A 13.00 13.00 0 0 0 -77.50 -13.00 V -42.00 A 8.00 8.00 0 0 1 -69.50 -50.00 Z"/>
+    <line x1="-46.33" y1="-42.0" x2="-46.33" y2="42.0" stroke="#FFFFFF" stroke-opacity="0.38" stroke-width="2.5" stroke-dasharray="4.5 4" stroke-linecap="round"/>
+    <path fill="#FFFFFF" d="M1430 0V590Q1430 664 1403.5 700.5Q1377 737 1317 737Q1258 737 1225.0 692.5Q1192 648 1192 569V0H766V580Q766 737 659 737Q594 737 561.0 691.5Q528 646 528 561V0H102V1024H528V862H532Q556 905 608.5 949.5Q661 994 727.0 1021.5Q793 1049 870 1049Q979 1049 1053.5 1006.0Q1128 963 1178 870Q1232 956 1322.0 1002.5Q1412 1049 1522 1049Q1683 1049 1769.0 944.0Q1855 839 1855 641V0Z" transform="translate(-32,14) scale(0.0234,-0.0234)"/>
+  <path fill="#FFFFFF" d="M301 -481Q241 -481 172.0 -470.5Q103 -460 49 -440V-119Q74 -138 123.5 -154.0Q173 -170 217 -170Q336 -170 375 -76L408 4L-20 1024H451L575 530Q611 392 614 344H618Q621 366 626.5 393.0Q632 420 782 1024H1196L819 -29Q734 -271 608.5 -376.0Q483 -481 301 -481Z" transform="translate(13.61,14) scale(0.0234,-0.0234)"/>
+    <path d="M 46 -7 L 56 0 L 46 7 Z" fill="#F97316"/>
+  </g>
+  <path fill="#4F46E5" d="M934 340Q934 166 801.5 70.5Q669 -25 432 -25Q363 -25 261.5 -11.0Q160 3 96 23V322Q285 238 412 238Q537 238 537 303Q537 330 508.0 347.5Q479 365 356 406Q220 449 158.0 520.0Q96 591 96 705Q96 864 222.5 956.5Q349 1049 578 1049Q712 1049 862 1010V723Q799 750 724.0 768.0Q649 786 598 786Q556 786 531.0 772.0Q506 758 506 733Q506 704 533.0 686.0Q560 668 641 643Q798 597 866.0 525.0Q934 453 934 340Z" transform="translate(496,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M762 0V584Q762 737 645 737Q588 737 558.0 693.5Q528 650 528 582V0H102V1516H528V885H532Q587 964 665.5 1006.5Q744 1049 834 1049Q1000 1049 1087.0 942.5Q1174 836 1174 629V0Z" transform="translate(527.87,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M1241 530Q1241 271 1084.5 123.0Q928 -25 647 -25Q368 -25 212.5 119.5Q57 264 57 518Q57 681 130.0 801.0Q203 921 338.0 985.0Q473 1049 649 1049Q831 1049 964.5 982.0Q1098 915 1169.5 796.0Q1241 677 1241 530ZM809 528Q809 737 649 737Q489 737 489 518Q489 287 651 287Q809 287 809 528Z" transform="translate(568.61,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M1430 0H987L885 498Q866 588 866 657H860Q849 551 838 504L727 0H285L14 1024H442L530 428L545 295H551Q564 412 569 432L700 1024H1106L1219 432L1228 361L1233 297H1239L1242 326L1333 1024H1716Z" transform="translate(610.44,142) scale(0.0322,-0.0322)"/>
+</svg>`,
+      'black-text': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" width="860" height="240">
+  <defs>
+    <filter id="ticket_shadow_black" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#4F46E5" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <path fill="#0F172A" d="M1212 143Q1212 -152 1026.5 -316.5Q841 -481 485 -481Q389 -481 299.0 -466.0Q209 -451 170 -432V-98Q234 -138 320.0 -162.0Q406 -186 473 -186Q616 -186 702.0 -117.0Q788 -48 788 66V129H784Q738 59 657.5 17.0Q577 -25 485 -25Q287 -25 172.0 112.5Q57 250 57 492Q57 658 117.0 785.0Q177 912 284.0 980.5Q391 1049 520 1049Q697 1049 784 918H788V1024H1212ZM795 541Q795 631 754.5 684.0Q714 737 647 737Q575 737 532.0 673.0Q489 609 489 502Q489 403 525.0 345.0Q561 287 639 287Q712 287 753.5 346.5Q795 406 795 506Z" transform="translate(194,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M469 391Q480 325 545.0 287.5Q610 250 717 250Q866 250 999 307V37Q844 -25 623 -25Q355 -25 206.0 112.0Q57 249 57 489Q57 654 122.5 780.0Q188 906 316.5 977.5Q445 1049 600 1049Q759 1049 872.0 987.0Q985 925 1043.5 813.0Q1102 701 1102 551V391ZM725 614Q725 791 598 791Q545 791 509.0 742.5Q473 694 467 614Z" transform="translate(236.38,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M823 14Q794 0 728.0 -12.5Q662 -25 569 -25Q391 -25 290.5 73.0Q190 171 190 352V729H29V1024H190V1225L610 1341V1024H823V729H610V422Q610 287 717 287Q767 287 823 309Z" transform="translate(273.34,142) scale(0.0322,-0.0322)"/>
+  <g transform="translate(398.50, 118.00) rotate(-8)" filter="url(#ticket_shadow_black)">
+    <path fill="#4F46E5" d="M -69.50 -50.00 H -52.33 A 6.00 6.00 0 0 0 -40.33 -50.00 H -6.00 A 6.00 6.00 0 0 0 6.00 -50.00 H 40.33 A 6.00 6.00 0 0 0 52.33 -50.00 H 69.50 A 8.00 8.00 0 0 1 77.50 -42.00 V -13.00 A 13.00 13.00 0 0 0 77.50 13.00 V 42.00 A 8.00 8.00 0 0 1 69.50 50.00 H 52.33 A 6.00 6.00 0 0 0 40.33 50.00 H 6.00 A 6.00 6.00 0 0 0 -6.00 50.00 H -40.33 A 6.00 6.00 0 0 0 -52.33 50.00 H -69.50 A 8.00 8.00 0 0 1 -77.50 42.00 V 13.00 A 13.00 13.00 0 0 0 -77.50 -13.00 V -42.00 A 8.00 8.00 0 0 1 -69.50 -50.00 Z"/>
+    <line x1="-46.33" y1="-42.0" x2="-46.33" y2="42.0" stroke="#FFFFFF" stroke-opacity="0.38" stroke-width="2.5" stroke-dasharray="4.5 4" stroke-linecap="round"/>
+    <path fill="#FFFFFF" d="M1430 0V590Q1430 664 1403.5 700.5Q1377 737 1317 737Q1258 737 1225.0 692.5Q1192 648 1192 569V0H766V580Q766 737 659 737Q594 737 561.0 691.5Q528 646 528 561V0H102V1024H528V862H532Q556 905 608.5 949.5Q661 994 727.0 1021.5Q793 1049 870 1049Q979 1049 1053.5 1006.0Q1128 963 1178 870Q1232 956 1322.0 1002.5Q1412 1049 1522 1049Q1683 1049 1769.0 944.0Q1855 839 1855 641V0Z" transform="translate(-32,14) scale(0.0234,-0.0234)"/>
+  <path fill="#FFFFFF" d="M301 -481Q241 -481 172.0 -470.5Q103 -460 49 -440V-119Q74 -138 123.5 -154.0Q173 -170 217 -170Q336 -170 375 -76L408 4L-20 1024H451L575 530Q611 392 614 344H618Q621 366 626.5 393.0Q632 420 782 1024H1196L819 -29Q734 -271 608.5 -376.0Q483 -481 301 -481Z" transform="translate(13.61,14) scale(0.0234,-0.0234)"/>
+    <path d="M 46 -7 L 56 0 L 46 7 Z" fill="#F97316"/>
+  </g>
+  <path fill="#0F172A" d="M934 340Q934 166 801.5 70.5Q669 -25 432 -25Q363 -25 261.5 -11.0Q160 3 96 23V322Q285 238 412 238Q537 238 537 303Q537 330 508.0 347.5Q479 365 356 406Q220 449 158.0 520.0Q96 591 96 705Q96 864 222.5 956.5Q349 1049 578 1049Q712 1049 862 1010V723Q799 750 724.0 768.0Q649 786 598 786Q556 786 531.0 772.0Q506 758 506 733Q506 704 533.0 686.0Q560 668 641 643Q798 597 866.0 525.0Q934 453 934 340Z" transform="translate(496,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M762 0V584Q762 737 645 737Q588 737 558.0 693.5Q528 650 528 582V0H102V1516H528V885H532Q587 964 665.5 1006.5Q744 1049 834 1049Q1000 1049 1087.0 942.5Q1174 836 1174 629V0Z" transform="translate(527.87,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M1241 530Q1241 271 1084.5 123.0Q928 -25 647 -25Q368 -25 212.5 119.5Q57 264 57 518Q57 681 130.0 801.0Q203 921 338.0 985.0Q473 1049 649 1049Q831 1049 964.5 982.0Q1098 915 1169.5 796.0Q1241 677 1241 530ZM809 528Q809 737 649 737Q489 737 489 518Q489 287 651 287Q809 287 809 528Z" transform="translate(568.61,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M1430 0H987L885 498Q866 588 866 657H860Q849 551 838 504L727 0H285L14 1024H442L530 428L545 295H551Q564 412 569 432L700 1024H1106L1219 432L1228 361L1233 297H1239L1242 326L1333 1024H1716Z" transform="translate(610.44,142) scale(0.0322,-0.0322)"/>
+</svg>`,
+      'wordmark-dark': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" width="860" height="240">
+  <defs>
+    <filter id="dark_shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  
+  <path fill="#FFFFFF" d="M1212 143Q1212 -152 1026.5 -316.5Q841 -481 485 -481Q389 -481 299.0 -466.0Q209 -451 170 -432V-98Q234 -138 320.0 -162.0Q406 -186 473 -186Q616 -186 702.0 -117.0Q788 -48 788 66V129H784Q738 59 657.5 17.0Q577 -25 485 -25Q287 -25 172.0 112.5Q57 250 57 492Q57 658 117.0 785.0Q177 912 284.0 980.5Q391 1049 520 1049Q697 1049 784 918H788V1024H1212ZM795 541Q795 631 754.5 684.0Q714 737 647 737Q575 737 532.0 673.0Q489 609 489 502Q489 403 525.0 345.0Q561 287 639 287Q712 287 753.5 346.5Q795 406 795 506Z" transform="translate(194,142) scale(0.0322,-0.0322)"/>
+  <path fill="#FFFFFF" d="M469 391Q480 325 545.0 287.5Q610 250 717 250Q866 250 999 307V37Q844 -25 623 -25Q355 -25 206.0 112.0Q57 249 57 489Q57 654 122.5 780.0Q188 906 316.5 977.5Q445 1049 600 1049Q759 1049 872.0 987.0Q985 925 1043.5 813.0Q1102 701 1102 551V391ZM725 614Q725 791 598 791Q545 791 509.0 742.5Q473 694 467 614Z" transform="translate(236.38,142) scale(0.0322,-0.0322)"/>
+  <path fill="#FFFFFF" d="M823 14Q794 0 728.0 -12.5Q662 -25 569 -25Q391 -25 290.5 73.0Q190 171 190 352V729H29V1024H190V1225L610 1341V1024H823V729H610V422Q610 287 717 287Q767 287 823 309Z" transform="translate(273.34,142) scale(0.0322,-0.0322)"/>
+  <g transform="translate(398.50, 118.00) rotate(-8)" filter="url(#dark_shadow)">
+    <path fill="#6366F1" d="M -69.50 -50.00 H -52.33 A 6.00 6.00 0 0 0 -40.33 -50.00 H -6.00 A 6.00 6.00 0 0 0 6.00 -50.00 H 40.33 A 6.00 6.00 0 0 0 52.33 -50.00 H 69.50 A 8.00 8.00 0 0 1 77.50 -42.00 V -13.00 A 13.00 13.00 0 0 0 77.50 13.00 V 42.00 A 8.00 8.00 0 0 1 69.50 50.00 H 52.33 A 6.00 6.00 0 0 0 40.33 50.00 H 6.00 A 6.00 6.00 0 0 0 -6.00 50.00 H -40.33 A 6.00 6.00 0 0 0 -52.33 50.00 H -69.50 A 8.00 8.00 0 0 1 -77.50 42.00 V 13.00 A 13.00 13.00 0 0 0 -77.50 -13.00 V -42.00 A 8.00 8.00 0 0 1 -69.50 -50.00 Z"/>
+    <line x1="-46.33" y1="-42.0" x2="-46.33" y2="42.0" stroke="#FFFFFF" stroke-opacity="0.38" stroke-width="2.5" stroke-dasharray="4.5 4" stroke-linecap="round"/>
+    <path fill="#FFFFFF" d="M1430 0V590Q1430 664 1403.5 700.5Q1377 737 1317 737Q1258 737 1225.0 692.5Q1192 648 1192 569V0H766V580Q766 737 659 737Q594 737 561.0 691.5Q528 646 528 561V0H102V1024H528V862H532Q556 905 608.5 949.5Q661 994 727.0 1021.5Q793 1049 870 1049Q979 1049 1053.5 1006.0Q1128 963 1178 870Q1232 956 1322.0 1002.5Q1412 1049 1522 1049Q1683 1049 1769.0 944.0Q1855 839 1855 641V0Z" transform="translate(-32,14) scale(0.0234,-0.0234)"/>
+  <path fill="#FFFFFF" d="M301 -481Q241 -481 172.0 -470.5Q103 -460 49 -440V-119Q74 -138 123.5 -154.0Q173 -170 217 -170Q336 -170 375 -76L408 4L-20 1024H451L575 530Q611 392 614 344H618Q621 366 626.5 393.0Q632 420 782 1024H1196L819 -29Q734 -271 608.5 -376.0Q483 -481 301 -481Z" transform="translate(13.61,14) scale(0.0234,-0.0234)"/>
+    <path d="M 46 -7 L 56 0 L 46 7 Z" fill="#F97316"/>
+  </g>
+  <path fill="#6366F1" d="M934 340Q934 166 801.5 70.5Q669 -25 432 -25Q363 -25 261.5 -11.0Q160 3 96 23V322Q285 238 412 238Q537 238 537 303Q537 330 508.0 347.5Q479 365 356 406Q220 449 158.0 520.0Q96 591 96 705Q96 864 222.5 956.5Q349 1049 578 1049Q712 1049 862 1010V723Q799 750 724.0 768.0Q649 786 598 786Q556 786 531.0 772.0Q506 758 506 733Q506 704 533.0 686.0Q560 668 641 643Q798 597 866.0 525.0Q934 453 934 340Z" transform="translate(496,142) scale(0.0322,-0.0322)"/>
+  <path fill="#6366F1" d="M762 0V584Q762 737 645 737Q588 737 558.0 693.5Q528 650 528 582V0H102V1516H528V885H532Q587 964 665.5 1006.5Q744 1049 834 1049Q1000 1049 1087.0 942.5Q1174 836 1174 629V0Z" transform="translate(527.87,142) scale(0.0322,-0.0322)"/>
+  <path fill="#6366F1" d="M1241 530Q1241 271 1084.5 123.0Q928 -25 647 -25Q368 -25 212.5 119.5Q57 264 57 518Q57 681 130.0 801.0Q203 921 338.0 985.0Q473 1049 649 1049Q831 1049 964.5 982.0Q1098 915 1169.5 796.0Q1241 677 1241 530ZM809 528Q809 737 649 737Q489 737 489 518Q489 287 651 287Q809 287 809 528Z" transform="translate(568.61,142) scale(0.0322,-0.0322)"/>
+  <path fill="#6366F1" d="M1430 0H987L885 498Q866 588 866 657H860Q849 551 838 504L727 0H285L14 1024H442L530 428L545 295H551Q564 412 569 432L700 1024H1106L1219 432L1228 361L1233 297H1239L1242 326L1333 1024H1716Z" transform="translate(610.44,142) scale(0.0322,-0.0322)"/>
+</svg>`,
+      'white-badge': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" width="860" height="240">
+  <defs>
+    <filter id="white_shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0F172A" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <path fill="#0F172A" d="M1212 143Q1212 -152 1026.5 -316.5Q841 -481 485 -481Q389 -481 299.0 -466.0Q209 -451 170 -432V-98Q234 -138 320.0 -162.0Q406 -186 473 -186Q616 -186 702.0 -117.0Q788 -48 788 66V129H784Q738 59 657.5 17.0Q577 -25 485 -25Q287 -25 172.0 112.5Q57 250 57 492Q57 658 117.0 785.0Q177 912 284.0 980.5Q391 1049 520 1049Q697 1049 784 918H788V1024H1212ZM795 541Q795 631 754.5 684.0Q714 737 647 737Q575 737 532.0 673.0Q489 609 489 502Q489 403 525.0 345.0Q561 287 639 287Q712 287 753.5 346.5Q795 406 795 506Z" transform="translate(194,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M469 391Q480 325 545.0 287.5Q610 250 717 250Q866 250 999 307V37Q844 -25 623 -25Q355 -25 206.0 112.0Q57 249 57 489Q57 654 122.5 780.0Q188 906 316.5 977.5Q445 1049 600 1049Q759 1049 872.0 987.0Q985 925 1043.5 813.0Q1102 701 1102 551V391ZM725 614Q725 791 598 791Q545 791 509.0 742.5Q473 694 467 614Z" transform="translate(236.38,142) scale(0.0322,-0.0322)"/>
+  <path fill="#0F172A" d="M823 14Q794 0 728.0 -12.5Q662 -25 569 -25Q391 -25 290.5 73.0Q190 171 190 352V729H29V1024H190V1225L610 1341V1024H823V729H610V422Q610 287 717 287Q767 287 823 309Z" transform="translate(273.34,142) scale(0.0322,-0.0322)"/>
+  <g transform="translate(398.50, 118.00) rotate(-8)" filter="url(#white_shadow)">
+    <path fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" d="M -69.50 -50.00 H -52.33 A 6.00 6.00 0 0 0 -40.33 -50.00 H -6.00 A 6.00 6.00 0 0 0 6.00 -50.00 H 40.33 A 6.00 6.00 0 0 0 52.33 -50.00 H 69.50 A 8.00 8.00 0 0 1 77.50 -42.00 V -13.00 A 13.00 13.00 0 0 0 77.50 13.00 V 42.00 A 8.00 8.00 0 0 1 69.50 50.00 H 52.33 A 6.00 6.00 0 0 0 40.33 50.00 H 6.00 A 6.00 6.00 0 0 0 -6.00 50.00 H -40.33 A 6.00 6.00 0 0 0 -52.33 50.00 H -69.50 A 8.00 8.00 0 0 1 -77.50 42.00 V 13.00 A 13.00 13.00 0 0 0 -77.50 -13.00 V -42.00 A 8.00 8.00 0 0 1 -69.50 -50.00 Z"/>
+    <line x1="-46.33" y1="-42.0" x2="-46.33" y2="42.0" stroke="#94A3B8" stroke-opacity="1.0" stroke-width="2.5" stroke-dasharray="4.5 4" stroke-linecap="round"/>
+    <path fill="#4F46E5" d="M1430 0V590Q1430 664 1403.5 700.5Q1377 737 1317 737Q1258 737 1225.0 692.5Q1192 648 1192 569V0H766V580Q766 737 659 737Q594 737 561.0 691.5Q528 646 528 561V0H102V1024H528V862H532Q556 905 608.5 949.5Q661 994 727.0 1021.5Q793 1049 870 1049Q979 1049 1053.5 1006.0Q1128 963 1178 870Q1232 956 1322.0 1002.5Q1412 1049 1522 1049Q1683 1049 1769.0 944.0Q1855 839 1855 641V0Z" transform="translate(-32,14) scale(0.0234,-0.0234)"/>
+  <path fill="#4F46E5" d="M301 -481Q241 -481 172.0 -470.5Q103 -460 49 -440V-119Q74 -138 123.5 -154.0Q173 -170 217 -170Q336 -170 375 -76L408 4L-20 1024H451L575 530Q611 392 614 344H618Q621 366 626.5 393.0Q632 420 782 1024H1196L819 -29Q734 -271 608.5 -376.0Q483 -481 301 -481Z" transform="translate(13.61,14) scale(0.0234,-0.0234)"/>
+    <path d="M 46 -7 L 56 0 L 46 7 Z" fill="#F97316"/>
+  </g>
+  <path fill="#4F46E5" d="M934 340Q934 166 801.5 70.5Q669 -25 432 -25Q363 -25 261.5 -11.0Q160 3 96 23V322Q285 238 412 238Q537 238 537 303Q537 330 508.0 347.5Q479 365 356 406Q220 449 158.0 520.0Q96 591 96 705Q96 864 222.5 956.5Q349 1049 578 1049Q712 1049 862 1010V723Q799 750 724.0 768.0Q649 786 598 786Q556 786 531.0 772.0Q506 758 506 733Q506 704 533.0 686.0Q560 668 641 643Q798 597 866.0 525.0Q934 453 934 340Z" transform="translate(496,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M762 0V584Q762 737 645 737Q588 737 558.0 693.5Q528 650 528 582V0H102V1516H528V885H532Q587 964 665.5 1006.5Q744 1049 834 1049Q1000 1049 1087.0 942.5Q1174 836 1174 629V0Z" transform="translate(527.87,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M1241 530Q1241 271 1084.5 123.0Q928 -25 647 -25Q368 -25 212.5 119.5Q57 264 57 518Q57 681 130.0 801.0Q203 921 338.0 985.0Q473 1049 649 1049Q831 1049 964.5 982.0Q1098 915 1169.5 796.0Q1241 677 1241 530ZM809 528Q809 737 649 737Q489 737 489 518Q489 287 651 287Q809 287 809 528Z" transform="translate(568.61,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M1430 0H987L885 498Q866 588 866 657H860Q849 551 838 504L727 0H285L14 1024H442L530 428L545 295H551Q564 412 569 432L700 1024H1106L1219 432L1228 361L1233 297H1239L1242 326L1333 1024H1716Z" transform="translate(610.44,142) scale(0.0322,-0.0322)"/>
+</svg>`,
+      'mono': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" width="860" height="240">
+  
+  
+  <path fill="#4F46E5" d="M1212 143Q1212 -152 1026.5 -316.5Q841 -481 485 -481Q389 -481 299.0 -466.0Q209 -451 170 -432V-98Q234 -138 320.0 -162.0Q406 -186 473 -186Q616 -186 702.0 -117.0Q788 -48 788 66V129H784Q738 59 657.5 17.0Q577 -25 485 -25Q287 -25 172.0 112.5Q57 250 57 492Q57 658 117.0 785.0Q177 912 284.0 980.5Q391 1049 520 1049Q697 1049 784 918H788V1024H1212ZM795 541Q795 631 754.5 684.0Q714 737 647 737Q575 737 532.0 673.0Q489 609 489 502Q489 403 525.0 345.0Q561 287 639 287Q712 287 753.5 346.5Q795 406 795 506Z" transform="translate(194,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M469 391Q480 325 545.0 287.5Q610 250 717 250Q866 250 999 307V37Q844 -25 623 -25Q355 -25 206.0 112.0Q57 249 57 489Q57 654 122.5 780.0Q188 906 316.5 977.5Q445 1049 600 1049Q759 1049 872.0 987.0Q985 925 1043.5 813.0Q1102 701 1102 551V391ZM725 614Q725 791 598 791Q545 791 509.0 742.5Q473 694 467 614Z" transform="translate(236.38,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M823 14Q794 0 728.0 -12.5Q662 -25 569 -25Q391 -25 290.5 73.0Q190 171 190 352V729H29V1024H190V1225L610 1341V1024H823V729H610V422Q610 287 717 287Q767 287 823 309Z" transform="translate(273.34,142) scale(0.0322,-0.0322)"/>
+  <g transform="translate(398.50, 118.00) rotate(-8)">
+    <path fill="#4F46E5" d="M -69.50 -50.00 H -52.33 A 6.00 6.00 0 0 0 -40.33 -50.00 H -6.00 A 6.00 6.00 0 0 0 6.00 -50.00 H 40.33 A 6.00 6.00 0 0 0 52.33 -50.00 H 69.50 A 8.00 8.00 0 0 1 77.50 -42.00 V -13.00 A 13.00 13.00 0 0 0 77.50 13.00 V 42.00 A 8.00 8.00 0 0 1 69.50 50.00 H 52.33 A 6.00 6.00 0 0 0 40.33 50.00 H 6.00 A 6.00 6.00 0 0 0 -6.00 50.00 H -40.33 A 6.00 6.00 0 0 0 -52.33 50.00 H -69.50 A 8.00 8.00 0 0 1 -77.50 42.00 V 13.00 A 13.00 13.00 0 0 0 -77.50 -13.00 V -42.00 A 8.00 8.00 0 0 1 -69.50 -50.00 Z"/>
+    <line x1="-46.33" y1="-42.0" x2="-46.33" y2="42.0" stroke="#FFFFFF" stroke-opacity="0.40" stroke-width="2.5" stroke-dasharray="4.5 4" stroke-linecap="round"/>
+    <path fill="#FFFFFF" d="M1430 0V590Q1430 664 1403.5 700.5Q1377 737 1317 737Q1258 737 1225.0 692.5Q1192 648 1192 569V0H766V580Q766 737 659 737Q594 737 561.0 691.5Q528 646 528 561V0H102V1024H528V862H532Q556 905 608.5 949.5Q661 994 727.0 1021.5Q793 1049 870 1049Q979 1049 1053.5 1006.0Q1128 963 1178 870Q1232 956 1322.0 1002.5Q1412 1049 1522 1049Q1683 1049 1769.0 944.0Q1855 839 1855 641V0Z" transform="translate(-32,14) scale(0.0234,-0.0234)"/>
+  <path fill="#FFFFFF" d="M301 -481Q241 -481 172.0 -470.5Q103 -460 49 -440V-119Q74 -138 123.5 -154.0Q173 -170 217 -170Q336 -170 375 -76L408 4L-20 1024H451L575 530Q611 392 614 344H618Q621 366 626.5 393.0Q632 420 782 1024H1196L819 -29Q734 -271 608.5 -376.0Q483 -481 301 -481Z" transform="translate(13.61,14) scale(0.0234,-0.0234)"/>
+    <path d="M 46 -7 L 56 0 L 46 7 Z" fill="#FFFFFF"/>
+  </g>
+  <path fill="#4F46E5" d="M934 340Q934 166 801.5 70.5Q669 -25 432 -25Q363 -25 261.5 -11.0Q160 3 96 23V322Q285 238 412 238Q537 238 537 303Q537 330 508.0 347.5Q479 365 356 406Q220 449 158.0 520.0Q96 591 96 705Q96 864 222.5 956.5Q349 1049 578 1049Q712 1049 862 1010V723Q799 750 724.0 768.0Q649 786 598 786Q556 786 531.0 772.0Q506 758 506 733Q506 704 533.0 686.0Q560 668 641 643Q798 597 866.0 525.0Q934 453 934 340Z" transform="translate(496,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M762 0V584Q762 737 645 737Q588 737 558.0 693.5Q528 650 528 582V0H102V1516H528V885H532Q587 964 665.5 1006.5Q744 1049 834 1049Q1000 1049 1087.0 942.5Q1174 836 1174 629V0Z" transform="translate(527.87,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M1241 530Q1241 271 1084.5 123.0Q928 -25 647 -25Q368 -25 212.5 119.5Q57 264 57 518Q57 681 130.0 801.0Q203 921 338.0 985.0Q473 1049 649 1049Q831 1049 964.5 982.0Q1098 915 1169.5 796.0Q1241 677 1241 530ZM809 528Q809 737 649 737Q489 737 489 518Q489 287 651 287Q809 287 809 528Z" transform="translate(568.61,142) scale(0.0322,-0.0322)"/>
+  <path fill="#4F46E5" d="M1430 0H987L885 498Q866 588 866 657H860Q849 551 838 504L727 0H285L14 1024H442L530 428L545 295H551Q564 412 569 432L700 1024H1106L1219 432L1228 361L1233 297H1239L1242 326L1333 1024H1716Z" transform="translate(610.44,142) scale(0.0322,-0.0322)"/>
+</svg>`,
+      'app-tilted': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="GetMyShow App Icon Tilted">
+  <title>GetMyShow App Icon (Tilted)</title>
+  <defs>
+    <linearGradient id="bg_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#3730A3"/>
+    </linearGradient>
+    <filter id="icon_shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="22" flood-color="#0F172A" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="115" fill="url(#bg_grad)"/>
+  <g transform="translate(256,256) rotate(-9) translate(-256,-256)" filter="url(#icon_shadow)">
+    <path fill="#FFFFFF" d="M 76.00 126.00 H 120.00 A 16.00 16.00 0 0 0 152.00 126.00 H 240.00 A 16.00 16.00 0 0 0 272.00 126.00 H 360.00 A 16.00 16.00 0 0 0 392.00 126.00 H 436.00 A 22.00 22.00 0 0 1 458.00 148.00 V 222.00 A 34.00 34.00 0 0 0 458.00 290.00 V 364.00 A 22.00 22.00 0 0 1 436.00 386.00 H 392.00 A 16.00 16.00 0 0 0 360.00 386.00 H 272.00 A 16.00 16.00 0 0 0 240.00 386.00 H 152.00 A 16.00 16.00 0 0 0 120.00 386.00 H 76.00 A 22.00 22.00 0 0 1 54.00 364.00 V 290.00 A 34.00 34.00 0 0 0 54.00 222.00 V 148.00 A 22.00 22.00 0 0 1 76.00 126.00 Z"/>
+    <line x1="136.00" y1="144.00" x2="136.00" y2="368.00" stroke="#CBD5E1" stroke-width="4.5" stroke-dasharray="9 8" stroke-linecap="round"/>
+    <path fill="#4F46E5" d="M1430 0V590Q1430 664 1403.5 700.5Q1377 737 1317 737Q1258 737 1225.0 692.5Q1192 648 1192 569V0H766V580Q766 737 659 737Q594 737 561.0 691.5Q528 646 528 561V0H102V1024H528V862H532Q556 905 608.5 949.5Q661 994 727.0 1021.5Q793 1049 870 1049Q979 1049 1053.5 1006.0Q1128 963 1178 870Q1232 956 1322.0 1002.5Q1412 1049 1522 1049Q1683 1049 1769.0 944.0Q1855 839 1855 641V0Z" transform="translate(172,292) scale(0.0605,-0.0605)"/>
+  <path fill="#4F46E5" d="M301 -481Q241 -481 172.0 -470.5Q103 -460 49 -440V-119Q74 -138 123.5 -154.0Q173 -170 217 -170Q336 -170 375 -76L408 4L-20 1024H451L575 530Q611 392 614 344H618Q621 366 626.5 393.0Q632 420 782 1024H1196L819 -29Q734 -271 608.5 -376.0Q483 -481 301 -481Z" transform="translate(289.82,292) scale(0.0605,-0.0605)"/>
+    <path d="M 375 237 L 401 256 L 375 275 Z" fill="#F97316"/>
+  </g>
+</svg>`,
+    };
+
+    function switchTheme(bgTheme, assetKey) {
+      const vp = document.getElementById('stage-viewport');
+      const container = document.getElementById('svg-container');
+      const pills = document.querySelectorAll('.pill');
+      
+      pills.forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+
+      vp.className = 'stage-viewport ' + bgTheme;
+      container.innerHTML = assets[assetKey] || assets['wordmark'];
+    }
+
+    function copyText(txt) {
+      navigator.clipboard.writeText(txt);
+      const t = document.getElementById('toast');
+      t.textContent = 'Copied: ' + txt;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2200);
+    }
+  </script>
+</body>
+</html>

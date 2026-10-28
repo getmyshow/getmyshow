@@ -1,0 +1,24 @@
+{
+  "project": {
+    "enabled": true,
+    "lastGenerated": "2026-10-27T20:28:39.462Z",
+    "observationCount": 429,
+    "skillCount": 0,
+    "domain": "project",
+    "triggerGlobs": [
+      "**/*"
+    ],
+    "description": "Project for getmyshow-official-brand-kit. 19 gotchas, 408 conventions."
+  },
+  "typescript-react": {
+    "enabled": true,
+    "lastGenerated": "2026-10-27T20:28:39.463Z",
+    "observationCount": 2,
+    "skillCount": 0,
+    "domain": "typescript-react",
+    "triggerGlobs": [
+      "**/*.tsx"
+    ],
+    "description": "Typescript React for getmyshow-official-brand-kit. 2 conventions."
+  }
+}
