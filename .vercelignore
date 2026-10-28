@@ -1,0 +1,13 @@
+.agent
+.agents
+.git
+.github
+.windsurf
+.windsurfrules
+.vscode
+context
+docs
+scripts
+tests
+*.md
+!README.md

@@ -57,3 +57,6 @@ yarn-error.log*
 .windsurfrules
 .gemini/
 .cline/
+
+.vercel
+.env*
