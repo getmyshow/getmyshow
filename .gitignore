@@ -6,11 +6,8 @@ node_modules/
 # Testing
 coverage/
 
-# Next.js
-.next/
-out/
-build/
-dist/
+# Reference Repositories
+Reference and Inspirations/
 
 # Environment Variables & Secrets (CRITICAL)
 .env
@@ -36,3 +33,14 @@ yarn-error.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# Auto-generated agent rules (personalized per developer)
+.brainsync/agent-rules.md
+
+# Auto-generated AI agent exclusions
+.cursorrules
+.clineRules
+.agent/
+.windsurfrules
+.gemini/
+.cline/
