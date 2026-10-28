@@ -8,6 +8,27 @@
       "env": {
         "BRAINSYNC_ENV_FILE": "C:\\Users\\AARAV SONI\\.bsync_core\\get-my-show-platform\\mcp-secret-env.json"
       }
+    },
+    "rea": {
+      "command": "node",
+      "args": [
+        "C:\\nvm4w\\nodejs\\node_modules\\rea-agents\\scripts\\rea.mjs",
+        "mcp"
+      ]
+    },
+    "ghidra-mcp": {
+      "command": "C:\\Users\\AARAV SONI\\.local\\bin\\uv.exe",
+      "args": [
+        "run",
+        "--directory",
+        "C:\\Users\\AARAV SONI\\Tools\\ghidra-mcp",
+        "bridge-mcp-ghidra",
+        "--transport",
+        "stdio"
+      ],
+      "env": {
+        "GHIDRA_MCP_URL": "http://127.0.0.1:8089"
+      }
     }
   }
 }

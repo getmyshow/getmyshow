@@ -118,3 +118,4 @@ USING (auth.jwt() ->> 'role' = 'service_role');
 CREATE POLICY "Tickets viewable by qr_token" 
 ON tickets FOR SELECT 
 USING (true);
+

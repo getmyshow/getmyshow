@@ -1,5 +1,15 @@
-# Get My Show Platform — Project Memory
-# Auto-synced | 450 observations
+# getmyshow — Project Memory
+
+> **CRITICAL AGENT DIRECTIVE:** Before executing any prompt or task, you **MUST FIRST READ** all 9 master context files in `context/` as declared in `AGENTS.md`:
+> 1. `context/project-overview.md` (Scope, Journeys, Hyperlocal Market)
+> 2. `context/architecture.md` (Stack, System Boundaries, Data Flow)
+> 3. `context/system-invariants-and-roadmap.md` (Non-Negotiable Rules, Invariants, 14-Day Roadmap)
+> 4. `context/code-standards.md` (TypeScript, Server Actions, Error Handling)
+> 5. `context/library-docs.md` (Supabase, Razorpay, QR HMAC, Scanner, Redis)
+> 6. `context/ui-tokens.md` (CSS Variables, Brand Colors, Typography)
+> 7. `context/ui-rules.md` (35mm Ticket Pass, Touch Rules, Buttons, Badges)
+> 8. `context/ui-registry.md` (Living Component Registry)
+> 9. `context/progress-tracker.md` (Living Milestone & Task Tracker)
 
 # 🏛️ CORE ARCHITECTURE
 
