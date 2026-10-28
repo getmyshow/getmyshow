@@ -122,4 +122,5 @@
 - [x] Implement Transactional Notification Dispatcher (`lib/notifications/dispatcher.ts`)
 - [ ] Register free Udyam MSME Certificate under parent sole proprietorship
 - [ ] Submit Razorpay Live KYC with GST Non-Enrollment Declaration
-- [ ] Deploy frontend to Vercel and backend to Render with 10-minute keep-alive ping
+- [x] Deploy frontend to Vercel (https://getmyshow-nine.vercel.app) and backend to Render (https://getmyshow-backend.onrender.com) for getmyshow0@gmail.com with 10-minute keep-alive ping
+- [x] Gate Scanner Staff RBAC Isolation Portal (/staff/login & /scan/login) with 3-credential verification and WhatsApp 1-click dispatch link generator
