@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { getEvents } from "@/actions/events";
 import {
   Sparkle,
   ShieldCheck,
@@ -168,7 +169,7 @@ const BIHAR_REGIONAL_CITIES = [
   {
     name: "Sasaram",
     tagline: "Historic Rohtas Capital",
-    imageUrl: "https://images.unsplash.com/photo-1590053303498-356b57953ea6?auto=format&fit=crop&w=600&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?auto=format&fit=crop&w=600&q=80",
     eventsCount: 14,
   },
   {
@@ -193,19 +194,38 @@ const BIHAR_REGIONAL_CITIES = [
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [liveEvents, setLiveEvents] = useState<EventItem[]>(DEMO_EVENTS);
+  const [isDbConnected, setIsDbConnected] = useState<boolean>(false);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadDbEvents() {
+      const res = await getEvents();
+      if (mounted && res.success && res.data && res.data.length > 0) {
+        setLiveEvents(res.data);
+        setIsDbConnected(true);
+      }
+    }
+    loadDbEvents();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const filteredEvents = useMemo(() => {
-    if (!selectedCategory) return DEMO_EVENTS;
-    return DEMO_EVENTS.filter((e) => {
-      if (selectedCategory === "coaching") return e.slug.includes("scholarship") || e.slug.includes("seminar");
-      if (selectedCategory === "dandiya") return e.slug.includes("dandiya");
-      if (selectedCategory === "college") return e.slug.includes("college") || e.slug.includes("fest");
-      if (selectedCategory === "sports") return e.slug.includes("marathon");
-      if (selectedCategory === "standup") return e.slug.includes("kavi");
-      if (selectedCategory === "workshops") return e.slug.includes("startup") || e.slug.includes("pitch");
+    const list = liveEvents.length > 0 ? liveEvents : DEMO_EVENTS;
+    if (!selectedCategory) return list;
+    return list.filter((e) => {
+      const slug = e.slug || "";
+      if (selectedCategory === "coaching") return slug.includes("scholarship") || slug.includes("seminar");
+      if (selectedCategory === "dandiya") return slug.includes("dandiya");
+      if (selectedCategory === "college") return slug.includes("college") || slug.includes("fest");
+      if (selectedCategory === "sports") return slug.includes("marathon");
+      if (selectedCategory === "standup") return slug.includes("kavi");
+      if (selectedCategory === "workshops") return slug.includes("startup") || slug.includes("pitch");
       return true;
     });
-  }, [selectedCategory]);
+  }, [liveEvents, selectedCategory]);
 
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
