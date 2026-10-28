@@ -114,3 +114,4 @@
 - [ ] Configure Cloudflare Cron ping worker to keep Supabase awake 24/7/365
 - [ ] Deploy production Next.js app to Vercel Hobby Tier
 - [ ] Run live on-ground test in Sasaram (Gaurakshani / Post Office Chowk)
+

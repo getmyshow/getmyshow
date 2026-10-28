@@ -16,6 +16,8 @@ Reference and Inspirations/
 .env.test.local
 .env.production.local
 *.env
+githubPAT.md
+*PAT*
 
 # Agent & Memory files
 AGENT.md

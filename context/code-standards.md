@@ -127,3 +127,4 @@ export function formatINR(amount: number): string {
 * UI converts and displays in **Asia/Kolkata (IST — UTC+5:30)**:
   * Format: `Sun, 15 Nov 2026 • 6:30 PM IST`
   * Never let a client's device timezone skew event showtimes.
+

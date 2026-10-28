@@ -23,8 +23,8 @@
   * **Stage 1 (₹0 to ₹18 Lakhs GMV):** Sole proprietorship in a trusted parent's name with a free Government of India Udyam MSME Certificate + Razorpay GST Non-Enrollment Declaration + 1-Page Signed Collection Agent Agreement.
   * **Stage 2 (Above ₹18 Lakhs GMV):** Register GST using earned net profits and enable automated gateway split (Razorpay Route or Cashfree Easy Split). With automated splitting, 93% goes direct to the organizer's bank, so only our 7% commission counts towards platform turnover.
 
-### Invariant 4: Free-Tier Cloud Trap Mitigation
-* **Rule 4.1 — Zero Render Free Tier:** Never host payment webhooks or APIs on sleep-prone containers (like Render free web services) that sleep after 15 minutes of quiet time. A 50-second wake-up time causes Razorpay webhooks to fail, stranding payments without issuing tickets.
+### Invariant 4: Free-Tier Cloud Trap Mitigation & Render Keep-Alive
+* **Rule 4.1 — Render 10-Minute Keep-Alive Protocol:** The Render backend free web service must have an automated 10-minute health ping configured (via Cloudflare Cron / cron-job.org) targeting `GET /api/health`. This ensures the container never enters the 15-minute sleep state and eliminates cold-start drops for Razorpay payment webhooks.
 * **Rule 4.2 — Prevent Supabase 7-Day Inactivity Sleep:** Supabase pauses free PostgreSQL instances after 7 consecutive days of zero traffic (common during school exams in Sasaram). A Cloudflare Cron worker must ping `/api/keep-alive` every 72 hours to ensure 24/7/365 active database availability.
 
 ### Invariant 5: Cryptographic QR Security
@@ -120,3 +120,4 @@ gantt
 | **Days 7–9** | **QR Ticket Pass & Mobile Gate Scanner** | Generate downloadable visual pass with HMAC QR token, sponsor ad banner, and WhatsApp share button. Build password-protected camera QR scanner (`/scan/[id]`) with instant duplicate detection. |
 | **Days 10–11**| **Organizer Wallet & Promoter Desk** | Build Organizer Dashboard displaying live tickets sold, Pending vs Available balance, "Request Withdrawal" modal, and offline "Issue Cash Ticket" promoter desk. |
 | **Days 12–14**| **KYC & First Local Pitch in Sasaram** | Register free Government Udyam Certificate, activate Razorpay Live KYC under parent sole proprietorship, pitch top 3 coaching institutes or organizers in Gaurakshani / Post Office Chowk area. |
+

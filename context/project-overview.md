@@ -107,4 +107,5 @@ GetMyShow is a high-speed, mobile-first, **No-Login UPI Ticketing & Box-Office P
   * Platform Gross Fee: 7.00%
   * Razorpay Gateway Fee: 2.36% (2% MDR + 18% GST)
   * Net Platform Profit Margin: **4.64% per ticket**
-* **Monthly Fixed Infrastructure Cost**: **₹0.00** across Vercel, Supabase, Upstash Redis, Cloudinary, and Cloudflare.
+* **Monthly Fixed Infrastructure Cost**: **₹0.00** across Vercel (Frontend), Render (Backend with 10-min keep-alive ping), Supabase (Database), Upstash Redis, Cloudinary, and Cloudflare.
+

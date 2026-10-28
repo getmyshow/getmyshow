@@ -35,3 +35,4 @@ You must inspect and strictly adhere to these 9 authoritative documents:
 * **Do NOT expose secrets:** Never prefix backend secrets (`SUPABASE_SERVICE_ROLE_KEY`, `RAZORPAY_KEY_SECRET`, `QR_HMAC_SECRET`) with `NEXT_PUBLIC_`.
 * **Do NOT introduce foreign runtimes:** Build strictly in Next.js + TypeScript + Tailwind. Reference repositories are for UI/logic inspiration only.
 * **Always handle UI resilience:** Every interactive form must handle pending states (`isPending`), every list must have an empty state with a CTA, and every fetch must have an error state with a retry option.
+

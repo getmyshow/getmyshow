@@ -1,149 +1,98 @@
 # 02. System Architecture & Technical Specifications
 
-> **Core Philosophy:** ₹0/Month Fixed Overhead, Zero Cold-Start Payment Drop, Lightning-Fast Hyperlocal Performance.
+> **Core Topology:** Vercel (Frontend) + Render (Backend API Service) + Supabase (PostgreSQL Database).  
+> **Infrastructure Target:** ₹0/Month Free-Tier Stack with 24/7 Keep-Alive Automation.
 
 ---
 
-## 1. Complete Technology Stack
+## 1. Complete Architecture Diagram
 
 ```mermaid
 flowchart TD
-    UserPhone["Attendee / Mobile Browser"] --> Cloudflare["Cloudflare CDN & DDoS Protection"]
-    Cloudflare --> Vercel["Vercel Serverless Hosting (Next.js App Router)"]
+    UserPhone["Attendee / Mobile Browser"] --> Cloudflare["Cloudflare CDN & Edge Shield"]
+    Cloudflare --> Vercel["Vercel (Frontend — Next.js 15+ App Router)"]
     
-    subgraph VercelApp["Next.js Application"]
-        ServerActions["Server Actions (Mutations & DB Ops)"]
-        APIRoutes["Webhook & High-Speed Scanner API"]
+    subgraph VercelFrontend["Vercel Frontend (Next.js)"]
+        UI["Server Components & Client Pages"]
+        CheckoutUI["2-Step Checkout Modal"]
+        GateUI["Mobile Camera Scanner Interface"]
     end
     
-    VercelApp --> UpstashRedis[("Upstash Redis Cache\nConcurrency Lock & <50ms Gate Check-in")]
-    VercelApp --> SupabaseDB[("Supabase PostgreSQL DB\nCore Data & Wallet Ledger")]
-    VercelApp --> RazorpayAPI["Razorpay Payment Gateway (UPI / Webhooks)"]
-    VercelApp --> CloudinaryCDN["Cloudinary Image CDN (Auto WebP)"]
+    VercelFrontend -->|"REST / JSON"| RenderBackend["Render (Backend API Service)"]
     
-    Cron["Cloudflare Cron Alarm"] -.->|"Ping every 72 hours"| SupabaseDB
+    subgraph RenderService["Render Backend Service"]
+        OrderAPI["Order Creation & Amount Validator"]
+        WebhookHandler["Razorpay Webhook (HMAC-SHA256)"]
+        ScanVerifier["<50ms QR Token Verifier"]
+        WalletEngine["Organizer Wallet & Payout Engine"]
+        HealthRoute["/health (Keep-Alive Endpoint)"]
+    end
+    
+    RenderService --> SupabaseDB[("Supabase PostgreSQL DB\n(Mumbai ap-south-1)")]
+    RenderService --> RazorpayGateway["Razorpay UPI Gateway"]
+    RenderService --> UpstashRedis[("Upstash Redis Cache\nConcurrency & Gate Sets")]
+    
+    KeepAliveCron["Cloudflare Cron / Keep-Alive Ping"] -.->|"Ping every 10 mins"| HealthRoute
+    KeepAliveCron -.->|"Ping every 72 hours"| SupabaseDB
 ```
-
-| Layer | Technology | Free Tier Provider | Purpose & Critical Role |
-| :--- | :--- | :--- | :--- |
-| **Framework** | Next.js 15+ (App Router), React 19, TypeScript | Vercel (Hobby Tier) | Server-Side Rendering (SSR), Server Components, and zero-cold-start serverless API routes. |
-| **Styling** | Tailwind CSS + Lucide Icons | Local Build | Ultra-lightweight utility CSS compiled at build time. Zero runtime CSS overhead. |
-| **Primary Database** | PostgreSQL 17 (Relational) | Supabase (Free Tier) | 500MB storage, handles 5,000+ events and 500,000+ ticket rows with strict foreign keys & transactions. |
-| **Cache & Concurrency** | Redis (In-Memory Key-Value) | Upstash Redis (Free Tier) | Atomic seat locking (prevents overselling) and <50ms QR code check-in validation at the venue gate. |
-| **Image Hosting** | Media Optimization & CDN | Cloudinary (Free Tier) | Auto-converts uploaded event posters into ~50KB WebP images for fast loading on Bihar 4G networks. |
-| **DNS & Keep-Alive** | Edge CDN + Cron Worker | Cloudflare (Free Tier) | Global CDN edge caching and scheduled cron pings every 3 days to prevent Supabase 7-day inactivity pausing. |
-| **Payments** | UPI Gateway + Webhooks | Razorpay (Primary) / Cashfree (Backup) | 2-click UPI payments (GPay/PhonePe/Paytm); fires instant webhook to confirm ticket and issue QR pass. |
 
 ---
 
-## 2. Directory & Folder Structure
+## 2. Layer Separation & Responsibilities
+
+| Layer | Hosting Provider | Technologies | Core Responsibilities |
+| :--- | :--- | :--- | :--- |
+| **Frontend** | **Vercel** (Hobby Tier) | Next.js 15+, React 19, Tailwind CSS | Ultra-fast Server-Side Rendering (SSR), responsive mobile layouts, 2-step checkout UI, 35mm scalloped cinema ticket rendering, and camera QR scanner interface. |
+| **Backend API** | **Render** (Web Service Tier) | Node.js / Express or Next API | Razorpay order generation, HMAC webhook signature verification, organizer wallet ledger calculations, cryptographic QR signing, and <50ms gate scanner verification. |
+| **Primary Database** | **Supabase** (Free Tier) | PostgreSQL 17 (Mumbai `ap-south-1`) | 500MB relational storage for `events`, `tickets`, and `withdrawal_requests`. Row-level security (RLS) and relational integrity. |
+| **Fast Cache** | **Upstash Redis** | Redis In-Memory | Seat inventory mutex locking (prevents overselling) and gate check-in set cache. |
+| **Poster CDN** | **Cloudinary** (Free Tier) | Image CDN & WebP optimization | Auto-compresses event posters to ~50KB WebP for fast Bihar 4G loading. |
+
+---
+
+## 3. The Render Keep-Alive Protocol (Preventing Cold Starts)
+
+### The Challenge
+Render free web services spin down to "sleep" mode after 15 minutes of quiet time. When a new request arrives, a sleeping service takes ~50 seconds to wake up. If an attendee pays via UPI and Razorpay sends an instant webhook, a sleeping server might timeout.
+
+### The Solution: Automated 10-Minute Health Ping
+1. The Render backend exposes a lightweight, instant health endpoint:
+   `GET /api/health -> { status: "ok", timestamp: 1793189000 }`
+2. An automated Cloudflare Worker / Cron-Job ping fires every **10 minutes** to this endpoint.
+3. Because the ping arrives every 10 minutes (well before the 15-minute inactivity window), the Render container **never sleeps** and remains warm 24/7/365 at ₹0 cost!
+4. **Idempotent Webhooks:** In addition, Razorpay automatically retries webhooks up to 5 times if a network blip occurs, and the backend verifies order IDs idempotently.
+
+---
+
+## 4. Frontend & Backend Directory Structure
 
 ```
 getmyshow/
-├── app/                                # Next.js App Router
-│   ├── (public)/                       # Attendee-facing public routes
-│   │   ├── page.tsx                    # Hyperlocal homepage & event discovery
-│   │   ├── e/[slug]/                   # Event detail & 2-step checkout modal
-│   │   └── ticket/[token]/             # Downloadable cryptographic QR ticket pass
-│   ├── (organizer)/                    # Organizer administrative routes
-│   │   ├── organizer/                  # Organizer portal landing
-│   │   ├── organizer/create/           # 60-Second single-page event creator
-│   │   └── dashboard/[id]/             # Real-time analytics, wallet & promoter desk
-│   ├── (gate)/                         # Venue gate security routes
-│   │   └── scan/[id]/                  # 4-Digit PIN camera QR scanner
-│   ├── (interactive)/                  # Event stage engagement
-│   │   └── poll/[id]/                  # Live audience quiz / Q&A polling screen
-│   ├── api/                            # External API & Webhook endpoints
-│   │   ├── webhook/razorpay/route.ts   # Cryptographically verified payment webhook
-│   │   ├── scan/verify/route.ts        # Ultra-low-latency Redis QR verification endpoint
-│   │   └── keep-alive/route.ts         # Supabase ping route for Cloudflare Cron
-│   ├── layout.tsx                      # Root layout with font optimization & theme
-│   └── globals.css                     # Tailwind base + CSS design tokens
-├── components/                         # UI & Feature Components
-│   ├── ui/                             # Primitive components (Button, Modal, Input, Badge)
-│   ├── checkout/                       # 2-Step checkout modal & UPI payment bridge
-│   ├── ticket/                         # Mobile QR pass card, ad banner, and download button
-│   ├── dashboard/                      # Sales stats, wallet cards, withdrawal request form
-│   ├── promoter/                       # Offline Cash-at-Counter issuance modal
-│   └── scanner/                        # Browser camera scanner (html5-qrcode wrapper)
-├── lib/                                # Core utilities & external clients
-│   ├── supabase/                       # Supabase client (browser, server & admin client)
-│   ├── upstash/                        # Redis client for seat locks and ticket caching
-│   ├── razorpay/                       # Razorpay order generation & signature verifier
-│   ├── qr/                             # HMAC cryptographic QR token generation & validation
-│   └── utils.ts                        # Currency formatters (₹ INR), date helpers, classNames
-├── actions/                            # Next.js Server Actions (Mutations)
-│   ├── events.ts                       # Create event, edit event, toggle fee pass
-│   ├── tickets.ts                      # Offline cash pass issuance, resend pass
-│   ├── wallet.ts                       # Request withdrawal, fetch ledger history
-│   └── poll.ts                         # Submit vote, create stage poll
-├── context/                            # Master Project Context Files (The 9 Files)
-├── types/                              # Strict TypeScript Definitions & Database Interfaces
-├── public/                             # Brand assets, favicons, app icons
-└── .env.local                          # Environment variables & secrets (NEVER COMMITTED)
+├── frontend/ (or root Next.js on Vercel)
+│   ├── app/                            # Public routes, ticket pass, organizer UI
+│   │   ├── (public)/                   # /, /e/[slug], /ticket/[token]
+│   │   ├── (organizer)/                # /organizer, /dashboard/[id]
+│   │   └── (gate)/                     # /scan/[id] (camera scanner)
+│   ├── components/                     # UI components, modals, ticket card
+│   ├── lib/                            # API client bridges, formatters, tokens
+│   └── public/brand/                   # Brand assets, logos, favicons
+├── backend/ (Render Web Service)
+│   ├── src/
+│   │   ├── routes/
+│   │   │   ├── orders.ts               # POST /api/orders/create
+│   │   │   ├── webhook.ts              # POST /api/webhook/razorpay (HMAC verified)
+│   │   │   ├── verify.ts               # POST /api/scan/verify (<50ms gate check)
+│   │   │   ├── wallet.ts               # POST /api/wallet/withdraw
+│   │   │   └── health.ts               # GET /api/health (10-min keep-alive ping)
+│   │   ├── services/                   # Supabase admin client, Redis, Razorpay
+│   │   └── index.ts                    # Server bootstrap
+│   └── package.json
+└── context/                            # Master Context Files
 ```
 
 ---
 
-## 3. Data Flow & Transaction Lifecycles
+## 5. Security & Boundary Rules
 
-### A. Online Ticket Purchase (Zero-Login UPI Flow)
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Buyer as Attendee (Mobile)
-    participant NextJS as Next.js Serverless
-    participant Redis as Upstash Redis
-    participant Razorpay as Razorpay Gateway
-    participant Supabase as Supabase DB
-
-    Buyer->>NextJS: Submits 2-Step Form (Name, WhatsApp, Qty)
-    NextJS->>Redis: Lock requested seats (Mutex 5-min TTL)
-    NextJS->>Razorpay: Create Order (₹ amount + receipt)
-    Razorpay-->>Buyer: Opens UPI Sheet (GPay / PhonePe / Paytm)
-    Buyer->>Razorpay: Completes UPI PIN Authorization
-    Razorpay->>NextJS: Webhook: payment.captured (HMAC-SHA256 verified)
-    NextJS->>Supabase: Insert Ticket Record (qr_token, buyer info)
-    NextJS->>Supabase: Increment Event tickets_sold & wallet_pending_settlement (+93%)
-    NextJS->>Redis: Cache valid qr_token in gate check-in set
-    NextJS-->>Buyer: Renders QR Ticket Pass on Screen & Sends WhatsApp Link
-```
-
-### B. Offline Cash Counter / Student Promoter Flow
-1. Reception desk or student promoter logs into Promoter Mode.
-2. Selects "Issue Cash Ticket", types Buyer Name + WhatsApp Number, and accepts physical cash (₹500 / ₹800).
-3. Server Action executes:
-   * Sets `payment_mode = 'CASH_PROMOTER'`.
-   * Sets `payment_status = 'PAID'`.
-   * Increments `tickets_sold` in Supabase.
-   * Calculates promoter cash bounty (e.g. ₹20) and organizer cash balance.
-   * Generates instant cryptographic QR pass on screen.
-
-### C. Gate QR Verification Flow (<50ms)
-1. Security guard opens `/scan/[event-id]` and authenticates with the event's 4-digit PIN.
-2. Browser camera scans the QR pass token (`SSM-XXXX-...`).
-3. Endpoint checks Upstash Redis cache first:
-   * If token not checked in: Redis marks token as checked in (`SETNX`), returns status: `VALID`. Guard screen flashes **Vibrant Emerald Green** with chime sound.
-   * If token already checked in: Returns status: `ALREADY_USED` with check-in timestamp. Guard screen flashes **Bright Crimson Red** with alert buzz.
-4. Asynchronous write updates Supabase `is_checked_in = TRUE` in the background.
-
----
-
-## 4. Server Actions vs. API Routes Division
-
-* **Server Actions (`actions/`)**:
-  * Used for all client-to-server UI mutations (submitting event creation, issuing cash tickets, requesting wallet payouts, casting poll votes).
-  * Enforces automatic type safety, CSRF protection, and co-located error handling without writing repetitive REST boilerplate.
-* **API Routes (`app/api/`)**:
-  * Reserved strictly for:
-    1. **Webhook Receivers**: `/api/webhook/razorpay` (must receive raw body for HMAC cryptographic signature verification).
-    2. **Low-Latency Edge Scanner**: `/api/scan/verify` (called asynchronously by camera scanner loop).
-    3. **Automated Ping Worker**: `/api/keep-alive` (called by Cloudflare Cron to prevent database pause).
-
----
-
-## 5. Security & Invariant Boundaries
-
-* **No Cold-Start Webhook Drops**: Backends must never run on sleep-prone containers (like Render free tier). All webhook receivers run on Vercel Serverless with instant wake-up.
-* **Zero Client-Side Secret Exposure**: `SUPABASE_SERVICE_ROLE_KEY`, `RAZORPAY_KEY_SECRET`, and `QR_HMAC_SECRET` are strictly server-side environment variables and must NEVER be prefixed with `NEXT_PUBLIC_`.
-* **Idempotent Webhook Handling**: Razorpay webhooks can be retried multiple times. The webhook handler verifies `razorpay_order_id` uniquely to prevent issuing duplicate tickets or crediting wallets twice.
+* **Secrets Isolation:** All backend secrets (`SUPABASE_SERVICE_ROLE_KEY`, `RAZORPAY_KEY_SECRET`, `QR_HMAC_SECRET`) live exclusively on Render and are never exposed to the Vercel frontend or client browsers.
+* **CORS Policy:** Render backend allows incoming requests only from the Vercel frontend domain (`https://getmyshow.vercel.app` or custom domain `https://getmyshow.in`) and `localhost:3000` during local development.

@@ -28,3 +28,4 @@ When creating a new component:
 2. Follow strict naming conventions: `PascalCase.tsx` in `components/<category>/`.
 3. Use the CSS variables defined in `context/ui-tokens.md`.
 4. Append a row to the registry table above detailing its file path, category, variants, and purpose.
+

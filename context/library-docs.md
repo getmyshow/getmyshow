@@ -161,3 +161,4 @@ Before improvising or writing workarounds for complex reverse engineering, binar
    * **`rea`**: Use for static and dynamic analysis of web bundles, APKs, or mobile app behavior.
    * **`ghidra-mcp`**: Use for native binary decompilation, string search, and xref inspection.
 2. Follow documented CLI commands and schema contracts.
+
