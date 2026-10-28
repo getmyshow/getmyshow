@@ -22,6 +22,7 @@ import {
 } from "@phosphor-icons/react";
 import EventCard from "@/components/ui/EventCard";
 import CategoryCircleRow from "@/components/discovery/CategoryCircleRow";
+import HeroBannerCarousel from "@/components/home/HeroBannerCarousel";
 import EmptyEventsIllustration from "@/components/illustrations/EmptyEventsIllustration";
 import OrganizerHostIllustration from "@/components/illustrations/OrganizerHostIllustration";
 import { EventItem } from "@/types";
@@ -208,55 +209,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
-      {/* 1. Eventbrite Full-Bleed Hero Banner with Rich Stock Image */}
-      <section className="relative w-full bg-[#1E0A3C] overflow-hidden">
-        <div className="relative max-w-[1340px] mx-auto min-h-[420px] sm:min-h-[460px] flex items-center px-4 sm:px-6 py-12">
-          {/* Background Stage Image */}
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1600&auto=format&fit=crop"
-              alt="Live event celebration and crowd"
-              fill
-              priority
-              className="object-cover opacity-40 filter brightness-90"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1E0A3C] via-[#1E0A3C]/80 to-transparent" />
-          </div>
-
-          {/* Eventbrite Floating Overlay Card (Rectangular with 12px Curved Radius) */}
-          <div className="relative z-10 max-w-lg bg-white/95 backdrop-blur-md rounded-xl p-6 sm:p-8 shadow-2xl border border-white/40">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#F05537] uppercase mb-2">
-              <Sparkle size={14} weight="fill" />
-              <span>GetMyShow • Bihar Event Box-Office</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1E0A3C] tracking-tight leading-tight">
-              From Coaching Seminars to Cultural Nights.
-            </h1>
-
-            <p className="mt-2.5 text-sm sm:text-base text-[#6F7287] leading-relaxed">
-              Book verified passes in under 10 seconds via Google Pay & PhonePe UPI. Zero app download, zero password hassle.
-            </p>
-
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <Link
-                href="#events"
-                className="px-6 py-3 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold transition-all shadow-xs active:scale-95 flex items-center gap-2"
-              >
-                <Ticket size={16} weight="bold" />
-                <span>Explore Events</span>
-              </Link>
-              <Link
-                href="/organizer/create"
-                className="px-6 py-3 rounded-lg border border-[#DBDAE3] hover:border-[#1E0A3C] bg-white text-[#1E0A3C] hover:bg-[#F8F7FA] text-sm font-semibold transition-all active:scale-95 flex items-center gap-2"
-              >
-                <Plus size={16} weight="bold" />
-                <span>List Event (0% Fee)</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 1. 3-Banner Hero Carousel (5-Second Auto-Loop with Pause-on-Hover) */}
+      <HeroBannerCarousel />
 
       {/* 2. Eventbrite Rectangular Visual Category Cards Grid */}
       <section className="border-b border-[#DBDAE3] bg-white">

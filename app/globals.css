@@ -148,3 +148,86 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* 5-Second Banner Carousel Progress Keyframe */
+@keyframes bannerProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-banner-progress {
+  animation: bannerProgress 5s linear forwards;
+}
+
+/* ==========================================================================
+   Comprehensive Single-Page Print Stylesheet for Digital Passes
+   Fixes ticket splitting across pages & eliminates website header/footer in print
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+
+  html,
+  body {
+    background: #FFFFFF !important;
+    background-color: #FFFFFF !important;
+    color: #1E0A3C !important;
+    font-size: 11pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Force-hide global website chrome & navigation elements */
+  header,
+  footer,
+  nav,
+  .no-print,
+  .print-hidden,
+  button,
+  a[href^="/"] {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: auto !important;
+  }
+
+  /* Single-page ticket container */
+  .ticket-print-wrapper {
+    max-width: 440px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #FFFFFF !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .ticket-scallop-card {
+    background: #FFFFFF !important;
+    border: 2px solid #1E0A3C !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin: 0 auto !important;
+  }
+
+  /* Ensure QR code and text are sharp in print */
+  .ticket-scallop-card img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

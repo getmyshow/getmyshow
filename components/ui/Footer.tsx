@@ -14,7 +14,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-[#DBDAE3] text-[#39364F] text-sm">
+    <footer className="bg-white border-t border-[#DBDAE3] text-[#39364F] text-sm print:hidden">
       {/* Trust & Guarantee Strip */}
       <div className="border-b border-[#EEEDF2] bg-[#F8F7FA]">
         <div className="max-w-[1340px] mx-auto px-4 sm:px-6 py-8">

@@ -50,7 +50,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[#DBDAE3] transition-colors">
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[#DBDAE3] transition-colors print:hidden">
       <div className="max-w-[1340px] mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
         {/* Brand Logo (Enlarged prominent size) & Mobile Hamburger */}
         <div className="flex items-center gap-3 shrink-0">

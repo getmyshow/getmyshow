@@ -13,8 +13,8 @@ export default function TicketConfirmationPage({
   const { token } = use(params);
 
   return (
-    <div className="py-10 px-4 min-h-[85vh] bg-[#F8F7FA]">
-      <div className="max-w-md mx-auto mb-6">
+    <div className="py-10 px-4 min-h-[85vh] bg-[#F8F7FA] print:p-0 print:bg-white print:min-h-0">
+      <div className="max-w-md mx-auto mb-6 print:hidden">
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#39364F] hover:text-[#3659E3] transition"
