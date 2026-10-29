@@ -29,6 +29,7 @@ import EmptyEventsIllustration from "@/components/illustrations/EmptyEventsIllus
 import OrganizerHostIllustration from "@/components/illustrations/OrganizerHostIllustration";
 import { getSubdomainUrl } from "@/lib/domains";
 import { EventItem } from "@/types";
+import { getUserStoredCity } from "@/lib/geo";
 
 // High-fidelity demo events representing Sasaram & Bihar target verticals with rich stock photography
 const DEMO_EVENTS: EventItem[] = [
@@ -204,10 +205,24 @@ function HomeContent() {
   const urlSearch = searchParams ? searchParams.get("search") || "" : "";
   const urlCity = searchParams ? searchParams.get("city") || "" : "";
 
+  const [userCity, setUserCity] = useState<string>("Sasaram");
   const [selectedCategory, setSelectedCategory] = useState<string>(urlCategory);
   const [liveEvents, setLiveEvents] = useState<EventItem[]>(DEMO_EVENTS);
   const [isDbConnected, setIsDbConnected] = useState<boolean>(false);
   const [dateFilter, setDateFilter] = useState<"all" | "today" | "tomorrow" | "weekend">("all");
+
+  // Read detected/stored city from Geolocation Manager
+  useEffect(() => {
+    setUserCity(getUserStoredCity());
+    const onCityChanged = (e: Event) => {
+      const customEvent = e as CustomEvent<{ city: string }>;
+      if (customEvent.detail?.city) {
+        setUserCity(customEvent.detail.city);
+      }
+    };
+    window.addEventListener("getmyshow:city-changed", onCityChanged);
+    return () => window.removeEventListener("getmyshow:city-changed", onCityChanged);
+  }, []);
 
   useEffect(() => {
     if (urlCategory) {
@@ -235,8 +250,12 @@ function HomeContent() {
   const filteredEvents = useMemo(() => {
     let list = liveEvents.length > 0 ? liveEvents : DEMO_EVENTS;
 
-    if (urlCity && urlCity !== "All") {
-      list = list.filter((e) => e.city.toLowerCase().includes(urlCity.toLowerCase()));
+    const activeCity = urlCity || userCity;
+    if (activeCity && activeCity !== "All") {
+      const cityMatches = list.filter((e) => e.city.toLowerCase().includes(activeCity.toLowerCase()));
+      if (cityMatches.length > 0) {
+        list = cityMatches;
+      }
     }
 
     if (urlSearch) {
@@ -286,7 +305,7 @@ function HomeContent() {
       if (selectedCategory === "workshops") return slug.includes("startup") || slug.includes("pitch");
       return true;
     });
-  }, [liveEvents, selectedCategory, urlSearch, urlCity, dateFilter]);
+  }, [liveEvents, selectedCategory, urlSearch, urlCity, userCity, dateFilter]);
 
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
@@ -309,8 +328,13 @@ function HomeContent() {
         <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div>
-              <div className="text-xs font-bold text-[#3659E3] uppercase tracking-wider">
-                {selectedCategory ? `Filtered by ${selectedCategory}` : "Discover in Sasaram & Rohtas"}
+              <div className="text-xs font-bold text-[#3659E3] uppercase tracking-wider flex items-center gap-1.5">
+                <MapPin size={13} weight="fill" className="text-[#3659E3] shrink-0" />
+                <span>
+                  {selectedCategory
+                    ? `Filtered by ${selectedCategory}`
+                    : `Discover in ${urlCity || userCity || "Sasaram & Rohtas"}`}
+                </span>
               </div>
               <h2 className="text-xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-0.5">
                 Popular Events Near You

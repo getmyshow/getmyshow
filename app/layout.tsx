@@ -6,6 +6,7 @@ import Footer from "@/components/ui/Footer";
 import MobileBottomNav from "@/components/ui/MobileBottomNav";
 import AgentationProvider from "@/components/dev/AgentationProvider";
 import ClerkAuthProvider from "@/components/auth/ClerkAuthProvider";
+import LocationManager from "@/components/common/LocationManager";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -52,6 +53,7 @@ export default function RootLayout({
       <body className="flex flex-col min-h-screen bg-[#F8F7FA] text-[#0F172A] font-sans antialiased selection:bg-[#4F46E5]/20 selection:text-[#4F46E5] overflow-x-hidden pb-16 md:pb-0">
         <ClerkAuthProvider>
           <AgentationProvider />
+          <LocationManager />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

@@ -18,21 +18,18 @@ import {
   UserCheck,
   ArrowRight,
   Compass,
+  Crosshair,
 } from "@phosphor-icons/react";
 import { getEvents, checkUserRole } from "@/actions/events";
 import { EventItem } from "@/types";
 import { formatINR } from "@/lib/utils";
 import { getSubdomainUrl } from "@/lib/domains";
-
-const BIHAR_CITIES = [
-  { name: "Sasaram", region: "Rohtas (HQ)", isPrimary: true },
-  { name: "Dehri-on-Sone", region: "Rohtas", isPrimary: false },
-  { name: "Patna", region: "Capital", isPrimary: false },
-  { name: "Gaya", region: "Magadh", isPrimary: false },
-  { name: "Bhabua", region: "Kaimur", isPrimary: false },
-  { name: "Ara", region: "Bhojpur", isPrimary: false },
-  { name: "Aurangabad", region: "Bihar", isPrimary: false },
-];
+import {
+  BIHAR_CITIES,
+  getUserStoredCity,
+  setUserStoredCity,
+  findNearestBiharCity,
+} from "@/lib/geo";
 
 const DISCOVERY_CATEGORIES = [
   { id: "all", label: "For You" },
@@ -82,9 +79,20 @@ function HeaderContent() {
     };
   }, [isSignedIn, user]);
 
-  // Set mounted state for React Portal teleportation
+  // Set mounted state for React Portal teleportation and load stored city
   useEffect(() => {
     setIsMounted(true);
+    setSelectedCity(getUserStoredCity());
+
+    const onCityChanged = (e: Event) => {
+      const customEvent = e as CustomEvent<{ city: string }>;
+      if (customEvent.detail?.city) {
+        setSelectedCity(customEvent.detail.city);
+      }
+    };
+
+    window.addEventListener("getmyshow:city-changed", onCityChanged);
+    return () => window.removeEventListener("getmyshow:city-changed", onCityChanged);
   }, []);
 
   // Prevent background scroll when mobile navigation drawer is open
@@ -149,6 +157,7 @@ function HeaderContent() {
 
   const handleSelectCity = (city: string) => {
     setSelectedCity(city);
+    setUserStoredCity(city);
     setIsCityDropdownOpen(false);
     const citySlug = city.toLowerCase().replace(/\s+/g, "-");
     router.push(`/city/${citySlug}`);
@@ -223,6 +232,31 @@ function HeaderContent() {
                     <div className="px-3 py-1.5 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
                       Select City in Bihar
                     </div>
+
+                    {/* Instant GPS Detection Option */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (typeof window !== "undefined" && "geolocation" in navigator) {
+                          navigator.geolocation.getCurrentPosition(
+                            (pos) => {
+                              const nearest = findNearestBiharCity(pos.coords.latitude, pos.coords.longitude);
+                              handleSelectCity(nearest.name);
+                            },
+                            () => {
+                              // If denied, fallback to Sasaram
+                              handleSelectCity("Sasaram");
+                            },
+                            { timeout: 8000 }
+                          );
+                        }
+                      }}
+                      className="w-full text-left px-3 py-2 mb-1 rounded-lg bg-indigo-50/80 hover:bg-indigo-100/80 text-[#4F46E5] text-xs font-bold flex items-center gap-2 transition-colors border border-indigo-200/60"
+                    >
+                      <Crosshair size={14} weight="bold" className="shrink-0" />
+                      <span className="truncate">Use Current Location (GPS)</span>
+                    </button>
+
                     <div className="space-y-0.5">
                       {BIHAR_CITIES.map((c) => (
                         <button
@@ -571,7 +605,12 @@ function HeaderContent() {
               {/* Quick Search Inside Drawer */}
               <form
                 onSubmit={(e) => {
-                  handleSearchSubmit(e);
+                  e.preventDefault();
+                  if (searchQuery.trim()) {
+                    router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                  } else {
+                    router.push("/search");
+                  }
                   setIsMobileMenuOpen(false);
                 }}
                 className="mt-3.5 flex items-center bg-[#F8F7FA] border border-[#DBDAE3] rounded-full h-9 px-3 focus-within:border-[#4F46E5] focus-within:bg-white"
@@ -589,12 +628,21 @@ function HeaderContent() {
               {/* Navigation Links */}
               <div className="mt-4 space-y-1">
                 <Link
-                  href="/#events"
+                  href="/"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
                 >
-                  <Ticket size={16} weight="duotone" className="text-[#4F46E5]" />
-                  <span>Browse Events</span>
+                  <Compass size={16} weight="duotone" className="text-[#4F46E5]" />
+                  <span>Explore Home</span>
+                </Link>
+
+                <Link
+                  href="/search"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
+                >
+                  <MagnifyingGlass size={16} weight="bold" className="text-[#4F46E5]" />
+                  <span>Search Events</span>
                 </Link>
 
                 <Link
@@ -604,6 +652,15 @@ function HeaderContent() {
                 >
                   <Ticket size={16} weight="bold" className="text-[#10B981]" />
                   <span>My Passes</span>
+                </Link>
+
+                <Link
+                  href="/account"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
+                >
+                  <UserCheck size={16} weight="duotone" className="text-[#4F46E5]" />
+                  <span>My Account</span>
                 </Link>
 
                 <Link
