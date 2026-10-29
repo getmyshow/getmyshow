@@ -47,12 +47,30 @@
   --glow-iris: rgba(54, 89, 227, 0.16);
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   background-color: var(--color-warm-linen);
   color: var(--color-aubergine-ink);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Ensure Agentation / floating developer feedback buttons sit above mobile bottom navigation */
+@media (max-width: 768px) {
+  [popover] button,
+  button[class*="trigger"],
+  div[class*="trigger"],
+  [class*="styles-module__trigger"],
+  [class*="styles-module__canvasToggle"],
+  [class*="canvasToggle"] {
+    bottom: 76px !important;
+  }
 }
 
 /* Eventbrite Crisp Modern Card (Anti-Slop 16px Radius - No Ovals) */
@@ -308,4 +326,18 @@ body::-webkit-scrollbar-thumb:hover,
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
+}
+
+/* QR Code Reveal Entrance Animation */
+@keyframes qr-code-reveal {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.animate-qr-code-reveal {
+  animation: qr-code-reveal cubic-bezier(0.16, 1, 0.3, 1) both;
 }

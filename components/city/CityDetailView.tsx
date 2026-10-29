@@ -234,7 +234,7 @@ export default function CityDetailView({ citySlug }: { citySlug: string }) {
             <div className="pt-2 flex flex-wrap items-center gap-3">
               <Link
                 href={getSubdomainUrl("org", "/create")}
-                className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95"
+                className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95"
               >
                 <Plus size={16} weight="bold" />
                 <span>Host Event in {cityInfo.name}</span>
@@ -319,7 +319,7 @@ export default function CityDetailView({ citySlug }: { citySlug: string }) {
                     setSelectedCategory("all");
                     setDateFilter("all");
                   }}
-                  className="text-xs font-bold text-[#F05537] hover:underline whitespace-nowrap ml-2 shrink-0"
+                  className="text-xs font-bold text-[#4F46E5] hover:underline whitespace-nowrap ml-2 shrink-0"
                 >
                   Reset Filters
                 </button>
@@ -364,7 +364,7 @@ export default function CityDetailView({ citySlug }: { citySlug: string }) {
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link
                   href={getSubdomainUrl("org", "/create")}
-                  className="px-5 py-2.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-xs font-bold transition-all shadow-xs"
+                  className="px-5 py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold transition-all shadow-xs"
                 >
                   Host an Event in {cityInfo.name}
                 </Link>
@@ -382,7 +382,7 @@ export default function CityDetailView({ citySlug }: { citySlug: string }) {
         {/* 5. Hyperlocal Organizer Box-Office Guarantee */}
         <section className="bg-white rounded-2xl border border-[#DBDAE3] p-6 sm:p-8 shadow-xs">
           <div className="max-w-3xl space-y-2">
-            <span className="text-xs font-bold text-[#F05537] uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#F97316] uppercase tracking-wider">
               Local Box-Office Support
             </span>
             <h3 className="text-xl sm:text-2xl font-black text-[#1E0A3C] tracking-tight">

@@ -20,7 +20,7 @@ export default function RefundPolicyPage() {
             <span>Back to GetMyShow</span>
           </Link>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#F05537]/10 text-[#F05537] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#4F46E5]/10 text-[#4F46E5] flex items-center justify-center shrink-0">
               <CurrencyInr size={22} weight="bold" />
             </div>
             <div>

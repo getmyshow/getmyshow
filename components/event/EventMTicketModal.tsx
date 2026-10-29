@@ -97,7 +97,7 @@ export default function EventMTicketModal({
           <div className="relative bg-white rounded-2xl p-3 text-slate-800 text-[10px] shadow-sm">
             <div className="flex items-center justify-between pb-1.5 border-b border-dashed border-slate-200">
               <span className="font-bold text-[#0F172A] truncate">ENTRY PASS</span>
-              <span className="text-[8px] font-black uppercase text-[#F05537]">M-TICKET</span>
+              <span className="text-[8px] font-black uppercase text-[#4F46E5]">M-TICKET</span>
             </div>
             <div className="py-2 flex flex-col items-center justify-center">
               <div className="w-20 h-20 bg-slate-900 rounded-xl p-1.5 flex items-center justify-center">
@@ -144,7 +144,7 @@ export default function EventMTicketModal({
         {/* Modal Body */}
         <div className="p-5 flex-1 flex flex-col items-center justify-between space-y-4">
           {/* Step Number Badge */}
-          <div className="w-8 h-8 rounded-lg bg-[#F05537] text-white flex items-center justify-center font-black text-sm shadow-sm shadow-orange-500/30">
+          <div className="w-8 h-8 rounded-lg bg-[#4F46E5] text-white flex items-center justify-center font-black text-sm shadow-sm shadow-indigo-500/30">
             {current.badgeText}
           </div>
 
@@ -170,7 +170,7 @@ export default function EventMTicketModal({
                 onClick={() => setCurrentStep(idx)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   currentStep === idx
-                    ? "w-8 bg-[#F05537]"
+                    ? "w-8 bg-[#4F46E5]"
                     : "w-4 bg-slate-200 hover:bg-slate-300"
                 }`}
                 aria-label={`Go to step ${idx + 1}`}
@@ -195,7 +195,7 @@ export default function EventMTicketModal({
               <button
                 type="button"
                 onClick={() => setCurrentStep((prev) => prev + 1)}
-                className="flex-1 py-2.5 rounded-xl bg-[#F05537] hover:bg-[#E04426] text-white text-xs font-bold transition shadow-xs active:scale-95 flex items-center justify-center gap-1"
+                className="flex-1 py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold transition shadow-xs active:scale-95 flex items-center justify-center gap-1"
               >
                 <span>Next Step</span>
                 <CaretRight size={14} weight="bold" />

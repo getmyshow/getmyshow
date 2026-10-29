@@ -95,7 +95,7 @@ export default function CategoryCircleRow({
           <button
             type="button"
             onClick={() => onSelectCategory?.("")}
-            className="text-xs font-bold text-[#F05537] hover:underline"
+            className="text-xs font-bold text-[#4F46E5] hover:underline"
           >
             Show All
           </button>
@@ -114,7 +114,7 @@ export default function CategoryCircleRow({
               onClick={() => onSelectCategory?.(isSelected ? "" : cat.id)}
               className={`group relative shrink-0 w-[130px] sm:w-auto h-24 sm:h-32 rounded-xl overflow-hidden border text-left transition-all duration-200 focus:outline-none flex flex-col justify-end p-2.5 snap-start active:scale-95 ${
                 isSelected
-                  ? "border-[#3659E3] ring-2 ring-[#3659E3] ring-offset-1 shadow-md scale-[1.02]"
+                  ? "border-[#4F46E5] ring-2 ring-[#4F46E5] ring-offset-1 shadow-md scale-[1.02]"
                   : "border-[#DBDAE3] hover:border-[#39364F] hover:shadow-md hover:-translate-y-0.5"
               }`}
             >
@@ -136,8 +136,8 @@ export default function CategoryCircleRow({
                 <div
                   className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${
                     isSelected
-                      ? "bg-[#3659E3] text-white"
-                      : "bg-white/20 backdrop-blur-xs text-white group-hover:bg-[#F05537]"
+                      ? "bg-[#4F46E5] text-white"
+                      : "bg-white/20 backdrop-blur-xs text-white group-hover:bg-[#4F46E5]"
                   }`}
                 >
                   {cat.icon}

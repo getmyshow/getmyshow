@@ -107,9 +107,10 @@ export default function HeroBannerCarousel() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="max-w-[1340px] mx-auto px-0 sm:px-6 py-0 sm:py-3">
-        {/* Banner Slide Frame: Zero border on mobile (edge-to-edge bleed), subtle 1px border on desktop (gsap.com) */}
-        <div className="relative w-full min-h-[260px] sm:min-h-[320px] md:min-h-[380px] rounded-none sm:rounded-2xl overflow-hidden shadow-none sm:shadow-md border-0 sm:border sm:border-slate-200/80 bg-[#0A0D14]">
+      {/* Banner decreased by 50% from all sides with compact centered container */}
+      <div className="max-w-[780px] mx-auto px-3 sm:px-6 py-2 sm:py-3">
+        {/* Banner Slide Frame: 50% compact height with elegant 16px radius on all devices */}
+        <div className="relative w-full min-h-[140px] sm:min-h-[175px] md:min-h-[200px] rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 bg-[#0A0D14]">
           {BANNERS.map((banner, index) => {
             const isActive = index === currentSlide;
 
@@ -132,30 +133,30 @@ export default function HeroBannerCarousel() {
                   {/* Subtle Cinematic Vignette for text readability */}
                   <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-black/85 via-black/55 to-transparent" />
 
-                  {/* Mobile-First Content Overlay */}
-                  <div className="relative z-20 max-w-xl px-4 sm:px-10 py-6 sm:py-8 space-y-2.5 sm:space-y-3.5">
+                  {/* Compact Content Overlay */}
+                  <div className="relative z-20 max-w-md px-3.5 sm:px-6 py-2.5 sm:py-3.5 space-y-1 sm:space-y-1.5">
                     {/* Category Pill Badge */}
                     <div>
                       <span
-                        className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-wider ${banner.badgeColor} shadow-xs inline-flex items-center gap-1.5`}
+                        className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${banner.badgeColor} shadow-2xs inline-flex items-center gap-1`}
                       >
-                        <Sparkle size={12} weight="fill" />
+                        <Sparkle size={10} weight="fill" />
                         <span>{banner.badge}</span>
                       </span>
                     </div>
 
-                    {/* Stacked Colored Headline Blocks (Responsive Fluid Font) */}
-                    <div className="space-y-1">
+                    {/* Stacked Colored Headline Blocks */}
+                    <div className="space-y-0.5">
                       <div className="block">
                         <h2
-                          className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-lg ${banner.titleColor} shadow-md inline-block max-w-full`}
+                          className={`text-xs sm:text-base md:text-lg font-black uppercase tracking-tight px-2 py-0.5 rounded ${banner.titleColor} shadow-xs inline-block max-w-full leading-tight`}
                         >
                           {banner.titleLine1}
                         </h2>
                       </div>
                       <div className="block">
                         <h2
-                          className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-lg ${banner.titleColor} shadow-md inline-block max-w-full`}
+                          className={`text-xs sm:text-base md:text-lg font-black uppercase tracking-tight px-2 py-0.5 rounded ${banner.titleColor} shadow-xs inline-block max-w-full leading-tight`}
                         >
                           {banner.titleLine2}
                         </h2>
@@ -163,21 +164,21 @@ export default function HeroBannerCarousel() {
                     </div>
 
                     {/* Subtitle / Description */}
-                    <p className="text-xs sm:text-sm text-slate-200 font-medium max-w-md leading-relaxed line-clamp-2 drop-shadow-xs">
+                    <p className="text-[11px] sm:text-xs text-slate-200 font-medium max-w-sm leading-tight line-clamp-1 drop-shadow-xs">
                       {banner.subtitle}
                     </p>
 
                     {/* Action CTA Button */}
-                    <div className="pt-1 sm:pt-2">
+                    <div className="pt-0.5">
                       <Link
                         href={banner.ctaLink}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-white hover:bg-slate-100 text-[#0F172A] text-xs sm:text-sm font-extrabold shadow-md transition-all active:scale-95 group"
+                        className="inline-flex items-center gap-1 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white hover:bg-slate-100 text-[#0F172A] text-[10px] sm:text-xs font-bold shadow-xs transition-all active:scale-95 group"
                       >
                         <span>{banner.ctaText}</span>
                         <ArrowRight
-                          size={14}
+                          size={12}
                           weight="bold"
-                          className="transition-transform group-hover:translate-x-1"
+                          className="transition-transform group-hover:translate-x-0.5"
                         />
                       </Link>
                     </div>
@@ -187,26 +188,26 @@ export default function HeroBannerCarousel() {
             );
           })}
 
-          {/* Navigation Arrows: Hidden on Mobile so they NEVER overlap text; visible on desktop only */}
+          {/* Navigation Arrows: Compact and tucked inside */}
           <button
             type="button"
             onClick={prevSlide}
             aria-label="Previous Banner"
-            className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
+            className="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-30 w-7 h-7 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
           >
-            <CaretLeft size={20} weight="bold" />
+            <CaretLeft size={16} weight="bold" />
           </button>
           <button
             type="button"
             onClick={nextSlide}
             aria-label="Next Banner"
-            className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
+            className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-30 w-7 h-7 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
           >
-            <CaretRight size={20} weight="bold" />
+            <CaretRight size={16} weight="bold" />
           </button>
 
           {/* Progress Indicators */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 sm:gap-2">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1">
             {BANNERS.map((_, i) => {
               const isSelected = i === currentSlide;
               return (
@@ -215,10 +216,10 @@ export default function HeroBannerCarousel() {
                   type="button"
                   onClick={() => setCurrentSlide(i)}
                   aria-label={`Go to slide ${i + 1}`}
-                  className="h-1.5 sm:h-2 rounded-full transition-all duration-300 overflow-hidden relative"
+                  className="h-1 rounded-full transition-all duration-300 overflow-hidden relative"
                   style={{
-                    width: isSelected ? "28px" : "8px",
-                    backgroundColor: isSelected ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0.25)",
+                    width: isSelected ? "18px" : "6px",
+                    backgroundColor: isSelected ? "rgba(255, 255, 255, 0.6)" : "rgba(255, 255, 255, 0.3)",
                   }}
                 >
                   {isSelected && (

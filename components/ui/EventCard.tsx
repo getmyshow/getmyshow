@@ -66,7 +66,7 @@ export default function EventCard({ event }: EventCardProps) {
             {event.city}
           </span>
           {isAlmostFull && (
-            <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-[#F05537] text-white flex items-center gap-1 shadow-xs">
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-[#F97316] text-white flex items-center gap-1 shadow-xs">
               <Sparkle size={12} weight="fill" />
               Fast Filling
             </span>
@@ -83,8 +83,8 @@ export default function EventCard({ event }: EventCardProps) {
           }}
           className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-md flex items-center justify-center transition-all shadow-xs border ${
             isSaved
-              ? "bg-[#F05537] text-white border-[#F05537]"
-              : "bg-white/95 text-[#39364F] hover:text-[#F05537] hover:bg-white border-[#DBDAE3]/80"
+              ? "bg-[#4F46E5] text-white border-[#4F46E5]"
+              : "bg-white/95 text-[#39364F] hover:text-[#4F46E5] hover:bg-white border-[#DBDAE3]/80"
           }`}
         >
           <BookmarkSimple size={18} weight={isSaved ? "fill" : "bold"} />
@@ -131,7 +131,7 @@ export default function EventCard({ event }: EventCardProps) {
 
           <Link
             href={`/e/${event.slug}`}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#F05537] hover:bg-[#D94428] text-white text-xs font-bold transition-all shadow-xs active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold transition-all shadow-xs active:scale-95"
           >
             <Ticket size={14} weight="bold" />
             <span>Get Passes</span>

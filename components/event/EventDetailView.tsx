@@ -239,7 +239,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
           <button
             type="button"
             onClick={handleShare}
-            className="p-2 -mr-1 text-slate-700 hover:text-[#F05537] hover:bg-slate-100 rounded-full transition-colors shrink-0"
+            className="p-2 -mr-1 text-slate-700 hover:text-[#4F46E5] hover:bg-slate-100 rounded-full transition-colors shrink-0"
             aria-label="Share event"
           >
             <ShareNetwork size={20} weight="bold" />
@@ -271,7 +271,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
 
               {/* Bottom-Left Organizer Watermark Badge (AtomX style) */}
               <div className="absolute bottom-3 left-3 bg-[#0F172A]/85 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/20 text-white text-[10px] font-extrabold flex items-center gap-1 shadow-md">
-                <SealCheck size={13} weight="fill" className="text-[#F05537]" />
+                <SealCheck size={13} weight="fill" className="text-[#F97316]" />
                 <span className="truncate max-w-[130px]">{event.organizer_name}</span>
               </div>
             </div>
@@ -310,7 +310,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 active:scale-95 ${
                   isInterested
                     ? "border border-slate-300 text-slate-600 hover:bg-slate-100 bg-white"
-                    : "border-2 border-[#F05537] text-[#F05537] hover:bg-red-50 bg-white shadow-2xs"
+                    : "border-2 border-[#4F46E5] text-[#4F46E5] hover:bg-indigo-50 bg-white shadow-2xs"
                 }`}
               >
                 {isInterested ? "Undo" : "Interested?"}
@@ -351,7 +351,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
 
               {/* Venue */}
               <div className="flex items-start gap-3 pt-1 border-t border-slate-100">
-                <MapPinLine size={18} weight="bold" className="text-[#F05537] shrink-0 mt-0.5" />
+                <MapPinLine size={18} weight="bold" className="text-[#F97316] shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <span className="font-bold">{event.venue}: {event.city}</span>
                   <a
@@ -418,7 +418,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
               <button
                 type="button"
                 onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                className="text-xs font-bold text-[#F05537] hover:underline transition-colors block pt-1"
+                className="text-xs font-bold text-[#4F46E5] hover:underline transition-colors block pt-1"
               >
                 {isDescriptionExpanded ? "Read Less" : "Read More"}
               </button>
@@ -437,7 +437,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
                   <button
                     type="button"
                     onClick={() => setIsMTicketModalOpen(true)}
-                    className="text-[11px] font-bold text-[#F05537] hover:underline mt-0.5 inline-block"
+                    className="text-[11px] font-bold text-[#4F46E5] hover:underline mt-0.5 inline-block"
                   >
                     Learn How
                   </button>
@@ -524,7 +524,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
               <button
                 type="button"
                 onClick={() => setIsCheckoutModalOpen(true)}
-                className="w-full py-3.5 rounded-xl bg-[#F05537] hover:bg-[#E04426] text-white text-base font-bold shadow-md shadow-orange-500/25 transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white text-base font-bold shadow-md shadow-indigo-500/25 transition-all active:scale-[0.99] flex items-center justify-center gap-2"
               >
                 <Ticket size={20} weight="bold" />
                 <span>Book Now</span>
@@ -537,7 +537,7 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
                   <span>Instant WhatsApp delivery with HMAC QR</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Lightning size={16} weight="fill" className="text-[#F05537] shrink-0" />
+                  <Lightning size={16} weight="fill" className="text-[#F97316] shrink-0" />
                   <span>2-Click No-Login UPI Checkout (under 10s)</span>
                 </div>
               </div>
@@ -564,11 +564,17 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
           <button
             type="button"
             onClick={() => setIsCheckoutModalOpen(true)}
-            className="py-3 px-6 rounded-xl bg-[#F05537] hover:bg-[#E04426] text-white text-sm font-bold shadow-md shadow-orange-500/25 transition-all active:scale-95 shrink-0"
+            className="py-3 px-6 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white text-sm font-bold shadow-md shadow-indigo-500/25 transition-all active:scale-95 shrink-0"
           >
             Book Now
           </button>
         </div>
+
+        {/* Solid white bottom skirt to seal edge on mobile */}
+        <div
+          aria-hidden="true"
+          className="absolute top-full left-0 right-0 h-40 bg-white pointer-events-none"
+        />
       </div>
 
       {/* 12. Interactive Modals */}

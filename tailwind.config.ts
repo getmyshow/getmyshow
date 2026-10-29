@@ -63,6 +63,15 @@ const config: Config = {
         card: "0 2px 12px -2px rgba(30, 10, 60, 0.05)",
         ticket: "0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04)",
       },
+      keyframes: {
+        "qr-code-reveal": {
+          from: { transform: "scale(0)" },
+          to: { transform: "scale(1)" },
+        },
+      },
+      animation: {
+        "qr-code-reveal": "qr-code-reveal 800ms cubic-bezier(0.16, 1, 0.3, 1) both",
+      },
     },
   },
   plugins: [],

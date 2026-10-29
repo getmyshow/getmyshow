@@ -104,7 +104,7 @@ export default function OrganizerLandingPage() {
 
             <Link
               href="/organizer/create"
-              className="px-5 py-3 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white font-bold text-sm shadow-xs transition-all active:scale-95 flex items-center justify-center gap-2"
+              className="px-5 py-3 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold text-sm shadow-xs transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               <Plus size={18} weight="bold" />
               <span>Create New Event</span>
@@ -130,7 +130,7 @@ export default function OrganizerLandingPage() {
           <div className="p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Tickets Issued</span>
-              <div className="w-9 h-9 rounded-md bg-[#F05537]/10 text-[#F05537] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-md bg-[#4F46E5]/10 text-[#4F46E5] flex items-center justify-center">
                 <Ticket size={22} weight="duotone" />
               </div>
             </div>
@@ -188,7 +188,7 @@ export default function OrganizerLandingPage() {
               <div className="grid grid-cols-2 gap-3 text-left pt-2">
                 <div className="p-3 rounded-xl bg-[#F8F7FA] border border-[#EEEDF2] space-y-1">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[#1E0A3C]">
-                    <Lightning size={14} className="text-[#F05537]" weight="fill" />
+                    <Lightning size={14} className="text-[#F97316]" weight="fill" />
                     <span>Instant UPI</span>
                   </div>
                   <p className="text-[11px] text-[#6F7287]">Google Pay, PhonePe, Paytm with 0% gateway dropoff.</p>
@@ -219,7 +219,7 @@ export default function OrganizerLandingPage() {
               <div className="pt-2">
                 <Link
                   href="/organizer/create"
-                  className="px-6 py-3 rounded-xl bg-[#F05537] hover:bg-[#D94428] text-white text-xs sm:text-sm font-bold transition shadow-md inline-flex items-center gap-2 active:scale-95"
+                  className="px-6 py-3 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs sm:text-sm font-bold transition shadow-md inline-flex items-center gap-2 active:scale-95"
                 >
                   <Plus size={18} weight="bold" />
                   <span>Create Your First Event Now</span>

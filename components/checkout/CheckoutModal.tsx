@@ -384,7 +384,7 @@ export default function CheckoutModal({
                     className="w-full px-3.5 py-2.5 flex items-center justify-between text-left hover:bg-slate-50 transition"
                   >
                     <div className="flex items-center gap-2 font-bold text-[#1E0A3C]">
-                      <Tag size={16} weight="bold" className="text-[#F05537]" />
+                      <Tag size={16} weight="bold" className="text-[#F97316]" />
                       <span>Have a Promo Code / Coupon?</span>
                     </div>
                     <span className="text-[11px] font-bold text-[#3659E3]">
@@ -473,12 +473,12 @@ export default function CheckoutModal({
               </div>
             </div>
 
-            {/* Action Buttons (Rectangular 8px Curved Radius - Ember Orange) */}
+            {/* Action Buttons (Rectangular 8px Curved Radius - Electric Indigo) */}
             <div className="space-y-2.5 pt-2">
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full py-3.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold shadow-sm hover:shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-sm font-bold shadow-sm hover:shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isPending ? (
                   <>
@@ -512,7 +512,7 @@ export default function CheckoutModal({
               {event.custom_fields?.map((field) => (
                 <div key={field.id}>
                   <label className="block text-xs font-bold text-[#39364F] mb-1">
-                    {field.label} {field.required && <span className="text-[#F05537]">*</span>}
+                    {field.label} {field.required && <span className="text-[#F97316]">*</span>}
                   </label>
                   <input
                     type="text"
@@ -520,7 +520,7 @@ export default function CheckoutModal({
                     placeholder={field.placeholder}
                     value={customAnswers[field.id] || ""}
                     onChange={(e) => handleCustomChange(field.id, e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition-all"
+                    className="w-full px-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-all"
                   />
                 </div>
               ))}
@@ -539,7 +539,7 @@ export default function CheckoutModal({
                 type="button"
                 onClick={initiatePayment}
                 disabled={isPending}
-                className="flex-1 py-3 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold shadow-sm transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 py-3 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-sm font-bold shadow-sm transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isPending ? (
                   <>

@@ -241,9 +241,13 @@ export default function Footer() {
         <div className="flex items-center justify-center gap-4 my-4">
           <div className="flex-1 h-px bg-slate-800" />
           <Link href="/" className="inline-flex items-center gap-2 group px-2">
-            <span className="font-black text-xl text-white tracking-tight flex items-center">
-              get<span className="text-[#4F46E5] mx-1">[my<span className="text-[#F97316] ml-0.5">▶</span>]</span>show
-            </span>
+            <Image
+              src="/brand/logos/wordmark-tilted-white.svg"
+              alt="GetMyShow"
+              width={160}
+              height={42}
+              className="h-10 w-auto object-contain group-hover:opacity-80 transition-opacity"
+            />
           </Link>
           <div className="flex-1 h-px bg-slate-800" />
         </div>

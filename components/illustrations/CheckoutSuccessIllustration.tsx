@@ -20,7 +20,7 @@ export default function CheckoutSuccessIllustration({ className = "w-48 h-36" }:
 
       {/* Ticket Pass on Screen */}
       <rect x="148" y="60" width="104" height="135" rx="10" fill="#F8F7FA" stroke="#DBDAE3" strokeWidth="1.5" />
-      <rect x="148" y="60" width="104" height="30" rx="10" fill="#F05537" />
+      <rect x="148" y="60" width="104" height="30" rx="10" fill="#4F46E5" />
 
       {/* Scallop waist notches on phone ticket */}
       <circle cx="148" cy="125" r="7" fill="#FFFFFF" />
@@ -32,14 +32,14 @@ export default function CheckoutSuccessIllustration({ className = "w-48 h-36" }:
       <rect x="186" y="141" width="10" height="10" fill="#FFFFFF" />
       <rect x="204" y="141" width="10" height="10" fill="#FFFFFF" />
       <rect x="186" y="159" width="10" height="10" fill="#FFFFFF" />
-      <rect x="202" y="157" width="14" height="14" fill="#F05537" />
+      <rect x="202" y="157" width="14" height="14" fill="#F97316" />
 
       {/* Green Success Badge */}
       <circle cx="200" cy="210" r="18" fill="#10B981" />
       <path d="M192 210L197 215L208 204" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
 
       {/* Floating party sparkles */}
-      <path d="M90 90L93 82L96 90L104 93L96 96L93 104L90 96L82 93L90 90Z" fill="#F05537" />
+      <path d="M90 90L93 82L96 90L104 93L96 96L93 104L90 96L82 93L90 90Z" fill="#F97316" />
       <path d="M300 70L303 62L306 70L314 73L306 76L303 84L300 76L292 73L300 70Z" fill="#3659E3" />
       <circle cx="100" cy="160" r="5" fill="#10B981" />
       <circle cx="295" cy="150" r="6" fill="#F97316" />

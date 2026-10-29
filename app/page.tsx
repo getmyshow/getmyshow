@@ -24,6 +24,7 @@ import {
 } from "@phosphor-icons/react";
 import EventCard from "@/components/ui/EventCard";
 import CategoryCircleRow from "@/components/discovery/CategoryCircleRow";
+import CategoryIconRow from "@/components/discovery/CategoryIconRow";
 import HeroBannerCarousel from "@/components/home/HeroBannerCarousel";
 import EmptyEventsIllustration from "@/components/illustrations/EmptyEventsIllustration";
 import { getSubdomainUrl } from "@/lib/domains";
@@ -310,6 +311,16 @@ function HomeContent() {
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
       {/* 1. 3-Banner Hero Carousel (5-Second Auto-Loop with Pause-on-Hover) */}
       <HeroBannerCarousel />
+
+      {/* 1b. Horizontal Category Icon Row (BookMyShow / District style) */}
+      <section className="bg-white border-b border-[#DBDAE3]">
+        <div className="max-w-[1340px] mx-auto px-4 sm:px-6">
+          <CategoryIconRow
+            selectedCategory={selectedCategory}
+            onSelectCategory={(id) => setSelectedCategory(id)}
+          />
+        </div>
+      </section>
 
       {/* 2. Eventbrite Rectangular Visual Category Cards Grid */}
       <section className="border-b border-[#DBDAE3] bg-white">

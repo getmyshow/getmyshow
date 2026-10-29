@@ -76,7 +76,7 @@ export default function EventTermsModal({
           <div className="space-y-3.5">
             {termsToDisplay.map((term, idx) => (
               <div key={idx} className="flex items-start gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#F05537] mt-2 shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F97316] mt-2 shrink-0" />
                 <p className="flex-1">{term}</p>
               </div>
             ))}
@@ -93,7 +93,7 @@ export default function EventTermsModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-3.5 rounded-xl bg-[#F05537] hover:bg-[#E04426] text-white text-sm font-bold shadow-md shadow-orange-500/25 transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white text-sm font-bold shadow-md shadow-indigo-500/25 transition-all active:scale-[0.99] flex items-center justify-center gap-2"
           >
             <span>Okay, Got It</span>
           </button>
