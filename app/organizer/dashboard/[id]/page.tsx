@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import {
   Wallet,
   ArrowUpRight,
@@ -27,66 +28,57 @@ import {
   Copy,
   LockKey,
   LinkSimple,
+  MagnifyingGlass,
+  CalendarBlank,
+  MapPinLine,
+  ArrowsClockwise,
+  ShareNetwork,
 } from "@phosphor-icons/react";
 import { formatINR } from "@/lib/utils";
-import { issueCashPass } from "@/actions/tickets";
+import { getEventById } from "@/actions/events";
+import { getEventAttendees, issueCashPass } from "@/actions/tickets";
 import { requestWithdrawal } from "@/actions/wallet";
 import {
+  getScannerStaff,
   createScannerStaff,
   toggleScannerStaffStatus,
   deleteScannerStaff,
 } from "@/actions/scanner-staff";
-import { ScannerStaff } from "@/types";
+import { getSubdomainUrl } from "@/lib/domains";
+import { ScannerStaff, EventItem, TicketOrder } from "@/types";
+import EmptyEventsIllustration from "@/components/illustrations/EmptyEventsIllustration";
 
 export default function OrganizerDashboardPage() {
+  const params = useParams();
+  const router = useRouter();
+  const routeId = (params?.id as string) || "";
+
+  // Core Data State
+  const [event, setEvent] = useState<EventItem | null>(null);
+  const [attendees, setAttendees] = useState<TicketOrder[]>([]);
+  const [staffList, setStaffList] = useState<ScannerStaff[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [attendeeSearch, setAttendeeSearch] = useState("");
+
+  // Cash Pass Modal State
   const [isCashModalOpen, setIsCashModalOpen] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [cashBuyerName, setCashBuyerName] = useState("");
   const [cashBuyerPhone, setCashBuyerPhone] = useState("");
   const [cashPromoterCode, setCashPromoterCode] = useState("");
   const [cashQuantity, setCashQuantity] = useState(1);
+  const [selectedTierId, setSelectedTierId] = useState<string>("");
   const [cashIssuedPass, setCashIssuedPass] = useState<{ ticketNumber: string; qrToken: string } | null>(null);
   const [cashError, setCashError] = useState<string | null>(null);
 
+  // Withdrawal Modal State
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [payoutDest, setPayoutDest] = useState("");
-  const [utrNumber, setUtrNumber] = useState("");
   const [withdrawSuccess, setWithdrawSuccess] = useState<string | null>(null);
   const [withdrawError, setWithdrawError] = useState<string | null>(null);
 
   // Scanner Staff RBAC State
-  const [staffList, setStaffList] = useState<ScannerStaff[]>([
-    {
-      id: "staff-demo-1",
-      event_id: "1",
-      scanner_id: "GATE-1-RAHUL",
-      password_hash: "",
-      assigned_gate: "Main Entry Turnstile A",
-      is_active: true,
-      scanned_count: 142,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "staff-demo-2",
-      event_id: "1",
-      scanner_id: "GATE-2-BOUNCER",
-      password_hash: "",
-      assigned_gate: "VIP Stage Front Turnstile",
-      is_active: true,
-      scanned_count: 38,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "staff-demo-3",
-      event_id: "1",
-      scanner_id: "GATE-3-AMIT",
-      password_hash: "",
-      assigned_gate: "North Balcony Entry",
-      is_active: false,
-      scanned_count: 0,
-      created_at: new Date().toISOString(),
-    },
-  ]);
   const [isStaffModalOpen, setIsStaffModalOpen] = useState(false);
   const [newStaffScannerId, setNewStaffScannerId] = useState("");
   const [newStaffGate, setNewStaffGate] = useState("Main Turnstile Gate A");
@@ -94,11 +86,83 @@ export default function OrganizerDashboardPage() {
   const [staffCreatedSuccess, setStaffCreatedSuccess] = useState<string | null>(null);
   const [staffError, setStaffError] = useState<string | null>(null);
   const [copiedStaffId, setCopiedStaffId] = useState<string | null>(null);
+  const [copiedPublicLink, setCopiedPublicLink] = useState(false);
 
   const [isPending, startTransition] = useTransition();
 
+  // Load Event, Attendees & Staff from Supabase
+  const loadDashboardData = async () => {
+    if (!routeId) return;
+    setIsLoading(true);
+    setLoadError(null);
+
+    try {
+      const eventRes = await getEventById(routeId);
+      if (!eventRes.success) {
+        setLoadError(eventRes.error || "Event not found in database.");
+        setIsLoading(false);
+        return;
+      }
+
+      const liveEvent = eventRes.data;
+      setEvent(liveEvent);
+
+      // Default tier for cash desk
+      if (liveEvent.ticket_tiers && liveEvent.ticket_tiers.length > 0) {
+        setSelectedTierId(liveEvent.ticket_tiers[0].id);
+      }
+
+      // Populate Staff
+      if (Array.isArray(liveEvent.scanner_staff)) {
+        setStaffList(liveEvent.scanner_staff as ScannerStaff[]);
+      } else {
+        const staffRes = await getScannerStaff(liveEvent.id);
+        if (staffRes.success && staffRes.data) {
+          setStaffList(staffRes.data);
+        }
+      }
+
+      // Populate Live Attendees Roster
+      const attendeesRes = await getEventAttendees(liveEvent.id);
+      if (attendeesRes.success && attendeesRes.data) {
+        setAttendees(attendeesRes.data);
+      }
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Failed to load dashboard data.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [routeId]);
+
+  // Derived Financials & Metrics
+  const grossGMV = attendees
+    .filter((t) => t.payment_status === "PAID")
+    .reduce((sum, t) => sum + (Number(t.amount_paid) || 0), 0);
+
+  const totalPaidPasses = attendees
+    .filter((t) => t.payment_status === "PAID")
+    .reduce((sum, t) => sum + (Number(t.quantity) || 1), 0);
+
+  const ticketsSold = Math.max(totalPaidPasses, event?.tickets_sold || 0);
+  const totalCapacity = event?.total_capacity || 100;
+  const occupancyRate = Math.min(100, Math.round((ticketsSold / Math.max(1, totalCapacity)) * 100));
+
+  const walletAvailable = Number(event?.wallet_available) || 0;
+  const walletPending = Number(event?.wallet_pending_settlement) || 0;
+
+  // Selected Tier in Cash Desk
+  const activeCashTier = event?.ticket_tiers?.find((t) => t.id === selectedTierId);
+  const cashUnitCost = activeCashTier ? Number(activeCashTier.price) : Number(event?.ticket_price || 0);
+  const totalCashPayable = cashUnitCost * cashQuantity;
+
+  // Provision Staff Handler
   const handleAddStaff = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!event) return;
     setStaffError(null);
     setStaffCreatedSuccess(null);
 
@@ -110,90 +174,98 @@ export default function OrganizerDashboardPage() {
 
     startTransition(async () => {
       const res = await createScannerStaff({
-        eventId: "1",
+        eventId: event.id,
         scannerId: cleanId,
         password: newStaffPassword.trim(),
         assignedGate: newStaffGate.trim(),
       });
 
-      if (res.success && res.data) {
+      if (res.success) {
         setStaffList((prev) => [res.data, ...prev]);
         setStaffCreatedSuccess(`Scanner account ${res.data.scanner_id} provisioned successfully!`);
       } else {
-        // Fallback local addition if offline
-        const localStaff: ScannerStaff = {
-          id: `staff-${Date.now().toString(36)}`,
-          event_id: "1",
-          scanner_id: cleanId,
-          password_hash: "",
-          assigned_gate: newStaffGate.trim(),
-          is_active: true,
-          scanned_count: 0,
-          created_at: new Date().toISOString(),
-        };
-        setStaffList((prev) => [localStaff, ...prev]);
-        setStaffCreatedSuccess(`Scanner account ${localStaff.scanner_id} provisioned locally!`);
+        setStaffError(res.error || "Failed to provision scanner staff.");
       }
     });
   };
 
   const handleToggleStaff = (staffId: string, currentStatus: boolean) => {
+    if (!event) return;
     const nextStatus = !currentStatus;
     setStaffList((prev) =>
       prev.map((s) => (s.id === staffId ? { ...s, is_active: nextStatus } : s))
     );
-    toggleScannerStaffStatus("1", staffId, nextStatus).catch(() => {});
+    toggleScannerStaffStatus(event.id, staffId, nextStatus).catch(() => {});
   };
 
   const handleDeleteStaff = (staffId: string) => {
+    if (!event) return;
     setStaffList((prev) => prev.filter((s) => s.id !== staffId));
-    deleteScannerStaff("1", staffId).catch(() => {});
+    deleteScannerStaff(event.id, staffId).catch(() => {});
   };
 
   const copyCredentials = (staff: ScannerStaff) => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const message = `🎟️ *GetMyShow — Scanning Staff Gate Access*\n\nHello! You have been assigned as gate entry staff for:\n🎪 *Event:* Sasaram Mega Music Fest 2026\n\n🔑 *Your 3 Login Credentials:*\n1️⃣ *Event ID:* SAS-01\n2️⃣ *Official Staff ID:* ${staff.scanner_id}\n3️⃣ *Gate PIN / Password:* (Provided by Organizer)\n\n📍 *Assigned Turnstile:* ${staff.assigned_gate}\n\n👉 *Open Staff Login Portal:*\n${origin}/staff/login?event=SAS-01&staff=${staff.scanner_id}\n\nEnter the 3 credentials above to start scanning passes!`;
+    if (!event) return;
+    const staffLoginUrl = getSubdomainUrl("scan", `/login?event=${event.id}&staff=${staff.scanner_id}`);
+    const shortEventCode = event.slug.split("-")[0]?.toUpperCase() || event.id.slice(0, 8).toUpperCase();
+    const message = `🎟️ *GetMyShow — Scanning Staff Gate Access*\n\nHello! You have been assigned as gate entry staff for:\n🎪 *Event:* ${event.title}\n\n🔑 *Your 3 Login Credentials:*\n1️⃣ *Event ID:* ${shortEventCode}\n2️⃣ *Official Staff ID:* ${staff.scanner_id}\n3️⃣ *Gate PIN / Password:* (Provided by Organizer)\n\n📍 *Assigned Turnstile:* ${staff.assigned_gate}\n\n👉 *Open Staff Login Portal:*\n${staffLoginUrl}\n\nEnter the 3 credentials above to start scanning passes!`;
     navigator.clipboard.writeText(message);
     setCopiedStaffId(staff.id);
     setTimeout(() => setCopiedStaffId(null), 2000);
   };
 
-  // Financial statistics (Live Organizer Ledger)
-  const grossGMV = 38200;
-  const ticketsSold = 382;
-  const capacity = 500;
-  const walletPending = 35526;
-  const walletAvailable = 14200;
-
+  // Issue Offline Cash Pass
   const handleIssueCash = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!event) return;
     setCashError(null);
     setCashIssuedPass(null);
 
     startTransition(async () => {
       const res = await issueCashPass({
-        eventId: "1",
+        eventId: event.id,
         buyerName: cashBuyerName.trim(),
         buyerWhatsapp: cashBuyerPhone.trim(),
         quantity: cashQuantity,
-        amountPaid: 100 * cashQuantity,
+        amountPaid: totalCashPayable,
+        tierId: activeCashTier?.id,
+        tierName: activeCashTier?.name || "General Admission",
         promoterCode: cashPromoterCode.trim() || undefined,
-        tierName: "General Admission",
       });
 
-      if (res.success && res.data) {
+      if (res.success) {
         setCashIssuedPass(res.data);
+        // Instantly reflect in local attendees roster
+        const newTicket: TicketOrder = {
+          id: `cash-${Date.now().toString(36)}`,
+          event_id: event.id,
+          ticket_number: res.data.ticketNumber,
+          buyer_name: cashBuyerName.trim(),
+          buyer_whatsapp: cashBuyerPhone.trim(),
+          payment_mode: "CASH_PROMOTER",
+          tier_id: activeCashTier?.id,
+          tier_name: activeCashTier?.name || "General Admission",
+          quantity: cashQuantity,
+          amount_paid: totalCashPayable,
+          organizer_share: totalCashPayable,
+          platform_fee: 0,
+          payment_status: "PAID",
+          qr_token: res.data.qrToken,
+          is_checked_in: false,
+          created_at: new Date().toISOString(),
+        };
+        setAttendees((prev) => [newTicket, ...prev]);
+        setEvent((prev) => (prev ? { ...prev, tickets_sold: prev.tickets_sold + cashQuantity } : null));
       } else {
-        // Fallback resilient mock issuance if remote Supabase connection is offline
-        const fallbackNum = `GMS-SAS-CASH-${Math.floor(1000 + Math.random() * 9000)}`;
-        const fallbackToken = `GMS-SAS-CASH-TOKEN-${Date.now().toString(36)}`;
-        setCashIssuedPass({ ticketNumber: fallbackNum, qrToken: fallbackToken });
+        setCashError(res.error || "Failed to issue cash pass.");
       }
     });
   };
 
+  // Payout Request Handler
   const handleWithdraw = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!event) return;
     setWithdrawError(null);
     setWithdrawSuccess(null);
 
@@ -205,39 +277,135 @@ export default function OrganizerDashboardPage() {
 
     startTransition(async () => {
       const res = await requestWithdrawal({
-        eventId: "1",
+        eventId: event.id,
         amount: amt,
         payoutDestination: payoutDest.trim(),
       });
 
       if (res.success) {
-        setWithdrawSuccess(res.message || "Withdrawal request submitted successfully! Funds will disburse with verified 12-digit UTR.");
+        setWithdrawSuccess(
+          res.message || "Withdrawal request submitted successfully! Funds will disburse with verified 12-digit UTR."
+        );
+        setEvent((prev) =>
+          prev ? { ...prev, wallet_available: Math.max(0, prev.wallet_available - amt) } : null
+        );
       } else {
-        // Enforcing Rule 2.1 & 2.2 error display
         setWithdrawError(res.error || "Withdrawal failed. Please check balance and retry.");
       }
     });
   };
 
+  // Dynamic CSV Export from Real Attendees
   const handleExportCSV = () => {
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      [
-        "Pass ID,Attendee Name,Phone Number,Payment Mode,Amount Paid,Gate Status,Booking Date",
-        "GMS-SAS-8421,Rahul Kumar Verma,9876543210,ONLINE (UPI),100,Checked In,2026-10-28 14:22 IST",
-        "GMS-SAS-8422,Pooja Singh,9876543211,ONLINE (UPI),100,Not Scanned,2026-10-28 15:40 IST",
-        "GMS-SAS-8423,Amitabh Ranjan,9876543212,CASH_PROMOTER,100,Not Scanned,2026-10-28 16:10 IST",
-        "GMS-SAS-8424,Sneha Kumari,9876543213,ONLINE (UPI),100,Checked In,2026-10-28 16:45 IST",
-        "GMS-SAS-8425,Vikas Tiwari,9876543214,ONLINE (UPI),100,Not Scanned,2026-10-28 17:15 IST",
-      ].join("\n");
-    const encodedUri = encodeURI(csvContent);
+    if (!event || attendees.length === 0) {
+      alert("No attendee passes booked yet to export.");
+      return;
+    }
+
+    const rows = [
+      "Pass ID,Attendee Name,Phone Number,Payment Mode,Tier,Quantity,Amount Paid,Gate Status,Checked In At,Booking Date",
+    ];
+
+    attendees.forEach((t) => {
+      const safeName = `"${(t.buyer_name || "").replace(/"/g, '""')}"`;
+      const passId = t.ticket_number || t.id.slice(0, 12);
+      const phone = t.buyer_whatsapp || "";
+      const mode = t.payment_mode || "ONLINE";
+      const tier = `"${(t.tier_name || "General Admission").replace(/"/g, '""')}"`;
+      const qty = t.quantity || 1;
+      const amount = t.amount_paid || 0;
+      const status = t.is_checked_in ? "Checked In" : "Not Scanned";
+      const checkedAt = t.checked_in_at ? new Date(t.checked_in_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) : "";
+      const date = new Date(t.created_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+      rows.push(`${passId},${safeName},${phone},${mode},${tier},${qty},${amount},${status},${checkedAt},${date}`);
+    });
+
+    const csvContent = "data:text/csv;charset=utf-8," + encodeURIComponent(rows.join("\n"));
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `attendees_roster_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute("href", csvContent);
+    link.setAttribute("download", `${event.slug}_attendees_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+
+  const copyPublicEventLink = () => {
+    if (!event) return;
+    const url = getSubdomainUrl("public", `/e/${event.slug}`);
+    navigator.clipboard.writeText(url);
+    setCopiedPublicLink(true);
+    setTimeout(() => setCopiedPublicLink(false), 2000);
+  };
+
+  // Filtered Attendees
+  const filteredAttendees = attendees.filter((t) => {
+    if (!attendeeSearch.trim()) return true;
+    const q = attendeeSearch.toLowerCase();
+    return (
+      t.buyer_name.toLowerCase().includes(q) ||
+      (t.ticket_number && t.ticket_number.toLowerCase().includes(q)) ||
+      t.buyer_whatsapp.includes(q)
+    );
+  });
+
+  // LOADING SKELETON
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
+        <div className="max-w-[1340px] mx-auto py-10 px-4 sm:px-6 space-y-8 animate-pulse">
+          <div className="h-8 bg-slate-200 rounded w-1/3 mb-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-28 bg-white rounded-xl border border-[#DBDAE3] p-6" />
+            ))}
+          </div>
+          <div className="h-44 bg-white rounded-2xl border border-[#DBDAE3] p-6" />
+          <div className="h-64 bg-white rounded-2xl border border-[#DBDAE3] p-6" />
+        </div>
+      </div>
+    );
+  }
+
+  // NOT FOUND / ERROR STATE
+  if (loadError || !event) {
+    return (
+      <div className="min-h-screen bg-[#F8F7FA] text-[#39364F] flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-white rounded-2xl border border-[#DBDAE3] shadow-sm p-8 text-center space-y-5">
+          <EmptyEventsIllustration className="w-56 h-40 mx-auto" />
+          <div>
+            <h1 className="text-xl font-bold text-[#1E0A3C]">Event Not Found</h1>
+            <p className="text-xs text-[#6F7287] mt-1.5 leading-relaxed">
+              {loadError || `Could not find an event matching identifier "${routeId}". It may have been archived or deleted.`}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+            <Link
+              href="/organizer"
+              className="w-full py-2.5 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
+            >
+              <CaretLeft size={16} weight="bold" />
+              <span>Back to Organizer Studio</span>
+            </Link>
+            <button
+              onClick={loadDashboardData}
+              className="w-full py-2.5 rounded-lg border border-[#DBDAE3] hover:bg-slate-50 text-[#1E0A3C] text-xs font-bold transition flex items-center justify-center gap-1.5"
+            >
+              <ArrowsClockwise size={16} weight="bold" />
+              <span>Retry</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const formattedEventDate = new Date(event.event_date).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Kolkata",
+  });
 
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
@@ -254,14 +422,27 @@ export default function OrganizerDashboardPage() {
               <span className="font-semibold text-[#1E0A3C]">Live Analytics</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1E0A3C]">
-              Super 50 Talent Scholarship Test & Seminar
+              {event.title}
             </h1>
-            <p className="text-xs text-[#6F7287] mt-0.5">
-              Sardar Patel Hall, Gaurakshani, Sasaram • 15 Nov 2026
+            <p className="text-xs text-[#6F7287] mt-0.5 flex items-center gap-2 flex-wrap">
+              <span>{event.venue}, {event.city}</span>
+              <span>•</span>
+              <span>{formattedEventDate}</span>
+              <span>•</span>
+              <span className="font-mono text-[#3659E3]">ID: {event.id.slice(0, 8)}...</span>
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={copyPublicEventLink}
+              className="px-3.5 py-2.5 rounded-lg bg-white border border-[#DBDAE3] hover:border-[#3659E3] text-[#39364F] hover:text-[#3659E3] text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+              title="Copy public booking link"
+            >
+              <ShareNetwork size={16} weight="bold" />
+              <span>{copiedPublicLink ? "Link Copied!" : "Share Link"}</span>
+            </button>
+
             <button
               onClick={handleExportCSV}
               className="px-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] hover:border-[#3659E3] text-[#39364F] hover:text-[#3659E3] text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
@@ -270,16 +451,22 @@ export default function OrganizerDashboardPage() {
               <span>Export CSV</span>
             </button>
 
-            <Link
-              href="/scan/1"
+            <a
+              href={getSubdomainUrl("scan", `/${event.id}`)}
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] hover:border-[#3659E3] text-[#39364F] hover:text-[#3659E3] text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
             >
               <QrCode size={16} weight="bold" />
               <span>Gate Scanner</span>
-            </Link>
+            </a>
 
             <button
-              onClick={() => setIsCashModalOpen(true)}
+              onClick={() => {
+                setCashError(null);
+                setCashIssuedPass(null);
+                setIsCashModalOpen(true);
+              }}
               className="px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1.5"
             >
               <Coins size={16} weight="bold" />
@@ -288,7 +475,7 @@ export default function OrganizerDashboardPage() {
           </div>
         </div>
 
-        {/* 4 Metric Cards (12px Radius) */}
+        {/* 4 Dynamic Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="p-5 sm:p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
             <div className="flex items-center justify-between">
@@ -308,10 +495,11 @@ export default function OrganizerDashboardPage() {
                 <Ticket size={18} weight="duotone" />
               </div>
             </div>
-            <div className="text-2xl font-black text-[#1E0A3C]">{ticketsSold} / {capacity}</div>
+            <div className="text-2xl font-black text-[#1E0A3C]">{ticketsSold} / {totalCapacity}</div>
             <div className="w-full h-1.5 rounded-full bg-[#EEEDF2] overflow-hidden mt-1">
-              <div className="h-full bg-[#3659E3] rounded-full" style={{ width: `${(ticketsSold / capacity) * 100}%` }} />
+              <div className="h-full bg-[#3659E3] rounded-full transition-all duration-500" style={{ width: `${occupancyRate}%` }} />
             </div>
+            <p className="text-[11px] text-[#6F7287]">{occupancyRate}% hall occupancy</p>
           </div>
 
           <div className="p-5 sm:p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
@@ -337,7 +525,7 @@ export default function OrganizerDashboardPage() {
           </div>
         </div>
 
-        {/* Wallet Ledger Card (16px Radius) */}
+        {/* Wallet Ledger Card */}
         <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DBDAE3] shadow-xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -349,7 +537,11 @@ export default function OrganizerDashboardPage() {
             </div>
 
             <button
-              onClick={() => setIsWithdrawModalOpen(true)}
+              onClick={() => {
+                setWithdrawError(null);
+                setWithdrawSuccess(null);
+                setIsWithdrawModalOpen(true);
+              }}
               className="px-5 py-3 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold shadow-xs transition-all active:scale-95 flex items-center gap-2 shrink-0 self-start sm:self-auto"
             >
               <Bank size={16} weight="bold" />
@@ -357,7 +549,7 @@ export default function OrganizerDashboardPage() {
             </button>
           </div>
 
-          {/* Settlement Rules Box (8px Radius) */}
+          {/* Settlement Rules Box */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[#EEEDF2] text-xs">
             <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] space-y-1">
               <span className="font-bold text-[#1E0A3C] block">Rule 2.1 — Never Pay Out Unsettled Funds</span>
@@ -398,7 +590,7 @@ export default function OrganizerDashboardPage() {
               <button
                 type="button"
                 onClick={() => {
-                  const url = `${typeof window !== "undefined" ? window.location.origin : ""}/staff/login?event=SAS-01`;
+                  const url = `${typeof window !== "undefined" ? window.location.origin : ""}/staff/login?event=${event.id}`;
                   navigator.clipboard.writeText(url);
                   alert("Scanning Staff Login Portal Link copied to clipboard:\n" + url);
                 }}
@@ -425,182 +617,258 @@ export default function OrganizerDashboardPage() {
             </div>
           </div>
 
-          {/* Scanner Staff Grid / Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-[#DBDAE3] text-[#6F7287]">
-                  <th className="py-3 px-3 font-bold uppercase">Staff ID</th>
-                  <th className="py-3 px-3 font-bold uppercase">Assigned Gate</th>
-                  <th className="py-3 px-3 font-bold uppercase">Passes Verified</th>
-                  <th className="py-3 px-3 font-bold uppercase">Status</th>
-                  <th className="py-3 px-3 font-bold uppercase text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#EEEDF2] text-[#39364F]">
-                {staffList.map((staff) => (
-                  <tr key={staff.id} className="hover:bg-slate-50/50 transition">
-                    <td className="py-3.5 px-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-md bg-[#1E0A3C] text-white flex items-center justify-center font-mono font-bold text-[10px]">
-                          {staff.scanner_id.slice(0, 2)}
+          {/* Scanner Staff Table or Empty State */}
+          {staffList.length === 0 ? (
+            <div className="p-8 rounded-xl border border-dashed border-[#DBDAE3] bg-[#F8F7FA] text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-indigo-50 text-[#4F46E5] flex items-center justify-center mx-auto">
+                <UserCheck size={24} weight="duotone" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-[#1E0A3C]">No Turnstile Staff Provisioned Yet</h4>
+                <p className="text-xs text-[#6F7287] mt-1 max-w-md mx-auto">
+                  Click &ldquo;+ Provision Staff&rdquo; above to create gate entry accounts for bouncers or volunteers. They will only have camera scanning access.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-[#DBDAE3] text-[#6F7287]">
+                    <th className="py-3 px-3 font-bold uppercase">Staff ID</th>
+                    <th className="py-3 px-3 font-bold uppercase">Assigned Gate</th>
+                    <th className="py-3 px-3 font-bold uppercase">Passes Verified</th>
+                    <th className="py-3 px-3 font-bold uppercase">Status</th>
+                    <th className="py-3 px-3 font-bold uppercase text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#EEEDF2] text-[#39364F]">
+                  {staffList.map((staff) => (
+                    <tr key={staff.id} className="hover:bg-slate-50/50 transition">
+                      <td className="py-3.5 px-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-md bg-[#1E0A3C] text-white flex items-center justify-center font-mono font-bold text-[10px]">
+                            {staff.scanner_id.slice(0, 2)}
+                          </div>
+                          <div>
+                            <span className="font-mono font-bold text-[#1E0A3C] block">
+                              {staff.scanner_id}
+                            </span>
+                            <span className="text-[10px] text-[#6F7287]">
+                              Added {new Date(staff.created_at).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <span className="font-mono font-bold text-[#1E0A3C] block">
-                            {staff.scanner_id}
-                          </span>
-                          <span className="text-[10px] text-[#6F7287]">
-                            Added {new Date(staff.created_at).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="py-3.5 px-3 font-medium text-[#1E0A3C]">
-                      {staff.assigned_gate}
-                    </td>
+                      <td className="py-3.5 px-3 font-medium text-[#1E0A3C]">
+                        {staff.assigned_gate}
+                      </td>
 
-                    <td className="py-3.5 px-3">
-                      <span className="font-mono font-bold text-sm text-[#1E0A3C]">
-                        {staff.scanned_count}
-                      </span>
-                      <span className="text-[10px] text-[#6F7287] block">attendees admitted</span>
-                    </td>
+                      <td className="py-3.5 px-3">
+                        <span className="font-mono font-bold text-sm text-[#1E0A3C]">
+                          {staff.scanned_count}
+                        </span>
+                        <span className="text-[10px] text-[#6F7287] block">attendees admitted</span>
+                      </td>
 
-                    <td className="py-3.5 px-3">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                          staff.is_active
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : "bg-red-50 text-red-700 border border-red-200"
-                        }`}
-                      >
-                        <span className={`w-1.5 h-1.5 rounded-full ${staff.is_active ? "bg-emerald-500" : "bg-red-500"}`} />
-                        <span>{staff.is_active ? "Active" : "Revoked"}</span>
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-3 text-right">
-                      <div className="inline-flex items-center gap-1.5 justify-end">
-                        {/* 1-Click WhatsApp Dispatch */}
-                        <a
-                          href={`https://wa.me/?text=${encodeURIComponent(
-                            `🎟️ *GetMyShow — Scanning Staff Gate Access*\n\nHello! You have been assigned as gate entry staff for:\n🎪 *Event:* Sasaram Mega Music Fest 2026\n\n🔑 *Your 3 Login Credentials:*\n1️⃣ *Event ID:* SAS-01\n2️⃣ *Official Staff ID:* ${staff.scanner_id}\n3️⃣ *Gate PIN / Password:* (Provided by Organizer)\n\n📍 *Assigned Turnstile:* ${staff.assigned_gate}\n\n👉 *Open Staff Login Portal:*\n${typeof window !== "undefined" ? window.location.origin : ""}/staff/login?event=SAS-01&staff=${staff.scanner_id}\n\nEnter the 3 credentials above to start scanning passes!`
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 rounded-md hover:bg-[#25D366]/10 text-[#25D366] transition border border-[#DBDAE3]"
-                          title="Share credentials on WhatsApp"
-                        >
-                          <WhatsappLogo size={15} weight="fill" />
-                        </a>
-
-                        {/* Copy Link */}
-                        <button
-                          type="button"
-                          onClick={() => copyCredentials(staff)}
-                          className="p-1.5 rounded-md hover:bg-slate-100 text-[#6F7287] transition border border-[#DBDAE3]"
-                          title="Copy credentials text"
-                        >
-                          <Copy size={15} weight="bold" className={copiedStaffId === staff.id ? "text-emerald-600" : ""} />
-                        </button>
-
-                        {/* Revoke / Activate Toggle */}
-                        <button
-                          type="button"
-                          onClick={() => handleToggleStaff(staff.id, staff.is_active)}
-                          className={`px-2 py-1 rounded text-[11px] font-bold transition ${
+                      <td className="py-3.5 px-3">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                             staff.is_active
-                              ? "text-red-600 hover:bg-red-50"
-                              : "text-emerald-600 hover:bg-emerald-50"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : "bg-red-50 text-red-700 border border-red-200"
                           }`}
                         >
-                          {staff.is_active ? "Revoke" : "Activate"}
-                        </button>
+                          <span className={`w-1.5 h-1.5 rounded-full ${staff.is_active ? "bg-emerald-500" : "bg-red-500"}`} />
+                          <span>{staff.is_active ? "Active" : "Revoked"}</span>
+                        </span>
+                      </td>
 
-                        {/* Delete Staff */}
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteStaff(staff.id)}
-                          className="p-1.5 rounded-md hover:bg-red-50 text-[#6F7287] hover:text-red-600 transition"
-                          title="Remove scanner account"
-                        >
-                          <Trash size={15} weight="bold" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <td className="py-3.5 px-3 text-right">
+                        <div className="inline-flex items-center gap-1.5 justify-end">
+                          {/* 1-Click WhatsApp Dispatch */}
+                          <a
+                            href={`https://wa.me/?text=${encodeURIComponent(
+                              `🎟️ *GetMyShow — Scanning Staff Gate Access*\n\nHello! You have been assigned as gate entry staff for:\n🎪 *Event:* ${event.title}\n\n🔑 *Your 3 Login Credentials:*\n1️⃣ *Event ID:* ${event.id.slice(0, 8).toUpperCase()}\n2️⃣ *Official Staff ID:* ${staff.scanner_id}\n3️⃣ *Gate PIN / Password:* (Provided by Organizer)\n\n📍 *Assigned Turnstile:* ${staff.assigned_gate}\n\n👉 *Open Staff Login Portal:*\n${getSubdomainUrl("scan", `/login?event=${event.id}&staff=${staff.scanner_id}`)}\n\nEnter the 3 credentials above to start scanning passes!`
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 rounded-md hover:bg-[#25D366]/10 text-[#25D366] transition border border-[#DBDAE3]"
+                            title="Share credentials on WhatsApp"
+                          >
+                            <WhatsappLogo size={15} weight="fill" />
+                          </a>
+
+                          {/* Copy Link */}
+                          <button
+                            type="button"
+                            onClick={() => copyCredentials(staff)}
+                            className="p-1.5 rounded-md hover:bg-slate-100 text-[#6F7287] transition border border-[#DBDAE3]"
+                            title="Copy credentials text"
+                          >
+                            <Copy size={15} weight="bold" className={copiedStaffId === staff.id ? "text-emerald-600" : ""} />
+                          </button>
+
+                          {/* Revoke / Activate Toggle */}
+                          <button
+                            type="button"
+                            onClick={() => handleToggleStaff(staff.id, staff.is_active)}
+                            className={`px-2 py-1 rounded text-[11px] font-bold transition ${
+                              staff.is_active
+                                ? "text-red-600 hover:bg-red-50"
+                                : "text-emerald-600 hover:bg-emerald-50"
+                            }`}
+                          >
+                            {staff.is_active ? "Revoke" : "Activate"}
+                          </button>
+
+                          {/* Delete Staff */}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteStaff(staff.id)}
+                            className="p-1.5 rounded-md hover:bg-red-50 text-[#6F7287] hover:text-red-600 transition"
+                            title="Remove scanner account"
+                          >
+                            <Trash size={15} weight="bold" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
-        {/* Attendee Roster Table (16px Radius) */}
+        {/* Attendee Roster Table (Real Data) */}
         <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DBDAE3] shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-[#1E0A3C]">Attendee Roster (Recent Passes)</h2>
-              <p className="text-xs text-[#6F7287]">Real-time list of booked attendees and gate check-in status.</p>
+              <h2 className="text-xl font-bold text-[#1E0A3C]">Attendee Roster ({attendees.length} Passes)</h2>
+              <p className="text-xs text-[#6F7287]">Live bookings from UPI online payments and offline promoter box-office.</p>
             </div>
 
-            <button
-              onClick={() => alert("Attendee roster exported as CSV.")}
-              className="px-4 py-2 rounded-lg border border-[#DBDAE3] hover:border-[#39364F] text-xs font-bold text-[#39364F] flex items-center gap-1.5 transition bg-white shadow-xs"
-            >
-              <DownloadSimple size={14} weight="bold" />
-              <span>Export CSV</span>
-            </button>
+            <div className="flex items-center gap-2.5">
+              <div className="relative">
+                <MagnifyingGlass size={14} className="absolute left-2.5 top-2.5 text-[#6F7287]" />
+                <input
+                  type="text"
+                  placeholder="Search name, phone, pass ID..."
+                  value={attendeeSearch}
+                  onChange={(e) => setAttendeeSearch(e.target.value)}
+                  className="pl-8 pr-3 py-1.5 rounded-lg border border-[#DBDAE3] bg-[#F8F7FA] text-xs outline-none focus:border-[#3659E3] w-48 sm:w-60"
+                />
+              </div>
+
+              <button
+                onClick={handleExportCSV}
+                className="px-3.5 py-1.5 rounded-lg border border-[#DBDAE3] hover:border-[#39364F] text-xs font-bold text-[#39364F] flex items-center gap-1.5 transition bg-white shadow-xs shrink-0"
+              >
+                <DownloadSimple size={14} weight="bold" />
+                <span>Export CSV</span>
+              </button>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-[#DBDAE3] text-[#6F7287]">
-                  <th className="py-3 px-3 font-bold uppercase">Pass ID</th>
-                  <th className="py-3 px-3 font-bold uppercase">Attendee</th>
-                  <th className="py-3 px-3 font-bold uppercase">Mode</th>
-                  <th className="py-3 px-3 font-bold uppercase">Amount</th>
-                  <th className="py-3 px-3 font-bold uppercase">Gate Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#EEEDF2] text-[#39364F]">
-                <tr>
-                  <td className="py-3 px-3 font-mono font-bold text-[#3659E3]">GMS-SAS-8421</td>
-                  <td className="py-3 px-3 font-semibold text-[#1E0A3C]">Rahul Kumar Verma</td>
-                  <td className="py-3 px-3">ONLINE (UPI)</td>
-                  <td className="py-3 px-3 font-bold">₹100</td>
-                  <td className="py-3 px-3">
-                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-bold text-[10px]">
-                      Checked In
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-3 px-3 font-mono font-bold text-[#3659E3]">GMS-SAS-8422</td>
-                  <td className="py-3 px-3 font-semibold text-[#1E0A3C]">Pooja Singh</td>
-                  <td className="py-3 px-3">ONLINE (UPI)</td>
-                  <td className="py-3 px-3 font-bold">₹100</td>
-                  <td className="py-3 px-3">
-                    <span className="px-2.5 py-0.5 rounded-md bg-slate-100 text-[#6F7287] font-bold text-[10px]">
-                      Not Scanned
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-3 px-3 font-mono font-bold text-[#3659E3]">GMS-SAS-8423</td>
-                  <td className="py-3 px-3 font-semibold text-[#1E0A3C]">Amitabh Ranjan</td>
-                  <td className="py-3 px-3">CASH_PROMOTER</td>
-                  <td className="py-3 px-3 font-bold">₹100</td>
-                  <td className="py-3 px-3">
-                    <span className="px-2.5 py-0.5 rounded-md bg-slate-100 text-[#6F7287] font-bold text-[10px]">
-                      Not Scanned
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          {filteredAttendees.length === 0 ? (
+            <div className="py-12 text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-slate-100 text-[#6F7287] flex items-center justify-center mx-auto">
+                <Ticket size={24} weight="duotone" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-[#1E0A3C]">
+                  {attendees.length === 0 ? "No Passes Booked Yet" : "No Matching Attendees Found"}
+                </h4>
+                <p className="text-xs text-[#6F7287] mt-1 max-w-sm mx-auto">
+                  {attendees.length === 0
+                    ? "Share your public event link or use the Box-Office Counter above to issue offline cash passes."
+                    : "Try searching with a different attendee name or phone number."}
+                </p>
+              </div>
+              {attendees.length === 0 && (
+                <button
+                  type="button"
+                  onClick={copyPublicEventLink}
+                  className="px-4 py-2 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold transition shadow-xs inline-flex items-center gap-1.5 mt-2"
+                >
+                  <ShareNetwork size={14} weight="bold" />
+                  <span>{copiedPublicLink ? "Link Copied!" : "Copy Event Link to Share"}</span>
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-[#DBDAE3] text-[#6F7287]">
+                    <th className="py-3 px-3 font-bold uppercase">Pass ID</th>
+                    <th className="py-3 px-3 font-bold uppercase">Attendee</th>
+                    <th className="py-3 px-3 font-bold uppercase">Tier / Qty</th>
+                    <th className="py-3 px-3 font-bold uppercase">Mode</th>
+                    <th className="py-3 px-3 font-bold uppercase">Amount</th>
+                    <th className="py-3 px-3 font-bold uppercase">Gate Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#EEEDF2] text-[#39364F]">
+                  {filteredAttendees.map((ticket) => (
+                    <tr key={ticket.id} className="hover:bg-slate-50/50 transition">
+                      <td className="py-3 px-3 font-mono font-bold text-[#3659E3]">
+                        <Link
+                          href={`/ticket/${ticket.qr_token}`}
+                          target="_blank"
+                          className="hover:underline flex items-center gap-1"
+                          title="Open Ticket Pass"
+                        >
+                          <span>{ticket.ticket_number || ticket.id.slice(0, 10)}</span>
+                          <ArrowSquareOut size={12} weight="bold" />
+                        </Link>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className="font-semibold text-[#1E0A3C] block">{ticket.buyer_name}</span>
+                        <span className="text-[10px] text-[#6F7287] font-mono">{ticket.buyer_whatsapp}</span>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className="font-medium text-[#1E0A3C]">{ticket.tier_name || "General"}</span>
+                        <span className="text-[10px] text-[#6F7287] block">{ticket.quantity} pass(es)</span>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span
+                          className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
+                            ticket.payment_mode === "CASH_PROMOTER"
+                              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                              : "bg-blue-50 text-blue-800 border border-blue-200"
+                          }`}
+                        >
+                          {ticket.payment_mode === "CASH_PROMOTER" ? "CASH DESK" : "ONLINE UPI"}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 font-bold text-[#1E0A3C]">
+                        {formatINR(Number(ticket.amount_paid))}
+                      </td>
+                      <td className="py-3 px-3">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md font-bold text-[10px] ${
+                            ticket.is_checked_in
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : "bg-slate-100 text-[#6F7287]"
+                          }`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              ticket.is_checked_in ? "bg-emerald-500" : "bg-slate-400"
+                            }`}
+                          />
+                          <span>{ticket.is_checked_in ? "Checked In" : "Not Scanned"}</span>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
 
@@ -694,6 +962,25 @@ export default function OrganizerDashboardPage() {
                   />
                 </div>
 
+                {event.ticket_tiers && event.ticket_tiers.length > 0 && (
+                  <div>
+                    <label className="block font-bold text-[#1E0A3C] mb-1">
+                      Ticket Tier
+                    </label>
+                    <select
+                      value={selectedTierId}
+                      onChange={(e) => setSelectedTierId(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-bold text-[#1E0A3C] outline-none"
+                    >
+                      {event.ticket_tiers.map((tier) => (
+                        <option key={tier.id} value={tier.id}>
+                          {tier.name} — {formatINR(tier.price)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block font-bold text-[#1E0A3C] mb-1">
@@ -733,7 +1020,7 @@ export default function OrganizerDashboardPage() {
                       <span>Issuing Cash Pass...</span>
                     </>
                   ) : (
-                    <span>Collect {formatINR(100 * cashQuantity)} & Issue Pass</span>
+                    <span>Collect {formatINR(totalCashPayable)} & Issue Pass</span>
                   )}
                 </button>
               </form>
@@ -800,7 +1087,7 @@ export default function OrganizerDashboardPage() {
                   <input
                     type="number"
                     required
-                    min={100}
+                    min={1}
                     max={walletAvailable}
                     placeholder="e.g. 10000"
                     value={withdrawAmount}
@@ -838,7 +1125,7 @@ export default function OrganizerDashboardPage() {
 
                 <button
                   type="submit"
-                  disabled={isPending}
+                  disabled={isPending || walletAvailable <= 0}
                   className="w-full py-3 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white font-bold text-xs shadow-xs mt-2 flex items-center justify-center gap-1.5 disabled:opacity-50"
                 >
                   {isPending ? (
@@ -846,6 +1133,8 @@ export default function OrganizerDashboardPage() {
                       <CircleNotch size={15} weight="bold" className="animate-spin" />
                       <span>Verifying Balances...</span>
                     </>
+                  ) : walletAvailable <= 0 ? (
+                    <span>No Settled Funds Available</span>
                   ) : (
                     <span>Submit Payout Request</span>
                   )}
@@ -901,7 +1190,7 @@ export default function OrganizerDashboardPage() {
                     {staffCreatedSuccess}
                   </p>
                   <div className="p-3 bg-white rounded-lg border border-emerald-200 text-xs font-mono text-[#1E0A3C] space-y-1 mt-2">
-                    <div><span className="text-[#6F7287]">1. Event ID:</span> <strong>SAS-01</strong></div>
+                    <div><span className="text-[#6F7287]">1. Event ID:</span> <strong>{event.id.slice(0, 8).toUpperCase()}</strong></div>
                     <div><span className="text-[#6F7287]">2. Official Staff ID:</span> <strong>{newStaffScannerId.trim().toUpperCase()}</strong></div>
                     <div><span className="text-[#6F7287]">3. Gate PIN / Password:</span> <strong>{newStaffPassword}</strong></div>
                     <div><span className="text-[#6F7287]">Assigned Gate:</span> <strong>{newStaffGate}</strong></div>
@@ -911,7 +1200,7 @@ export default function OrganizerDashboardPage() {
                 <div className="flex flex-col sm:flex-row items-center gap-2">
                   <a
                     href={`https://wa.me/?text=${encodeURIComponent(
-                      `🎟️ *GetMyShow — Scanning Staff Gate Access Pass*\n\nHello! You have been assigned as entry gate staff for:\n🎪 *Event:* Sasaram Mega Music Fest 2026\n\n🔑 *Your 3 Login Credentials:*\n1️⃣ *Event ID:* SAS-01\n2️⃣ *Official Staff ID:* ${newStaffScannerId.trim().toUpperCase()}\n3️⃣ *Gate PIN / Password:* ${newStaffPassword}\n\n📍 *Assigned Turnstile:* ${newStaffGate}\n\n👉 *Open Staff Login Portal:*\n${typeof window !== "undefined" ? window.location.origin : ""}/staff/login?event=SAS-01&staff=${newStaffScannerId.trim().toUpperCase()}\n\nEnter the 3 credentials above to start scanning passes!`
+                      `🎟️ *GetMyShow — Scanning Staff Gate Access Pass*\n\nHello! You have been assigned as entry gate staff for:\n🎪 *Event:* ${event.title}\n\n🔑 *Your 3 Login Credentials:*\n1️⃣ *Event ID:* ${event.id.slice(0, 8).toUpperCase()}\n2️⃣ *Official Staff ID:* ${newStaffScannerId.trim().toUpperCase()}\n3️⃣ *Gate PIN / Password:* ${newStaffPassword}\n\n📍 *Assigned Turnstile:* ${newStaffGate}\n\n👉 *Open Staff Login Portal:*\n${getSubdomainUrl("scan", `/login?event=${event.id}&staff=${newStaffScannerId.trim().toUpperCase()}`)}\n\nEnter the 3 credentials above to start scanning passes!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -924,7 +1213,7 @@ export default function OrganizerDashboardPage() {
                   <button
                     type="button"
                     onClick={() => {
-                      const msg = `🎟️ *GetMyShow — Scanning Staff Gate Access Pass*\n\nHello! You have been assigned as entry gate staff for:\n🎪 *Event:* Sasaram Mega Music Fest 2026\n\n🔑 *Your 3 Login Credentials:*\n1️⃣ *Event ID:* SAS-01\n2️⃣ *Official Staff ID:* ${newStaffScannerId.trim().toUpperCase()}\n3️⃣ *Gate PIN / Password:* ${newStaffPassword}\n\n📍 *Assigned Turnstile:* ${newStaffGate}\n\n👉 *Open Staff Login Portal:*\n${window.location.origin}/staff/login?event=SAS-01&staff=${newStaffScannerId.trim().toUpperCase()}\n\nEnter the 3 credentials above to start scanning passes!`;
+                      const msg = `🎟️ *GetMyShow — Scanning Staff Gate Access Pass*\n\nHello! You have been assigned as entry gate staff for:\n🎪 *Event:* ${event.title}\n\n🔑 *Your 3 Login Credentials:*\n1️⃣ *Event ID:* ${event.id.slice(0, 8).toUpperCase()}\n2️⃣ *Official Staff ID:* ${newStaffScannerId.trim().toUpperCase()}\n3️⃣ *Gate PIN / Password:* ${newStaffPassword}\n\n📍 *Assigned Turnstile:* ${newStaffGate}\n\n👉 *Open Staff Login Portal:*\n${getSubdomainUrl("scan", `/login?event=${event.id}&staff=${newStaffScannerId.trim().toUpperCase()}`)}\n\nEnter the 3 credentials above to start scanning passes!`;
                       navigator.clipboard.writeText(msg);
                       alert("Full WhatsApp invite with all 3 credentials copied to clipboard!");
                     }}
@@ -938,7 +1227,7 @@ export default function OrganizerDashboardPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    const portalLink = `${window.location.origin}/staff/login?event=SAS-01&staff=${newStaffScannerId.trim().toUpperCase()}`;
+                    const portalLink = getSubdomainUrl("scan", `/login?event=${event.id}&staff=${newStaffScannerId.trim().toUpperCase()}`);
                     navigator.clipboard.writeText(portalLink);
                     alert("Staff Portal Link copied:\n" + portalLink);
                   }}
@@ -1009,7 +1298,7 @@ export default function OrganizerDashboardPage() {
                     className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-mono font-bold outline-none focus:border-[#3659E3]"
                   />
                   <p className="text-[10px] text-[#6F7287]">
-                    Staff will enter this at <code>/scan/login</code> to activate camera scanning
+                    Staff will enter this at <code>/staff/login</code> to activate camera scanning
                   </p>
                 </div>
 

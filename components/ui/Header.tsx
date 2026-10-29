@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,7 +15,13 @@ import {
   Plus,
   Buildings,
   UserCheck,
+  ArrowRight,
+  Sparkle,
 } from "@phosphor-icons/react";
+import { getEvents } from "@/actions/events";
+import { EventItem } from "@/types";
+import { formatINR } from "@/lib/utils";
+import { getSubdomainUrl } from "@/lib/domains";
 
 const BIHAR_CITIES = [
   { name: "Sasaram", region: "Rohtas (HQ)", isPrimary: true },
@@ -46,6 +52,47 @@ function HeaderContent() {
   const [selectedCity, setSelectedCity] = useState("Sasaram");
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [allEvents, setAllEvents] = useState<EventItem[]>([]);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  // Load events for predictive autocomplete search
+  useEffect(() => {
+    let mounted = true;
+    getEvents().then((res) => {
+      if (mounted && res.success && res.data) {
+        setAllEvents(res.data);
+      }
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Close search dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const matchingEvents = searchQuery.trim().length >= 1
+    ? allEvents
+        .filter((e) => {
+          const q = searchQuery.toLowerCase();
+          return (
+            e.title.toLowerCase().includes(q) ||
+            (e.description && e.description.toLowerCase().includes(q)) ||
+            e.venue.toLowerCase().includes(q) ||
+            e.city.toLowerCase().includes(q)
+          );
+        })
+        .slice(0, 5)
+    : [];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -181,29 +228,110 @@ function HeaderContent() {
 
       {/* 3. Right Section: Compact Search + My Tickets + Host CTA + Profile */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        {/* Compact Search Bar */}
-        <form
-          onSubmit={handleSearchSubmit}
-          className="relative flex items-center bg-[#F8F7FA] hover:bg-slate-100/90 focus-within:bg-white focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/15 border border-[#E2E8F0] rounded-full h-9 px-3 w-32 sm:w-40 xl:w-52 transition-all duration-200"
-        >
-          <MagnifyingGlass size={15} weight="bold" className="text-[#64748B] shrink-0 mr-1.5" />
-          <input
-            type="text"
-            placeholder="Search events..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent text-xs text-[#0F172A] placeholder-[#94A3B8] outline-none font-medium"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="text-slate-400 hover:text-slate-600 p-0.5"
-            >
-              <X size={12} weight="bold" />
-            </button>
+        {/* Compact Predictive Search Bar (BookMyShow Standard) */}
+        <div ref={searchContainerRef} className="relative">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex items-center bg-[#F8F7FA] hover:bg-slate-100/90 focus-within:bg-white focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/15 border border-[#E2E8F0] rounded-full h-9 px-3 w-36 sm:w-48 xl:w-60 transition-all duration-200"
+          >
+            <MagnifyingGlass size={15} weight="bold" className="text-[#64748B] shrink-0 mr-1.5" />
+            <input
+              type="text"
+              placeholder="Search events, artists..."
+              value={searchQuery}
+              onFocus={() => setIsSearchFocused(true)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setIsSearchFocused(true);
+              }}
+              className="w-full bg-transparent text-xs text-[#0F172A] placeholder-[#94A3B8] outline-none font-medium"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setIsSearchFocused(false);
+                }}
+                className="text-slate-400 hover:text-slate-600 p-0.5"
+              >
+                <X size={12} weight="bold" />
+              </button>
+            )}
+          </form>
+
+          {/* Floating Predictive Search Dropdown with Poster Thumbnails */}
+          {isSearchFocused && searchQuery.trim().length >= 1 && (
+            <div className="absolute right-0 top-11 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="flex items-center justify-between px-2.5 py-1 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+                <span>Matching Events</span>
+                <span className="text-[#4F46E5]">{matchingEvents.length} found</span>
+              </div>
+
+              {matchingEvents.length === 0 ? (
+                <div className="p-4 text-center text-xs text-[#64748B] space-y-1">
+                  <p>No direct matches for &ldquo;{searchQuery}&rdquo;</p>
+                  <p className="text-[11px] text-slate-400">Press Enter to run a global search</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-100 max-h-80 overflow-y-auto no-scrollbar">
+                  {matchingEvents.map((ev) => (
+                    <Link
+                      key={ev.id}
+                      href={`/e/${ev.slug}`}
+                      onClick={() => {
+                        setIsSearchFocused(false);
+                        setSearchQuery("");
+                      }}
+                      className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition group"
+                    >
+                      <div className="relative w-11 h-14 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
+                        {ev.poster_url ? (
+                          <img
+                            src={ev.poster_url}
+                            alt={ev.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-400">
+                            <Ticket size={16} />
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-indigo-50 text-[#4F46E5] uppercase">
+                            {ev.city}
+                          </span>
+                        </div>
+                        <h4 className="text-xs font-bold text-[#0F172A] truncate group-hover:text-[#4F46E5] transition-colors mt-0.5">
+                          {ev.title}
+                        </h4>
+                        <p className="text-[10px] text-[#64748B] truncate">{ev.venue}</p>
+                        <span className="text-[11px] font-bold text-[#0F172A] font-mono block mt-0.5">
+                          {formatINR(ev.ticket_price)}
+                        </span>
+                      </div>
+                      <ArrowRight
+                        size={14}
+                        className="text-slate-300 group-hover:text-[#4F46E5] group-hover:translate-x-0.5 transition-all shrink-0"
+                      />
+                    </Link>
+                  ))}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={handleSearchSubmit}
+                className="w-full mt-2 py-2 text-center text-xs font-bold text-[#4F46E5] bg-indigo-50/60 hover:bg-indigo-50 rounded-xl transition flex items-center justify-center gap-1"
+              >
+                <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
+                <ArrowRight size={13} weight="bold" />
+              </button>
+            </div>
           )}
-        </form>
+        </div>
 
         {/* Universal "My Tickets" Vault Link */}
         <Link
@@ -216,7 +344,7 @@ function HeaderContent() {
 
         {/* Host Event Primary Button */}
         <Link
-          href="/organizer/create"
+          href={getSubdomainUrl("org", "/create")}
           className="inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 rounded-full bg-[#F05537] hover:bg-[#D94428] text-white text-xs font-bold transition-all shadow-xs active:scale-95 shrink-0"
         >
           <Plus size={14} weight="bold" />
@@ -248,7 +376,7 @@ function HeaderContent() {
                   <UserButton.Link
                     label="Organizer Dashboard"
                     labelIcon={<Buildings size={16} weight="duotone" />}
-                    href="/organizer"
+                    href={getSubdomainUrl("org")}
                   />
                 </UserButton.MenuItems>
               </UserButton>
@@ -350,7 +478,7 @@ function HeaderContent() {
               <span>My Passes</span>
             </Link>
             <Link
-              href="/organizer/create"
+              href={getSubdomainUrl("org", "/create")}
               onClick={() => setIsMobileMenuOpen(false)}
               className="p-3 rounded-xl bg-[#F05537]/10 hover:bg-[#F05537]/20 text-[#F05537] flex items-center gap-2 border border-[#F05537]/20"
             >
@@ -358,7 +486,7 @@ function HeaderContent() {
               <span>Create Event</span>
             </Link>
             <Link
-              href="/organizer"
+              href={getSubdomainUrl("org")}
               onClick={() => setIsMobileMenuOpen(false)}
               className="p-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-[#0F172A] flex items-center gap-2 border border-slate-200"
             >
@@ -366,7 +494,7 @@ function HeaderContent() {
               <span>Host Console</span>
             </Link>
             <Link
-              href="/staff/login"
+              href={getSubdomainUrl("scan", "/login")}
               onClick={() => setIsMobileMenuOpen(false)}
               className="col-span-2 p-2.5 rounded-xl bg-[#F8F7FA] hover:bg-slate-100 text-[#39364F] flex items-center justify-center gap-2 border border-[#DBDAE3] text-[11px] font-semibold"
             >

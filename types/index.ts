@@ -29,6 +29,12 @@ export interface ScannerStaff {
   last_active_at?: string;
 }
 
+export interface ArtistPerformer {
+  name: string;
+  role: string; // e.g. "Guest Artist", "Keynote Speaker", "Lead DJ"
+  avatar_url?: string;
+}
+
 export interface EventItem {
   id: string;
   slug: string;
@@ -42,6 +48,7 @@ export interface EventItem {
   total_capacity: number;
   tickets_sold: number;
   ticket_tiers?: TicketTier[];
+  performers?: ArtistPerformer[];
   poster_url?: string | null;
   organizer_name: string;
   organizer_whatsapp: string;

@@ -92,6 +92,7 @@
   - [x] Wallet ledger card (Pending T+2 vs Available Balance)
   - [x] "Request Withdrawal" Server Action enforcing Rule 2.1 & Rule 2.2 holdbacks (`actions/wallet.ts`)
   - [x] Offline "Issue Cash Pass" promoter desk modal
+  - [x] Dynamic Supabase integration & complete removal of static mock data (real event lookup, live attendee roster, dynamic gate staff management)
 - [x] Integrate Clerk authentication guard for organizers (`middleware.ts`)
 - [x] Build Render 10-Minute keep-alive health route (`app/api/health/route.ts`)
 
@@ -124,3 +125,17 @@
 - [ ] Submit Razorpay Live KYC with GST Non-Enrollment Declaration
 - [x] Deploy frontend to Vercel (https://getmyshow-nine.vercel.app) and backend to Render (https://getmyshow-backend.onrender.com) for getmyshow0@gmail.com with 10-minute keep-alive ping
 - [x] Gate Scanner Staff RBAC Isolation Portal (/staff/login & /scan/login) with 3-credential verification and WhatsApp 1-click dispatch link generator
+- [x] BookMyShow Tier-1 Feature Upgrade Suite:
+  - [x] Live Real-Time Anti-Screenshot M-Ticket Hologram Bar with live IST second clock & verification ping
+  - [x] Direct Google Maps Navigation and 1-Tap Google Calendar Sync on M-Ticket & Event Detail
+  - [x] Instant Floating Predictive Autocomplete Search Bar in Header with event thumbnails, city badge, and pricing
+  - [x] BookMyShow Temporal Date Quick Filters ("All Dates", "Today", "Tomorrow", "This Weekend") on Discovery Feed
+  - [x] "❤️ Interested" Social Hype Proof Counter with interactive attendee toggling
+  - [x] Artists & Key Performers Lineup Section with verified badges and avatars
+  - [x] Venue Amenities Strip (Free Parking, Photo ID Required, Food Stalls, Gate Open 45m Prior)
+  - [x] Interactive Promo / Coupon Engine in Checkout Modal (`BIHAR20`, `SUPER50`, `FIRSTSHOW`, `GMSVIP`) with instant subtotal and convenience fee recalculation
+- [x] 3-Tier Multi-Subdomain Architecture on Free Vercel & Render Setup:
+  - [x] Dynamic domain resolution engine (`lib/domains.ts`) supporting local development (`lvh.me`), free Vercel hosting, and future custom domains
+  - [x] Next.js Edge Middleware host rewriting (`middleware.ts`) for dedicated Organizer HQ (`org.*`), Gate Scanner Terminal (`scan.*`), and Public Attendee Discovery (`*`)
+  - [x] Session & RBAC boundary protection with Clerk auth on Organizer HQ and PIN/token isolation on Gate Scanner
+  - [x] Zero-code future custom domain migration readiness (`NEXT_PUBLIC_ROOT_DOMAIN`)

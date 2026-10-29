@@ -27,6 +27,7 @@ import CategoryCircleRow from "@/components/discovery/CategoryCircleRow";
 import HeroBannerCarousel from "@/components/home/HeroBannerCarousel";
 import EmptyEventsIllustration from "@/components/illustrations/EmptyEventsIllustration";
 import OrganizerHostIllustration from "@/components/illustrations/OrganizerHostIllustration";
+import { getSubdomainUrl } from "@/lib/domains";
 import { EventItem } from "@/types";
 
 // High-fidelity demo events representing Sasaram & Bihar target verticals with rich stock photography
@@ -202,6 +203,7 @@ function HomeContent() {
   const [selectedCategory, setSelectedCategory] = useState<string>(urlCategory);
   const [liveEvents, setLiveEvents] = useState<EventItem[]>(DEMO_EVENTS);
   const [isDbConnected, setIsDbConnected] = useState<boolean>(false);
+  const [dateFilter, setDateFilter] = useState<"all" | "today" | "tomorrow" | "weekend">("all");
 
   useEffect(() => {
     if (urlCategory) {
@@ -242,6 +244,31 @@ function HomeContent() {
       );
     }
 
+    if (dateFilter !== "all") {
+      const now = new Date();
+      const todayStr = now.toISOString().slice(0, 10);
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+
+      list = list.filter((e) => {
+        const evDate = new Date(e.event_date);
+        const evDateStr = evDate.toISOString().slice(0, 10);
+
+        if (dateFilter === "today") {
+          return evDateStr === todayStr;
+        }
+        if (dateFilter === "tomorrow") {
+          return evDateStr === tomorrowStr;
+        }
+        if (dateFilter === "weekend") {
+          const day = evDate.getDay();
+          return day === 5 || day === 6 || day === 0; // Friday, Saturday, or Sunday
+        }
+        return true;
+      });
+    }
+
     if (!selectedCategory) return list;
     return list.filter((e) => {
       const slug = (e.slug || "").toLowerCase();
@@ -255,7 +282,7 @@ function HomeContent() {
       if (selectedCategory === "workshops") return slug.includes("startup") || slug.includes("pitch");
       return true;
     });
-  }, [liveEvents, selectedCategory, urlSearch, urlCity]);
+  }, [liveEvents, selectedCategory, urlSearch, urlCity, dateFilter]);
 
   return (
     <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
@@ -276,7 +303,7 @@ function HomeContent() {
       <main id="events" className="max-w-[1340px] mx-auto px-4 sm:px-6 py-12 space-y-16">
         {/* Curated Grid Section */}
         <div>
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
               <div className="text-xs font-bold text-[#3659E3] uppercase tracking-wider">
                 {selectedCategory ? `Filtered by ${selectedCategory}` : "Discover in Sasaram & Rohtas"}
@@ -286,15 +313,46 @@ function HomeContent() {
               </h2>
             </div>
 
-            {selectedCategory && (
-              <button
-                type="button"
-                onClick={() => setSelectedCategory("")}
-                className="text-xs font-bold text-[#F05537] hover:underline"
-              >
-                Clear Filter
-              </button>
-            )}
+            {/* BookMyShow-style Date Quick Chips */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+              {(
+                [
+                  { id: "all", label: "All Dates" },
+                  { id: "today", label: "Today" },
+                  { id: "tomorrow", label: "Tomorrow" },
+                  { id: "weekend", label: "This Weekend" },
+                ] as const
+              ).map((chip) => {
+                const isActive = dateFilter === chip.id;
+                return (
+                  <button
+                    key={chip.id}
+                    type="button"
+                    onClick={() => setDateFilter(chip.id)}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                      isActive
+                        ? "bg-[#1E0A3C] text-white border-[#1E0A3C] shadow-xs"
+                        : "bg-white text-[#39364F] border-[#DBDAE3] hover:border-[#1E0A3C]/40 hover:bg-[#F8F7FA]"
+                    }`}
+                  >
+                    {chip.label}
+                  </button>
+                );
+              })}
+
+              {(selectedCategory || dateFilter !== "all") && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory("");
+                    setDateFilter("all");
+                  }}
+                  className="text-xs font-bold text-[#F05537] hover:underline whitespace-nowrap ml-2"
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
           </div>
 
           {/* 4-Column Modern Eventbrite 16px Cards Grid or Empty State with unDraw Illustration */}
@@ -322,7 +380,7 @@ function HomeContent() {
                   Show All Events
                 </button>
                 <Link
-                  href="/organizer/create"
+                  href={getSubdomainUrl("org", "/create")}
                   className="px-5 py-2.5 rounded-lg border border-[#DBDAE3] hover:border-[#1E0A3C] bg-white text-[#1E0A3C] text-xs font-bold transition-all"
                 >
                   Host an Event
@@ -437,13 +495,13 @@ function HomeContent() {
 
             <div className="pt-3 flex flex-col sm:flex-row gap-3">
               <Link
-                href="/organizer/create"
+                href={getSubdomainUrl("org", "/create")}
                 className="px-6 py-3.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold text-center transition-all shadow-md active:scale-95"
               >
                 Create Free Event
               </Link>
               <Link
-                href="/organizer"
+                href={getSubdomainUrl("org")}
                 className="px-6 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-semibold text-center transition-all active:scale-95 border border-white/20"
               >
                 Organizer Dashboard

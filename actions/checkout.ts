@@ -19,6 +19,8 @@ interface CheckoutParams {
   tierPrice?: number;
   customResponses?: Record<string, string>;
   promoterCode?: string;
+  discountAmount?: number;
+  promoCode?: string;
 }
 
 interface CheckoutResponse {
@@ -36,7 +38,7 @@ export async function initiateCheckout(
   params: CheckoutParams
 ): Promise<ActionResult<CheckoutResponse>> {
   try {
-    const { eventId, buyerName, buyerWhatsapp, buyerEmail, quantity, tierId, tierName, tierPrice, customResponses, promoterCode } = params;
+    const { eventId, buyerName, buyerWhatsapp, buyerEmail, quantity, tierId, tierName, tierPrice, customResponses, promoterCode, discountAmount, promoCode } = params;
 
     if (!eventId || !buyerName || !buyerWhatsapp || quantity < 1) {
       return {
@@ -91,10 +93,12 @@ export async function initiateCheckout(
       unitPrice = tierPrice;
     }
 
-    const basePrice = unitPrice * quantity;
+    const rawBasePrice = unitPrice * quantity;
+    const effectiveDiscount = Math.min(rawBasePrice, Math.max(0, discountAmount || 0));
+    const basePrice = Math.max(0, rawBasePrice - effectiveDiscount);
     const platformFee = Math.round(basePrice * 0.07);
     const totalAmount = event.pass_fee_to_buyer ? basePrice + platformFee : basePrice;
-    const organizerShare = event.pass_fee_to_buyer ? basePrice : basePrice - platformFee;
+    const organizerShare = event.pass_fee_to_buyer ? basePrice : Math.max(0, basePrice - platformFee);
     const gatewayFee = Math.round(totalAmount * 0.0236); // 2.36% MDR + GST
     const netPlatformProfit = platformFee - gatewayFee;
 
@@ -158,7 +162,7 @@ export async function initiateCheckout(
       is_checked_in: false,
       is_settled: false,
       custom_responses: customResponses || {},
-      promoter_code: promoterCode || null,
+      promoter_code: promoCode || promoterCode || null,
       tier_id: resolvedTierId,
       tier_name: resolvedTierName,
     };

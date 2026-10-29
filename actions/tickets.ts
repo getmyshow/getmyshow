@@ -4,7 +4,7 @@ import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase/server";
 import { generateQrToken } from "@/lib/qr/signer";
 import { dispatchTicketConfirmation } from "@/lib/notifications/dispatcher";
-import { ActionResult } from "@/types";
+import { ActionResult, TicketOrder } from "@/types";
 
 export interface TicketDetails {
   id: string;
@@ -319,6 +319,46 @@ export async function issueCashPass(
     return {
       success: false,
       error: err instanceof Error ? err.message : "Internal error issuing cash pass.",
+    };
+  }
+}
+
+/**
+ * Retrieves all attendees/tickets booked for an event (both ONLINE and CASH_PROMOTER).
+ * Backs the organizer dashboard live attendee roster and CSV export.
+ */
+export async function getEventAttendees(
+  eventId: string
+): Promise<ActionResult<TicketOrder[]>> {
+  try {
+    if (!eventId) {
+      return { success: false, error: "Missing event ID." };
+    }
+
+    const supabase = createAdminClient();
+
+    const { data: tickets, error: ticketsErr } = await supabase
+      .from("tickets")
+      .select("*")
+      .eq("event_id", eventId)
+      .order("created_at", { ascending: false });
+
+    if (ticketsErr) {
+      console.error("Error querying event attendees:", ticketsErr);
+      return {
+        success: false,
+        error: ticketsErr.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: (tickets as TicketOrder[]) || [],
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to load attendees for event",
     };
   }
 }

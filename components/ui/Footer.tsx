@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { getSubdomainUrl } from "@/lib/domains";
 import {
   ShieldCheck,
   Lightning,
@@ -121,10 +122,10 @@ export default function Footer() {
               Organizer Tools
             </h4>
             <ul className="space-y-2 text-xs text-[#6F7287]">
-              <li><Link href="/organizer/create" className="hover:text-[#3659E3] transition font-semibold text-[#1E0A3C]">List Your Event (0% Fee)</Link></li>
-              <li><Link href="/organizer" className="hover:text-[#3659E3] transition">Organizer Studio</Link></li>
-              <li><Link href="/staff/login" className="hover:text-[#3659E3] transition font-semibold text-[#1E0A3C]">Scanning Staff Portal</Link></li>
-              <li><Link href="/scan/1" className="hover:text-[#3659E3] transition">Mobile Gate Scanner</Link></li>
+              <li><Link href={getSubdomainUrl("org", "/create")} className="hover:text-[#3659E3] transition font-semibold text-[#1E0A3C]">List Your Event (0% Fee)</Link></li>
+              <li><Link href={getSubdomainUrl("org")} className="hover:text-[#3659E3] transition">Organizer Studio</Link></li>
+              <li><Link href={getSubdomainUrl("scan", "/login")} className="hover:text-[#3659E3] transition font-semibold text-[#1E0A3C]">Scanning Staff Portal</Link></li>
+              <li><Link href={getSubdomainUrl("scan")} className="hover:text-[#3659E3] transition">Mobile Gate Scanner</Link></li>
               <li><span className="text-[#6F7287]">T+2 Bank Settlement</span></li>
               <li><span className="text-[#6F7287]">Cash Counter Desk</span></li>
             </ul>

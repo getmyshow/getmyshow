@@ -55,7 +55,32 @@ export default function QrPassCard({
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const [isDownloading, setIsDownloading] = useState(false);
   const [copiedToken, setCopiedToken] = useState(false);
+  const [liveTime, setLiveTime] = useState<string>("");
   const ticketRef = useRef<HTMLDivElement>(null);
+
+  // Live anti-screenshot real-time clock (BookMyShow M-Ticket security standard)
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setLiveTime(
+        now.toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+          timeZone: "Asia/Kolkata",
+        })
+      );
+    };
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${venue}, ${city}, Bihar`)}`;
+  const eventStartIso = new Date(eventDate).toISOString().replace(/-|:|\.\d\d\d/g, "");
+  const eventEndIso = new Date(new Date(eventDate).getTime() + 3 * 60 * 60 * 1000).toISOString().replace(/-|:|\.\d\d\d/g, "");
+  const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventName)}&dates=${eventStartIso}/${eventEndIso}&details=${encodeURIComponent(`GetMyShow Entry Pass: ${ticketNumber}`)}&location=${encodeURIComponent(`${venue}, ${city}`)}`;
 
   useEffect(() => {
     QRCode.toDataURL(qrToken, {
@@ -501,6 +526,18 @@ export default function QrPassCard({
           </div>
         </div>
 
+        {/* Live Anti-Screenshot Dynamic Security Hologram Bar (BookMyShow M-Ticket Standard) */}
+        <div className="bg-gradient-to-r from-emerald-600 via-indigo-600 to-emerald-600 px-4 py-2 text-white flex items-center justify-between text-[11px] font-bold shadow-xs print:hidden">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-300 animate-ping" />
+            <span className="tracking-wider uppercase text-[10px]">Live Verified Pass</span>
+          </div>
+          <div className="font-mono text-[11px] text-emerald-100 flex items-center gap-1.5">
+            <Clock size={13} weight="bold" />
+            <span>{liveTime ? `${liveTime} IST` : "SYNCING..."}</span>
+          </div>
+        </div>
+
         {/* 2. Top Event Presentation Section (BookMyShow Split View) */}
         <div className="p-5 sm:p-6 space-y-4">
           <div className="flex items-start justify-between gap-4">
@@ -560,9 +597,20 @@ export default function QrPassCard({
             </div>
 
             <div className="col-span-2">
-              <span className="text-[10px] font-bold text-[#6F7287] uppercase tracking-wider block">
-                Venue Location
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-[#6F7287] uppercase tracking-wider block">
+                  Venue Location
+                </span>
+                <a
+                  href={googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] font-bold text-[#3659E3] hover:underline flex items-center gap-1"
+                >
+                  <MapPinLine size={13} weight="bold" />
+                  <span>Google Maps Directions →</span>
+                </a>
+              </div>
               <p className="font-medium text-[#39364F] mt-0.5 flex items-center gap-1.5">
                 <MapPinLine size={15} className="text-[#F05537] shrink-0" />
                 <span>{venue}</span>
@@ -691,8 +739,8 @@ export default function QrPassCard({
         </div>
       </div>
 
-      {/* 7. Action Suite: WhatsApp Share, Save Image, Print PDF */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 print:hidden">
+      {/* 7. Action Suite: WhatsApp Share, Save Image, Print PDF, Calendar, Navigation */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1 print:hidden">
         <button
           type="button"
           onClick={handleShare}
@@ -721,13 +769,33 @@ export default function QrPassCard({
           )}
         </button>
 
+        <a
+          href={gCalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="py-3 px-3 rounded-xl bg-white border border-[#DBDAE3] hover:border-[#3659E3] text-[#1E0A3C] hover:text-[#3659E3] text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-95 shadow-xs"
+        >
+          <CalendarBlank size={18} weight="bold" className="text-[#3659E3]" />
+          <span>Add to Calendar</span>
+        </a>
+
+        <a
+          href={googleMapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="py-3 px-3 rounded-xl bg-white border border-[#DBDAE3] hover:border-[#F05537] text-[#1E0A3C] hover:text-[#F05537] text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-95 shadow-xs"
+        >
+          <MapPinLine size={18} weight="bold" className="text-[#F05537]" />
+          <span>Directions (Maps)</span>
+        </a>
+
         <button
           type="button"
           onClick={handlePrint}
-          className="py-3 px-3 rounded-xl border border-[#DBDAE3] hover:border-[#0F172A] text-[#0F172A] hover:bg-slate-50 text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-95 bg-white shadow-xs"
+          className="col-span-2 sm:col-span-2 py-3 px-3 rounded-xl border border-[#DBDAE3] hover:border-[#0F172A] text-[#0F172A] hover:bg-slate-50 text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-95 bg-white shadow-xs"
         >
           <Printer size={18} weight="bold" className="text-[#4F46E5]" />
-          <span>Print / PDF</span>
+          <span>Print Pass / Save PDF</span>
         </button>
       </div>
 

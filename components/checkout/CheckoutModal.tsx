@@ -17,6 +17,9 @@ import {
   Ticket,
   LockKey,
   Clock,
+  Tag,
+  Trash,
+  Sparkle,
 } from "@phosphor-icons/react";
 import { EventItem, TicketTier } from "@/types";
 import { formatINR } from "@/lib/utils";
@@ -48,6 +51,16 @@ export default function CheckoutModal({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [secondsRemaining, setSecondsRemaining] = useState(480); // 8 minutes BookMyShow hold
 
+  // BookMyShow-style Promo & Coupon Code Engine
+  const [promoInput, setPromoInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<{
+    code: string;
+    discountAmount: number;
+    label: string;
+  } | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
+
   useEffect(() => {
     if (!isOpen) return;
     setSecondsRemaining(480);
@@ -75,11 +88,61 @@ export default function CheckoutModal({
 
   if (!isOpen) return null;
 
-  // Pricing calculation based on selected tier or general price
+  // Pricing calculation based on selected tier, quantity, and applied coupons
   const currentTierPrice = selectedTier ? selectedTier.price : event.ticket_price;
   const baseSubtotal = currentTierPrice * quantity;
-  const platformFee = event.pass_fee_to_buyer ? Math.round(baseSubtotal * 0.07) : 0;
-  const totalPayable = baseSubtotal + platformFee;
+  const discountAmount = appliedPromo ? appliedPromo.discountAmount : 0;
+  const netSubtotal = Math.max(0, baseSubtotal - discountAmount);
+  const platformFee = event.pass_fee_to_buyer ? Math.round(netSubtotal * 0.07) : 0;
+  const totalPayable = netSubtotal + platformFee;
+
+  const handleApplyPromo = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPromoError(null);
+    const cleanCode = promoInput.trim().toUpperCase();
+    if (!cleanCode) return;
+
+    const VALID_COUPONS: Record<
+      string,
+      { discountPercent?: number; flatDiscount?: number; minOrder?: number; label: string }
+    > = {
+      BIHAR20: { discountPercent: 20, minOrder: 100, label: "20% Bihar Launch Offer" },
+      SUPER50: { flatDiscount: 50, minOrder: 150, label: "Flat ₹50 Instant Discount" },
+      FIRSTSHOW: { discountPercent: 10, minOrder: 50, label: "10% First Show Welcome Discount" },
+      GMSVIP: { discountPercent: 25, minOrder: 250, label: "25% VIP Pass Offer" },
+    };
+
+    const coupon = VALID_COUPONS[cleanCode];
+    if (!coupon) {
+      setPromoError("Invalid promo code. Try BIHAR20, SUPER50, or FIRSTSHOW.");
+      return;
+    }
+
+    if (coupon.minOrder && baseSubtotal < coupon.minOrder) {
+      setPromoError(`Minimum spend of ${formatINR(coupon.minOrder)} required for code ${cleanCode}.`);
+      return;
+    }
+
+    let calculatedDiscount = 0;
+    if (coupon.discountPercent) {
+      calculatedDiscount = Math.round((baseSubtotal * coupon.discountPercent) / 100);
+    } else if (coupon.flatDiscount) {
+      calculatedDiscount = coupon.flatDiscount;
+    }
+
+    const finalDiscount = Math.min(baseSubtotal, calculatedDiscount);
+    setAppliedPromo({
+      code: cleanCode,
+      discountAmount: finalDiscount,
+      label: coupon.label,
+    });
+    setPromoInput("");
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoError(null);
+  };
 
   const handleCustomChange = (fieldId: string, value: string) => {
     setCustomAnswers((prev) => ({ ...prev, [fieldId]: value }));
@@ -122,6 +185,8 @@ export default function CheckoutModal({
           tierName: selectedTier?.name,
           tierPrice: currentTierPrice,
           customResponses: customAnswers,
+          discountAmount,
+          promoCode: appliedPromo?.code,
         });
 
         if (!res.success || !res.data) {
@@ -309,12 +374,93 @@ export default function CheckoutModal({
               </div>
             </div>
 
+            {/* BookMyShow-Inspired Promo Code Accordion */}
+            <div className="rounded-lg border border-[#DBDAE3] bg-white overflow-hidden text-xs">
+              {!appliedPromo ? (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setIsPromoOpen(!isPromoOpen)}
+                    className="w-full px-3.5 py-2.5 flex items-center justify-between text-left hover:bg-slate-50 transition"
+                  >
+                    <div className="flex items-center gap-2 font-bold text-[#1E0A3C]">
+                      <Tag size={16} weight="bold" className="text-[#F05537]" />
+                      <span>Have a Promo Code / Coupon?</span>
+                    </div>
+                    <span className="text-[11px] font-bold text-[#3659E3]">
+                      {isPromoOpen ? "Hide" : "+ Apply"}
+                    </span>
+                  </button>
+
+                  {isPromoOpen && (
+                    <div className="p-3 border-t border-[#EEEDF2] bg-[#F8F7FA] space-y-2">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="e.g. BIHAR20, SUPER50"
+                          value={promoInput}
+                          onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                          className="flex-1 px-3 py-1.5 rounded-md border border-[#DBDAE3] bg-white text-xs font-mono font-bold uppercase tracking-wider outline-none focus:border-[#3659E3]"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleApplyPromo}
+                          className="px-3.5 py-1.5 rounded-md bg-[#1E0A3C] hover:bg-[#39364F] text-white font-bold text-xs transition"
+                        >
+                          Apply
+                        </button>
+                      </div>
+
+                      {promoError && (
+                        <p className="text-[11px] text-[#EF4444] font-medium">{promoError}</p>
+                      )}
+
+                      <div className="flex items-center gap-1.5 text-[10px] text-[#6F7287]">
+                        <Sparkle size={12} weight="fill" className="text-amber-500" />
+                        <span>Try coupon <strong>BIHAR20</strong> (20% off) or <strong>SUPER50</strong> (₹50 off)</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="p-3 bg-emerald-50 border-emerald-200 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle size={18} weight="fill" className="text-emerald-600" />
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono font-bold text-xs text-emerald-950 uppercase">{appliedPromo.code}</span>
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-emerald-200 text-emerald-800">APPLIED</span>
+                      </div>
+                      <span className="text-[10px] text-emerald-800">{appliedPromo.label}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-emerald-800 font-mono text-xs">-{formatINR(appliedPromo.discountAmount)}</span>
+                    <button
+                      type="button"
+                      onClick={handleRemovePromo}
+                      className="p-1 rounded text-emerald-700 hover:text-red-600 hover:bg-red-50 transition"
+                      title="Remove coupon"
+                    >
+                      <Trash size={14} weight="bold" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Fee Breakdown Summary */}
             <div className="p-3.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs space-y-1.5">
               <div className="flex justify-between text-[#6F7287]">
-                <span>Tickets ({quantity}x {formatINR(event.ticket_price)})</span>
+                <span>Tickets ({quantity}x {formatINR(currentTierPrice)})</span>
                 <span className="font-semibold text-[#1E0A3C]">{formatINR(baseSubtotal)}</span>
               </div>
+              {appliedPromo && (
+                <div className="flex justify-between text-emerald-700 font-bold">
+                  <span>Coupon Discount ({appliedPromo.code})</span>
+                  <span>-{formatINR(appliedPromo.discountAmount)}</span>
+                </div>
+              )}
               {event.pass_fee_to_buyer && (
                 <div className="flex justify-between text-[#6F7287]">
                   <span>Platform Convenience Fee (7%)</span>
@@ -323,7 +469,7 @@ export default function CheckoutModal({
               )}
               <div className="flex justify-between text-sm font-bold text-[#1E0A3C] pt-2 border-t border-[#DBDAE3]/60">
                 <span>Total Amount</span>
-                <span>{formatINR(totalPayable)}</span>
+                <span className="text-base text-[#1E0A3C]">{formatINR(totalPayable)}</span>
               </div>
             </div>
 

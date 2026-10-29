@@ -89,6 +89,99 @@ export async function getEventBySlug(slug: string): Promise<ActionResult<EventIt
   }
 }
 
+export async function getEventById(identifier: string): Promise<ActionResult<EventItem>> {
+  try {
+    if (!identifier) {
+      return { success: false, error: "Missing event identifier." };
+    }
+
+    const supabase = createAdminClient();
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
+
+    let query = supabase.from("events").select("*");
+    if (isUuid) {
+      query = query.eq("id", identifier);
+    } else {
+      query = query.eq("slug", identifier);
+    }
+
+    let { data, error } = await query.maybeSingle();
+
+    // Fallback: If not found and not standard UUID, attempt direct ID query in case ID format varies
+    if (!data && !isUuid) {
+      const fallbackRes = await supabase.from("events").select("*").eq("id", identifier).maybeSingle();
+      if (fallbackRes.data) {
+        data = fallbackRes.data;
+        error = fallbackRes.error;
+      }
+    }
+
+    if (error || !data) {
+      return {
+        success: false,
+        error: error?.message || "Event not found in database.",
+      };
+    }
+
+    return {
+      success: true,
+      data: data as EventItem,
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Error querying event by ID",
+    };
+  }
+}
+
+export async function getOrganizerEvents(filter?: {
+  email?: string;
+  phone?: string;
+}): Promise<ActionResult<EventItem[]>> {
+  try {
+    const supabase = createAdminClient();
+
+    let query = supabase.from("events").select("*").order("created_at", { ascending: false });
+
+    if (filter?.email || filter?.phone) {
+      const conditions: string[] = [];
+      if (filter.email?.trim()) {
+        conditions.push(`organizer_email.ilike.%${filter.email.trim()}%`);
+      }
+      if (filter.phone?.trim()) {
+        const cleanPhone = filter.phone.replace(/\D/g, "").slice(-10);
+        if (cleanPhone) {
+          conditions.push(`organizer_whatsapp.ilike.%${cleanPhone}%`);
+        }
+      }
+      if (conditions.length > 0) {
+        query = query.or(conditions.join(","));
+      }
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("Error fetching organizer events:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: (data as EventItem[]) || [],
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to load organizer events",
+    };
+  }
+}
+
 export async function createEvent(input: CreateEventInput): Promise<ActionResult<EventItem>> {
   try {
     const supabase = createAdminClient();
