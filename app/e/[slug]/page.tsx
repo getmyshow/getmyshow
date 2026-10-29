@@ -132,13 +132,41 @@ export async function generateMetadata({
     return { title: "Event Not Found — GetMyShow" };
   }
 
+  const formattedDate = new Date(event.event_date).toLocaleDateString("en-IN", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Kolkata",
+  });
+
+  const ogImageUrl = event.poster_url || "https://getmyshow-nine.vercel.app/brand/og-default.png";
+  const ogTitle = `${event.title} - ${event.city} Event Tickets | GetMyShow`;
+  const ogDesc = `Book online tickets for ${event.title} in ${event.city} on GetMyShow which is a verified event happening at ${event.venue} on ${formattedDate}. 2-click instant UPI checkout.`;
+
   return {
-    title: `${event.title} — GetMyShow Passes`,
-    description: `Book your pass for ${event.title} in ${event.venue}, ${event.city}. Instant 2-click UPI checkout.`,
+    title: ogTitle,
+    description: ogDesc,
     openGraph: {
-      title: event.title,
-      description: `Venue: ${event.venue} • Price: ₹${event.ticket_price}`,
-      images: event.poster_url ? [{ url: event.poster_url }] : [],
+      type: "website",
+      url: `https://getmyshow-nine.vercel.app/e/${event.slug}`,
+      siteName: "GetMyShow",
+      title: `${event.title} - ${event.city} Event Tickets - GetMyShow`,
+      description: ogDesc,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 675, // Exact 16:9 ratio for WhatsApp high-resolution preview
+          alt: event.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDesc,
+      images: [ogImageUrl],
     },
   };
 }

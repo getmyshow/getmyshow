@@ -29,6 +29,7 @@ import {
   getUserStoredCity,
   setUserStoredCity,
   findNearestBiharCity,
+  openPickRegionModal,
 } from "@/lib/geo";
 
 const DISCOVERY_CATEGORIES = [
@@ -206,80 +207,20 @@ function HeaderContent() {
               />
             </Link>
 
-            {/* City Location Chip */}
+            {/* City Location Chip (BookMyShow "Pick A Region" Modal Trigger) */}
             <div className="relative shrink-0 ml-1">
               <button
                 type="button"
-                onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
-                className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 rounded-full bg-slate-100/80 hover:bg-slate-200/80 transition-colors text-left"
-                aria-label="Select location"
+                onClick={() => openPickRegionModal()}
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-full bg-slate-100/90 hover:bg-slate-200 transition-colors text-left border border-slate-200/60 active:scale-95"
+                aria-label="Pick a region"
               >
-                <MapPin size={13} weight="fill" className="text-[#4F46E5] shrink-0" />
+                <MapPin size={13} weight="fill" className="text-[#F05537] shrink-0" />
                 <span className="text-[11px] sm:text-xs font-bold text-[#0F172A] tracking-tight truncate max-w-[70px] sm:max-w-none">
                   {selectedCity}
                 </span>
                 <CaretDown size={10} weight="bold" className="text-[#64748B]" />
               </button>
-
-              {/* City Dropdown Menu */}
-              {isCityDropdownOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setIsCityDropdownOpen(false)}
-                  />
-                  <div className="absolute left-0 mt-2 w-56 sm:w-64 bg-white rounded-xl shadow-xl border border-slate-200 p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3 py-1.5 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
-                      Select City in Bihar
-                    </div>
-
-                    {/* Instant GPS Detection Option */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (typeof window !== "undefined" && "geolocation" in navigator) {
-                          navigator.geolocation.getCurrentPosition(
-                            (pos) => {
-                              const nearest = findNearestBiharCity(pos.coords.latitude, pos.coords.longitude);
-                              handleSelectCity(nearest.name);
-                            },
-                            () => {
-                              // If denied, fallback to Sasaram
-                              handleSelectCity("Sasaram");
-                            },
-                            { timeout: 8000 }
-                          );
-                        }
-                      }}
-                      className="w-full text-left px-3 py-2 mb-1 rounded-lg bg-indigo-50/80 hover:bg-indigo-100/80 text-[#4F46E5] text-xs font-bold flex items-center gap-2 transition-colors border border-indigo-200/60"
-                    >
-                      <Crosshair size={14} weight="bold" className="shrink-0" />
-                      <span className="truncate">Use Current Location (GPS)</span>
-                    </button>
-
-                    <div className="space-y-0.5">
-                      {BIHAR_CITIES.map((c) => (
-                        <button
-                          key={c.name}
-                          type="button"
-                          onClick={() => handleSelectCity(c.name)}
-                          className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
-                            selectedCity === c.name
-                              ? "bg-[#4F46E5]/10 text-[#4F46E5]"
-                              : "text-[#39364F] hover:bg-slate-50 hover:text-[#0F172A]"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <MapPin size={13} weight={selectedCity === c.name ? "fill" : "regular"} className={selectedCity === c.name ? "text-[#4F46E5]" : "text-slate-400"} />
-                            <span>{c.name}</span>
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-normal">{c.region}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
             </div>
           </div>
 
@@ -687,8 +628,20 @@ function HeaderContent() {
 
               {/* Popular Cities in Bihar */}
               <div className="mt-4 pt-3 border-t border-[#EEEDF2]">
-                <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-2">
-                  Cities in Bihar
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+                    Cities in Bihar
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      openPickRegionModal();
+                    }}
+                    className="text-[11px] font-bold text-[#F05537] hover:underline"
+                  >
+                    Pick Region →
+                  </button>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {BIHAR_CITIES.map((c) => {

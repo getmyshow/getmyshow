@@ -59,6 +59,11 @@ export interface EventItem {
   scanner_pin: string;
   scanner_staff?: ScannerStaff[];
   custom_fields?: CustomField[];
+  duration_hours?: number;
+  age_limit?: string;
+  genre_tags?: string[];
+  terms_and_conditions?: string[];
+  interested_count?: number;
   is_active: boolean;
   created_at: string;
 }

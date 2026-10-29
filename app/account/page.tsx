@@ -36,6 +36,7 @@ import {
   getUserStoredCity,
   setUserStoredCity,
   findNearestBiharCity,
+  openPickRegionModal,
 } from "@/lib/geo";
 
 export default function AccountPage() {
@@ -310,7 +311,16 @@ export default function AccountPage() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-[#0F172A]">Location & Area</h3>
-                <p className="text-xs text-[#64748B]">Current: <strong>{currentCity}, Bihar</strong></p>
+                <p className="text-xs text-[#64748B]">
+                  Current: <strong>{currentCity}, Bihar</strong>
+                  <button
+                    type="button"
+                    onClick={() => openPickRegionModal()}
+                    className="ml-2 font-bold text-[#F05537] hover:underline"
+                  >
+                    Change Region →
+                  </button>
+                </p>
               </div>
             </div>
 
