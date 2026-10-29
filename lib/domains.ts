@@ -94,8 +94,8 @@ export function getSubdomainUrl(tier: AppTier, path: string = ""): string {
     if (vercelScanDomain) {
       return `https://${vercelScanDomain}${formattedPath}`;
     }
-    // Fallback on single Vercel project: direct subpath
-    return `/scan${formattedPath}`;
+    // Dedicated standalone gate scanner portal on Vercel
+    return `https://getmyshow-scan.vercel.app${formattedPath}`;
   }
 
   return formattedPath || "/";

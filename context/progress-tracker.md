@@ -144,3 +144,9 @@
   - [x] 60% Left Slide-Over Navigation Drawer (`components/ui/Header.tsx`) on hamburger tap with search bar, Bihar quick city chips, event categories, and Clerk auth actions
   - [x] Minimalist Edge-to-Edge Hero Carousel (`components/home/HeroBannerCarousel.tsx`) eliminating thick purple borders on mobile screens
   - [x] Dedicated City Landing Pages (`/city/[city]` & `components/city/CityDetailView.tsx`) with city hero headers, dynamic Supabase event filtering, category/date chips, and quick CTAs
+- [x] Standalone Gate Scanner Terminal & PWA Architecture (Separate Repository & Vercel Project):
+  - [x] Dedicated repository created: `https://github.com/getmyshow/getmyshow-scanner`
+  - [x] Dedicated Vercel project deployed: `https://getmyshow-scan.vercel.app`
+  - [x] Zero cold-start architecture: direct Supabase & Upstash Redis verification without Render sleep delays
+  - [x] High-FPS camera scanner, Web Audio synthesized chimes, hardware torch, and manual alphanumeric ticket keypad
+  - [x] Integrated all WhatsApp bouncer dispatch links & organizer buttons across main site to route to `getmyshow-scan.vercel.app`
