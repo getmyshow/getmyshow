@@ -11,4 +11,5 @@ scripts
 tests
 *.md
 !README.md
+render.yaml
 
