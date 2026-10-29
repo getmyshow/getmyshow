@@ -308,12 +308,12 @@ function HomeContent() {
   }, [liveEvents, selectedCategory, urlSearch, urlCity, userCity, dateFilter]);
 
   return (
-    <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
+    <div className="min-h-screen bg-slate-50 text-slate-700">
       {/* 1. 3-Banner Hero Carousel (5-Second Auto-Loop with Pause-on-Hover) */}
       <HeroBannerCarousel />
 
       {/* 1b. Horizontal Category Icon Row (BookMyShow / District style) */}
-      <section className="bg-white border-b border-[#DBDAE3]">
+      <section className="bg-white border-b border-slate-200">
         <div className="max-w-[1340px] mx-auto px-4 sm:px-6">
           <CategoryIconRow
             selectedCategory={selectedCategory}
@@ -323,7 +323,7 @@ function HomeContent() {
       </section>
 
       {/* 2. Eventbrite Rectangular Visual Category Cards Grid */}
-      <section className="border-b border-[#DBDAE3] bg-white">
+      <section className="border-b border-slate-200 bg-white">
         <div className="max-w-[1340px] mx-auto px-4 sm:px-6">
           <CategoryCircleRow
             selectedCategory={selectedCategory}
@@ -338,15 +338,15 @@ function HomeContent() {
         <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div>
-              <div className="text-xs font-bold text-[#3659E3] uppercase tracking-wider flex items-center gap-1.5">
-                <MapPin size={13} weight="fill" className="text-[#3659E3] shrink-0" />
+              <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider flex items-center gap-1.5">
+                <MapPin size={13} weight="fill" className="text-indigo-600 shrink-0" />
                 <span>
                   {selectedCategory
                     ? `Filtered by ${selectedCategory}`
                     : `Discover in ${urlCity || userCity || "Sasaram & Rohtas"}`}
                 </span>
               </div>
-              <h2 className="text-xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-0.5">
+              <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-0.5">
                 Popular Events Near You
               </h2>
             </div>
@@ -369,8 +369,8 @@ function HomeContent() {
                     onClick={() => setDateFilter(chip.id)}
                     className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border shrink-0 snap-start active:scale-95 ${
                       isActive
-                        ? "bg-[#1E0A3C] text-white border-[#1E0A3C] shadow-xs"
-                        : "bg-white text-[#39364F] border-[#DBDAE3] hover:border-[#1E0A3C]/40 hover:bg-[#F8F7FA]"
+                        ? "bg-slate-900 text-white border-slate-900 shadow-xs"
+                        : "bg-white text-slate-700 border-slate-200 hover:border-slate-800/40 hover:bg-slate-50"
                     }`}
                   >
                     {chip.label}
@@ -385,7 +385,7 @@ function HomeContent() {
                     setSelectedCategory("");
                     setDateFilter("all");
                   }}
-                  className="text-xs font-bold text-[#F05537] hover:underline whitespace-nowrap ml-2 shrink-0"
+                  className="text-xs font-bold text-orange-600 hover:underline whitespace-nowrap ml-2 shrink-0"
                 >
                   Clear Filters
                 </button>
@@ -393,19 +393,23 @@ function HomeContent() {
             </div>
           </div>
 
-          {/* 4-Column Modern Eventbrite 16px Cards Grid or Empty State with unDraw Illustration */}
+          {/* Asymmetric Curated Cards Grid */}
           {filteredEvents.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {filteredEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
+              {filteredEvents.map((event, idx) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  featured={idx === 0 && filteredEvents.length > 2}
+                />
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-[#DBDAE3] p-8 sm:p-12 text-center flex flex-col items-center justify-center space-y-4 shadow-xs">
+            <div className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center flex flex-col items-center justify-center space-y-4 shadow-xs">
               <EmptyEventsIllustration className="w-56 h-40 sm:w-64 sm:h-48" />
               <div className="max-w-md space-y-1">
-                <h3 className="text-lg font-bold text-[#1E0A3C]">No events found in this category</h3>
-                <p className="text-sm text-[#6F7287]">
+                <h3 className="text-lg font-bold text-slate-900">No events found in this category</h3>
+                <p className="text-sm text-slate-500">
                   There are no scheduled events matching your filter right now. Explore other categories or create your own event!
                 </p>
               </div>
@@ -413,13 +417,13 @@ function HomeContent() {
                 <button
                   type="button"
                   onClick={() => setSelectedCategory("")}
-                  className="px-5 py-2.5 rounded-lg bg-[#3659E3] hover:bg-[#2B47B8] text-white text-xs font-bold transition-all shadow-xs"
+                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-xs"
                 >
                   Show All Events
                 </button>
                 <Link
                   href={getSubdomainUrl("org", "/create")}
-                  className="px-5 py-2.5 rounded-lg border border-[#DBDAE3] hover:border-[#1E0A3C] bg-white text-[#1E0A3C] text-xs font-bold transition-all"
+                  className="px-5 py-2.5 rounded-xl border border-slate-200 hover:border-slate-800 bg-white text-slate-800 text-xs font-bold transition-all"
                 >
                   Host an Event
                 </Link>
@@ -431,13 +435,13 @@ function HomeContent() {
         {/* 4. Explore Cities in Bihar (Horizontal Swipe on Mobile, Grid on Desktop) */}
         <div>
           <div className="mb-4 sm:mb-6">
-            <span className="text-xs font-bold text-[#3659E3] uppercase tracking-wider">
+            <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
               Regional Box-Office
             </span>
-            <h2 className="text-xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-0.5">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-0.5">
               Explore Events by City
             </h2>
-            <p className="text-xs sm:text-sm text-[#6F7287] mt-0.5">
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
               Connect with college fests, coaching seminars, and celebrations across Bihar.
             </p>
           </div>
@@ -447,7 +451,7 @@ function HomeContent() {
               <Link
                 key={city.name}
                 href={`/city/${city.slug}`}
-                className="group relative shrink-0 w-64 sm:w-auto h-40 sm:h-48 rounded-xl overflow-hidden border border-[#DBDAE3] shadow-xs hover:border-[#1E0A3C] hover:shadow-md transition-all block snap-start active:scale-98"
+                className="group relative shrink-0 w-64 sm:w-auto h-40 sm:h-48 rounded-2xl overflow-hidden border border-slate-200 shadow-xs hover:border-slate-800 hover:shadow-md transition-all block snap-start active:scale-98"
               >
                 <Image
                   src={city.imageUrl}
@@ -456,11 +460,11 @@ function HomeContent() {
                   sizes="(max-width: 640px) 260px, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1E0A3C]/90 via-[#1E0A3C]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
                 <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
                   <div className="text-base sm:text-lg font-bold leading-tight">{city.name}</div>
                   <div className="text-xs text-white/80 mt-0.5 line-clamp-1">{city.tagline}</div>
-                  <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-[#F97316]">
+                  <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-orange-400">
                     <span>{city.eventsCount} upcoming events</span>
                     <ArrowRight size={12} weight="bold" />
                   </div>
@@ -476,7 +480,7 @@ function HomeContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F8F7FA]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
       <HomeContent />
     </Suspense>
   );

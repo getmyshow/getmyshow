@@ -114,8 +114,8 @@ export default function TicketConfirmationPage({
   if (loading) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
-        <CircleNotch size={36} className="animate-spin text-[#4F46E5] mb-3" weight="bold" />
-        <p className="text-sm font-semibold text-[#0F172A]">Retrieving verified ticket pass...</p>
+        <CircleNotch size={36} className="animate-spin text-indigo-600 mb-3" weight="bold" />
+        <p className="text-sm font-semibold text-slate-900">Retrieving verified ticket pass...</p>
       </div>
     );
   }
@@ -126,13 +126,13 @@ export default function TicketConfirmationPage({
         <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center mb-4">
           <Ticket size={32} weight="duotone" />
         </div>
-        <h2 className="text-xl font-bold text-[#0F172A] mb-1">Ticket Pass Not Found</h2>
-        <p className="text-xs text-[#64748B] max-w-sm mb-6">
+        <h2 className="text-xl font-bold text-slate-900 mb-1">Ticket Pass Not Found</h2>
+        <p className="text-xs text-slate-500 max-w-sm mb-6">
           The requested pass identifier was not located in the verified database.
         </p>
         <Link
           href="/"
-          className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition shadow-md"
+          className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-500 transition shadow-md"
         >
           Back to All Events
         </Link>

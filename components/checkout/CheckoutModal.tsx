@@ -20,6 +20,8 @@ import {
   Tag,
   Trash,
   Sparkle,
+  DeviceMobile,
+  Check,
 } from "@phosphor-icons/react";
 import { EventItem, TicketTier } from "@/types";
 import { formatINR } from "@/lib/utils";
@@ -46,6 +48,7 @@ export default function CheckoutModal({
   const [quantity, setQuantity] = useState<number>(initialQuantity);
   const [name, setName] = useState<string>("");
   const [whatsapp, setWhatsapp] = useState<string>("");
+  const [selectedUpiApp, setSelectedUpiApp] = useState<"gpay" | "phonepe" | "paytm" | "any">("gpay");
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -73,6 +76,7 @@ export default function CheckoutModal({
   const countdownMinutes = Math.floor(secondsRemaining / 60);
   const countdownSeconds = secondsRemaining % 60;
   const formattedCountdown = `${countdownMinutes.toString().padStart(2, "0")}:${countdownSeconds.toString().padStart(2, "0")}`;
+  const timerPercentage = Math.max(0, Math.min(100, (secondsRemaining / 480) * 100));
 
   // Auto-fill buyer details if signed in with Clerk / Google
   useEffect(() => {
@@ -84,7 +88,7 @@ export default function CheckoutModal({
         setWhatsapp(user.primaryPhoneNumber.phoneNumber.replace(/\D/g, "").slice(-10));
       }
     }
-  }, [isSignedIn, user]);
+  }, [isSignedIn, user, name, whatsapp]);
 
   if (!isOpen) return null;
 
@@ -96,10 +100,9 @@ export default function CheckoutModal({
   const platformFee = event.pass_fee_to_buyer ? Math.round(netSubtotal * 0.07) : 0;
   const totalPayable = netSubtotal + platformFee;
 
-  const handleApplyPromo = (e: React.FormEvent) => {
-    e.preventDefault();
+  const applyCouponCode = (codeToApply: string) => {
     setPromoError(null);
-    const cleanCode = promoInput.trim().toUpperCase();
+    const cleanCode = codeToApply.trim().toUpperCase();
     if (!cleanCode) return;
 
     const VALID_COUPONS: Record<
@@ -114,7 +117,7 @@ export default function CheckoutModal({
 
     const coupon = VALID_COUPONS[cleanCode];
     if (!coupon) {
-      setPromoError("Invalid promo code. Try BIHAR20, SUPER50, or FIRSTSHOW.");
+      setPromoError("Invalid promo code. Tap one of the recommended coupons below.");
       return;
     }
 
@@ -137,6 +140,12 @@ export default function CheckoutModal({
       label: coupon.label,
     });
     setPromoInput("");
+    setIsPromoOpen(false);
+  };
+
+  const handleApplyPromo = (e: React.FormEvent) => {
+    e.preventDefault();
+    applyCouponCode(promoInput);
   };
 
   const handleRemovePromo = () => {
@@ -190,7 +199,7 @@ export default function CheckoutModal({
         });
 
         if (!res.success || !res.data) {
-          // If Supabase tables are not yet migrated, generate a resilient local token
+          // If Supabase tables are in fallback mode, generate a resilient local token
           const fallbackToken = `GMS-${(event.city || "SAS").slice(0, 3).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString(36).slice(-6).toUpperCase()}`;
           const fallbackNumber = `GMS-SAS-${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -246,17 +255,19 @@ export default function CheckoutModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      {/* Eventbrite / Mobile Bottom Sheet Dialog Container */}
-      <div className="relative w-full max-w-lg bg-white rounded-t-2xl sm:rounded-2xl border border-[#DBDAE3] shadow-2xl p-5 sm:p-8 animate-in fade-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
-        {/* Header & Close */}
-        <div className="flex items-center justify-between pb-4 border-b border-[#EEEDF2]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 font-sans select-none">
+      {/* Dialog Container */}
+      <div className="relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl border border-slate-200 shadow-2xl p-5 sm:p-7 animate-in fade-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
+        {/* Header Strip */}
+        <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-bold text-[#3659E3] uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 uppercase tracking-wider">
               <Ticket size={16} weight="duotone" />
-              <span>Step {step} of {event.custom_fields && event.custom_fields.length > 0 ? 2 : 1}</span>
+              <span>
+                Step {step} of {event.custom_fields && event.custom_fields.length > 0 ? 2 : 1}
+              </span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-[#1E0A3C] mt-0.5">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5 tracking-tight">
               {step === 1 ? "Instant UPI Booking" : "Attendee Questionnaire"}
             </h2>
           </div>
@@ -264,72 +275,84 @@ export default function CheckoutModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-md bg-[#F8F7FA] text-[#6F7287] hover:text-[#1E0A3C] hover:bg-[#EEEDF2] flex items-center justify-center transition-colors border border-[#DBDAE3]"
+            className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200 flex items-center justify-center transition border border-slate-200/80"
             aria-label="Close dialog"
           >
-            <X size={18} weight="bold" />
+            <X size={16} weight="bold" />
           </button>
         </div>
 
-        {/* BookMyShow Standard: 8-Minute Seat Reservation Countdown */}
-        <div className="mt-3.5 bg-amber-50 border border-amber-200/80 rounded-xl px-3.5 py-2 flex items-center justify-between text-xs text-amber-900">
-          <div className="flex items-center gap-1.5 font-medium">
-            <Clock size={15} weight="bold" className="text-amber-600 animate-pulse" />
-            <span>Passes reserved for you</span>
+        {/* 8-Minute Seat Reservation Hold with Progress Bar */}
+        <div className="mt-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl p-2.5 text-xs text-amber-900 overflow-hidden">
+          <div className="flex items-center justify-between font-medium mb-1.5 px-1">
+            <div className="flex items-center gap-1.5">
+              <Clock size={15} weight="bold" className="text-amber-600 animate-pulse" />
+              <span className="font-semibold">Passes reserved for you</span>
+            </div>
+            <span className="font-mono font-bold text-amber-800">{formattedCountdown}</span>
           </div>
-          <span className="font-mono font-bold text-amber-800">{formattedCountdown}</span>
+
+          {/* Visual Hold Progress Bar */}
+          <div className="w-full bg-amber-200/60 h-1.5 rounded-full overflow-hidden">
+            <div
+              className={`h-full transition-all duration-1000 rounded-full ${
+                secondsRemaining < 120 ? "bg-red-500 animate-pulse" : "bg-amber-500"
+              }`}
+              style={{ width: `${timerPercentage}%` }}
+            />
+          </div>
         </div>
 
         {errorMessage && (
-          <div className="mt-4 p-3 rounded-lg bg-red-50 border border-red-200 text-xs font-semibold text-red-600">
+          <div className="mt-3.5 p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-600">
             {errorMessage}
           </div>
         )}
 
-        {/* STEP 1: Pass Selection & Buyer Contact */}
+        {/* STEP 1: Pass Selection, Contact & Instant UPI */}
         {step === 1 && (
-          <form onSubmit={handleStepOneSubmit} className="mt-5 space-y-4">
-            {/* Ticket Tier Box (8px radius) */}
-            <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] flex items-center justify-between">
+          <form onSubmit={handleStepOneSubmit} className="mt-4 space-y-4">
+            {/* Ticket Tier Box */}
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-bold text-[#1E0A3C]">
+                  <h4 className="text-sm font-bold text-slate-900">
                     {selectedTier?.name || "General Admission Pass"}
                   </h4>
                   {selectedTier && (
-                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-indigo-50 text-[#4F46E5] uppercase tracking-wider">
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-indigo-50 text-indigo-600 uppercase tracking-wider">
                       Tier
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-[#6F7287] mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5 font-medium">
                   {currentTierPrice === 0 ? "Free Entry Pass" : `${formatINR(currentTierPrice)} per attendee`}
                 </p>
                 {selectedTier?.perks && (
-                  <p className="text-[11px] text-[#4F46E5] font-medium mt-1">
+                  <p className="text-[11px] text-indigo-600 font-medium mt-0.5">
                     ★ {selectedTier.perks}
                   </p>
                 )}
               </div>
 
-              {/* Quantity Stepper (Rectangular with rounded-md) */}
-              <div className="flex items-center gap-3 bg-white border border-[#DBDAE3] rounded-md px-2.5 py-1">
+              {/* Quantity Stepper */}
+              <div className="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-2 py-1 shadow-2xs">
                 <button
                   type="button"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={quantity <= 1}
-                  className="p-1 text-[#39364F] hover:text-[#1E0A3C] disabled:opacity-30"
+                  className="p-1 text-slate-600 hover:text-slate-900 disabled:opacity-30 transition"
                 >
                   <Minus size={14} weight="bold" />
                 </button>
-                <span className="text-sm font-bold text-[#1E0A3C] min-w-[16px] text-center">
+                <span className="text-sm font-bold text-slate-900 min-w-[18px] text-center font-mono">
                   {quantity}
                 </span>
                 <button
                   type="button"
                   onClick={() => setQuantity(Math.min(10, quantity + 1))}
                   disabled={quantity >= 10}
-                  className="p-1 text-[#39364F] hover:text-[#1E0A3C] disabled:opacity-30"
+                  className="p-1 text-slate-600 hover:text-slate-900 disabled:opacity-30 transition"
                 >
                   <Plus size={14} weight="bold" />
                 </button>
@@ -337,30 +360,30 @@ export default function CheckoutModal({
             </div>
 
             {/* Buyer Contact Fields */}
-            <div className="space-y-3.5">
+            <div className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-[#39364F] mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Full Name (will appear on ticket pass)
                 </label>
                 <div className="relative">
-                  <User size={18} weight="bold" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6F7287]" />
+                  <User size={18} weight="bold" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
                     required
                     placeholder="e.g. Rahul Kumar Verma"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm text-slate-800 font-medium outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#39364F] mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   WhatsApp Phone Number (instant QR delivery)
                 </label>
                 <div className="relative">
-                  <WhatsappLogo size={18} weight="fill" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#25D366]" />
+                  <WhatsappLogo size={18} weight="fill" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-500" />
                   <input
                     type="tel"
                     inputMode="numeric"
@@ -368,14 +391,43 @@ export default function CheckoutModal({
                     placeholder="10-digit mobile number"
                     value={whatsapp}
                     onChange={(e) => setWhatsapp(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#3659E3] focus:ring-1 focus:ring-[#3659E3] transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm text-slate-800 font-medium outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
                   />
                 </div>
               </div>
             </div>
 
-            {/* BookMyShow-Inspired Promo Code Accordion */}
-            <div className="rounded-lg border border-[#DBDAE3] bg-white overflow-hidden text-xs">
+            {/* 1-Tap UPI App Picker */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-700">
+                Preferred UPI App
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { id: "gpay", name: "GPay", icon: "🟢" },
+                  { id: "phonepe", name: "PhonePe", icon: "🟣" },
+                  { id: "paytm", name: "Paytm", icon: "🔵" },
+                  { id: "any", name: "Any UPI", icon: "⚡" },
+                ].map((app) => (
+                  <button
+                    key={app.id}
+                    type="button"
+                    onClick={() => setSelectedUpiApp(app.id as "gpay" | "phonepe" | "paytm" | "any")}
+                    className={`py-2 px-1.5 rounded-xl border text-xs font-bold flex flex-col items-center justify-center gap-0.5 transition ${
+                      selectedUpiApp === app.id
+                        ? "bg-indigo-50/80 border-indigo-500 text-indigo-700 shadow-2xs"
+                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                    }`}
+                  >
+                    <span className="text-sm">{app.icon}</span>
+                    <span className="text-[11px] font-semibold">{app.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 1-Tap Quick Promo Code Chips & Accordion */}
+            <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden text-xs">
               {!appliedPromo ? (
                 <div>
                   <button
@@ -383,42 +435,57 @@ export default function CheckoutModal({
                     onClick={() => setIsPromoOpen(!isPromoOpen)}
                     className="w-full px-3.5 py-2.5 flex items-center justify-between text-left hover:bg-slate-50 transition"
                   >
-                    <div className="flex items-center gap-2 font-bold text-[#1E0A3C]">
-                      <Tag size={16} weight="bold" className="text-[#F97316]" />
+                    <div className="flex items-center gap-2 font-bold text-slate-900">
+                      <Tag size={16} weight="bold" className="text-orange-500" />
                       <span>Have a Promo Code / Coupon?</span>
                     </div>
-                    <span className="text-[11px] font-bold text-[#3659E3]">
+                    <span className="text-[11px] font-bold text-indigo-600">
                       {isPromoOpen ? "Hide" : "+ Apply"}
                     </span>
                   </button>
 
+                  {/* Quick-Apply Promo Chips */}
+                  <div className="px-3 pb-2.5 pt-0.5 flex items-center gap-2 overflow-x-auto">
+                    {[
+                      { code: "BIHAR20", label: "20% OFF" },
+                      { code: "SUPER50", label: "₹50 OFF" },
+                      { code: "FIRSTSHOW", label: "10% OFF" },
+                    ].map((chip) => (
+                      <button
+                        key={chip.code}
+                        type="button"
+                        onClick={() => applyCouponCode(chip.code)}
+                        className="px-2.5 py-1 rounded-lg bg-orange-50 hover:bg-orange-100 border border-orange-200/80 text-[10px] font-mono font-bold text-orange-700 transition flex items-center gap-1 shrink-0"
+                      >
+                        <Sparkle size={10} weight="fill" className="text-orange-500" />
+                        <span>{chip.code}</span>
+                        <span className="text-orange-900 font-sans font-extrabold">({chip.label})</span>
+                      </button>
+                    ))}
+                  </div>
+
                   {isPromoOpen && (
-                    <div className="p-3 border-t border-[#EEEDF2] bg-[#F8F7FA] space-y-2">
+                    <div className="p-3 border-t border-slate-100 bg-slate-50 space-y-2">
                       <div className="flex gap-2">
                         <input
                           type="text"
-                          placeholder="e.g. BIHAR20, SUPER50"
+                          placeholder="ENTER CODE..."
                           value={promoInput}
                           onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
-                          className="flex-1 px-3 py-1.5 rounded-md border border-[#DBDAE3] bg-white text-xs font-mono font-bold uppercase tracking-wider outline-none focus:border-[#3659E3]"
+                          className="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono font-bold uppercase tracking-wider outline-none focus:border-indigo-500"
                         />
                         <button
                           type="button"
                           onClick={handleApplyPromo}
-                          className="px-3.5 py-1.5 rounded-md bg-[#1E0A3C] hover:bg-[#39364F] text-white font-bold text-xs transition"
+                          className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition"
                         >
                           Apply
                         </button>
                       </div>
 
                       {promoError && (
-                        <p className="text-[11px] text-[#EF4444] font-medium">{promoError}</p>
+                        <p className="text-[11px] text-red-500 font-medium">{promoError}</p>
                       )}
-
-                      <div className="flex items-center gap-1.5 text-[10px] text-[#6F7287]">
-                        <Sparkle size={12} weight="fill" className="text-amber-500" />
-                        <span>Try coupon <strong>BIHAR20</strong> (20% off) or <strong>SUPER50</strong> (₹50 off)</span>
-                      </div>
                     </div>
                   )}
                 </div>
@@ -450,10 +517,10 @@ export default function CheckoutModal({
             </div>
 
             {/* Fee Breakdown Summary */}
-            <div className="p-3.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs space-y-1.5">
-              <div className="flex justify-between text-[#6F7287]">
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1.5">
+              <div className="flex justify-between text-slate-500">
                 <span>Tickets ({quantity}x {formatINR(currentTierPrice)})</span>
-                <span className="font-semibold text-[#1E0A3C]">{formatINR(baseSubtotal)}</span>
+                <span className="font-semibold text-slate-900">{formatINR(baseSubtotal)}</span>
               </div>
               {appliedPromo && (
                 <div className="flex justify-between text-emerald-700 font-bold">
@@ -462,23 +529,23 @@ export default function CheckoutModal({
                 </div>
               )}
               {event.pass_fee_to_buyer && (
-                <div className="flex justify-between text-[#6F7287]">
+                <div className="flex justify-between text-slate-500">
                   <span>Platform Convenience Fee (7%)</span>
-                  <span className="font-semibold text-[#1E0A3C]">{formatINR(platformFee)}</span>
+                  <span className="font-semibold text-slate-900">{formatINR(platformFee)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-sm font-bold text-[#1E0A3C] pt-2 border-t border-[#DBDAE3]/60">
+              <div className="flex justify-between text-sm font-bold text-slate-900 pt-2 border-t border-slate-200">
                 <span>Total Amount</span>
-                <span className="text-base text-[#1E0A3C]">{formatINR(totalPayable)}</span>
+                <span className="text-base text-slate-900 font-mono font-extrabold">{formatINR(totalPayable)}</span>
               </div>
             </div>
 
-            {/* Action Buttons (Rectangular 8px Curved Radius - Electric Indigo) */}
-            <div className="space-y-2.5 pt-2">
+            {/* Action Button */}
+            <div className="space-y-2 pt-1">
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full py-3.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-sm font-bold shadow-sm hover:shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isPending ? (
                   <>
@@ -493,7 +560,7 @@ export default function CheckoutModal({
                 )}
               </button>
 
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#6F7287]">
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 font-medium">
                 <LockKey size={14} weight="fill" className="text-emerald-600" />
                 <span>100% Secure 256-Bit Encrypted UPI Checkout</span>
               </div>
@@ -503,16 +570,16 @@ export default function CheckoutModal({
 
         {/* STEP 2: Custom Questionnaire (if coaching/seminar) */}
         {step === 2 && (
-          <div className="mt-5 space-y-4">
-            <p className="text-xs text-[#6F7287]">
+          <div className="mt-4 space-y-4">
+            <p className="text-xs text-slate-500">
               The organizer requires these details for attendance and scholarship roll rosters:
             </p>
 
-            <div className="space-y-3.5">
+            <div className="space-y-3">
               {event.custom_fields?.map((field) => (
                 <div key={field.id}>
-                  <label className="block text-xs font-bold text-[#39364F] mb-1">
-                    {field.label} {field.required && <span className="text-[#F97316]">*</span>}
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {field.label} {field.required && <span className="text-orange-500">*</span>}
                   </label>
                   <input
                     type="text"
@@ -520,7 +587,7 @@ export default function CheckoutModal({
                     placeholder={field.placeholder}
                     value={customAnswers[field.id] || ""}
                     onChange={(e) => handleCustomChange(field.id, e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm text-slate-800 font-medium outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
                   />
                 </div>
               ))}
@@ -530,7 +597,7 @@ export default function CheckoutModal({
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-5 py-3 rounded-lg border border-[#DBDAE3] text-[#39364F] text-xs font-bold hover:bg-[#F8F7FA]"
+                className="px-5 py-3 rounded-xl border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50"
               >
                 Back
               </button>
@@ -539,7 +606,7 @@ export default function CheckoutModal({
                 type="button"
                 onClick={initiatePayment}
                 disabled={isPending}
-                className="flex-1 py-3 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-sm font-bold shadow-sm transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isPending ? (
                   <>

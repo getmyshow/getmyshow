@@ -352,16 +352,16 @@ export default function OrganizerDashboardPage() {
   // LOADING SKELETON
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
+      <div className="min-h-screen bg-slate-50 text-slate-700">
         <div className="max-w-[1340px] mx-auto py-10 px-4 sm:px-6 space-y-8 animate-pulse">
           <div className="h-8 bg-slate-200 rounded w-1/3 mb-4" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-28 bg-white rounded-xl border border-[#DBDAE3] p-6" />
+              <div key={i} className="h-28 bg-white rounded-xl border border-slate-200 p-6" />
             ))}
           </div>
-          <div className="h-44 bg-white rounded-2xl border border-[#DBDAE3] p-6" />
-          <div className="h-64 bg-white rounded-2xl border border-[#DBDAE3] p-6" />
+          <div className="h-44 bg-white rounded-2xl border border-slate-200 p-6" />
+          <div className="h-64 bg-white rounded-2xl border border-slate-200 p-6" />
         </div>
       </div>
     );
@@ -370,26 +370,26 @@ export default function OrganizerDashboardPage() {
   // NOT FOUND / ERROR STATE
   if (loadError || !event) {
     return (
-      <div className="min-h-screen bg-[#F8F7FA] text-[#39364F] flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-[#DBDAE3] shadow-sm p-8 text-center space-y-5">
+      <div className="min-h-screen bg-slate-50 text-slate-700 flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center space-y-5">
           <EmptyEventsIllustration className="w-56 h-40 mx-auto" />
           <div>
-            <h1 className="text-xl font-bold text-[#1E0A3C]">Event Not Found</h1>
-            <p className="text-xs text-[#6F7287] mt-1.5 leading-relaxed">
+            <h1 className="text-xl font-bold text-slate-900">Event Not Found</h1>
+            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
               {loadError || `Could not find an event matching identifier "${routeId}". It may have been archived or deleted.`}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
             <Link
               href="/organizer"
-              className="w-full py-2.5 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
             >
               <CaretLeft size={16} weight="bold" />
               <span>Back to Organizer Studio</span>
             </Link>
             <button
               onClick={loadDashboardData}
-              className="w-full py-2.5 rounded-lg border border-[#DBDAE3] hover:bg-slate-50 text-[#1E0A3C] text-xs font-bold transition flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-900 text-xs font-bold transition flex items-center justify-center gap-1.5"
             >
               <ArrowsClockwise size={16} weight="bold" />
               <span>Retry</span>
@@ -408,35 +408,35 @@ export default function OrganizerDashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F8F7FA] text-[#39364F]">
+    <div className="min-h-screen bg-slate-50 text-slate-700">
       <div className="max-w-[1340px] mx-auto py-10 px-4 sm:px-6 space-y-8">
         {/* Top Breadcrumb & Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#DBDAE3]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
           <div>
-            <div className="flex items-center gap-2 text-xs text-[#6F7287] mb-1">
-              <Link href="/organizer" className="hover:text-[#3659E3] transition flex items-center gap-1 font-semibold">
+            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+              <Link href="/organizer" className="hover:text-indigo-600 transition flex items-center gap-1 font-semibold">
                 <CaretLeft size={14} weight="bold" />
                 <span>Organizer Desk</span>
               </Link>
               <span>/</span>
-              <span className="font-semibold text-[#1E0A3C]">Live Analytics</span>
+              <span className="font-semibold text-slate-900">Live Analytics</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1E0A3C]">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               {event.title}
             </h1>
-            <p className="text-xs text-[#6F7287] mt-0.5 flex items-center gap-2 flex-wrap">
+            <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-2 flex-wrap font-medium">
               <span>{event.venue}, {event.city}</span>
               <span>•</span>
               <span>{formattedEventDate}</span>
               <span>•</span>
-              <span className="font-mono text-[#3659E3]">ID: {event.id.slice(0, 8)}...</span>
+              <span className="font-mono text-indigo-600">ID: {event.id.slice(0, 8)}...</span>
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={copyPublicEventLink}
-              className="px-3.5 py-2.5 rounded-lg bg-white border border-[#DBDAE3] hover:border-[#3659E3] text-[#39364F] hover:text-[#3659E3] text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+              className="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-indigo-600 text-slate-700 hover:text-indigo-600 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
               title="Copy public booking link"
             >
               <ShareNetwork size={16} weight="bold" />
@@ -445,7 +445,7 @@ export default function OrganizerDashboardPage() {
 
             <button
               onClick={handleExportCSV}
-              className="px-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] hover:border-[#3659E3] text-[#39364F] hover:text-[#3659E3] text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+              className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-indigo-600 text-slate-700 hover:text-indigo-600 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
             >
               <DownloadSimple size={16} weight="bold" />
               <span>Export CSV</span>
@@ -455,7 +455,7 @@ export default function OrganizerDashboardPage() {
               href={getSubdomainUrl("scan", `/${event.id}`)}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2.5 rounded-lg bg-white border border-[#DBDAE3] hover:border-[#3659E3] text-[#39364F] hover:text-[#3659E3] text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+              className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-indigo-600 text-slate-700 hover:text-indigo-600 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
             >
               <QrCode size={16} weight="bold" />
               <span>Gate Scanner</span>
@@ -467,7 +467,7 @@ export default function OrganizerDashboardPage() {
                 setCashIssuedPass(null);
                 setIsCashModalOpen(true);
               }}
-              className="px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1.5"
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-xs flex items-center gap-1.5"
             >
               <Coins size={16} weight="bold" />
               <span>Issue Cash Ticket</span>
@@ -477,62 +477,62 @@ export default function OrganizerDashboardPage() {
 
         {/* 4 Dynamic Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="p-5 sm:p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Gross Sales</span>
-              <div className="w-9 h-9 rounded-md bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Gross Sales</span>
+              <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
                 <ArrowUpRight size={18} weight="bold" />
               </div>
             </div>
-            <div className="text-2xl font-black text-[#1E0A3C]">{formatINR(grossGMV)}</div>
-            <p className="text-xs text-[#6F7287]">Total ticket volume collected</p>
+            <div className="text-2xl font-black text-slate-900 font-mono tracking-tight">{formatINR(grossGMV)}</div>
+            <p className="text-xs text-slate-500 font-medium">Total ticket volume collected</p>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Passes Sold</span>
-              <div className="w-9 h-9 rounded-md bg-[#F05537]/10 text-[#F05537] flex items-center justify-center">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Passes Sold</span>
+              <div className="w-9 h-9 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center">
                 <Ticket size={18} weight="duotone" />
               </div>
             </div>
-            <div className="text-2xl font-black text-[#1E0A3C]">{ticketsSold} / {totalCapacity}</div>
-            <div className="w-full h-1.5 rounded-full bg-[#EEEDF2] overflow-hidden mt-1">
-              <div className="h-full bg-[#3659E3] rounded-full transition-all duration-500" style={{ width: `${occupancyRate}%` }} />
+            <div className="text-2xl font-black text-slate-900 font-mono tracking-tight">{ticketsSold} / {totalCapacity}</div>
+            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden mt-1">
+              <div className="h-full bg-indigo-600 rounded-full transition-all duration-500" style={{ width: `${occupancyRate}%` }} />
             </div>
-            <p className="text-[11px] text-[#6F7287]">{occupancyRate}% hall occupancy</p>
+            <p className="text-[11px] text-slate-500 font-medium">{occupancyRate}% hall occupancy</p>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Settled & Ready</span>
-              <div className="w-9 h-9 rounded-md bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Settled & Ready</span>
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <Wallet size={18} weight="duotone" />
               </div>
             </div>
-            <div className="text-2xl font-black text-[#1E0A3C]">{formatINR(walletAvailable)}</div>
-            <p className="text-xs text-emerald-600 font-semibold">Ready for bank withdrawal</p>
+            <div className="text-2xl font-black text-slate-900 font-mono tracking-tight">{formatINR(walletAvailable)}</div>
+            <p className="text-xs text-emerald-600 font-bold">Ready for bank withdrawal</p>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-xl bg-white border border-[#DBDAE3] shadow-xs space-y-2">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#6F7287] uppercase tracking-wider">Pending T+2</span>
-              <div className="w-9 h-9 rounded-md bg-amber-500/10 text-amber-600 flex items-center justify-center">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pending T+2</span>
+              <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
                 <Clock size={18} weight="bold" />
               </div>
             </div>
-            <div className="text-2xl font-black text-[#1E0A3C]">{formatINR(walletPending)}</div>
-            <p className="text-xs text-[#6F7287]">Razorpay banking clearance</p>
+            <div className="text-2xl font-black text-slate-900 font-mono tracking-tight">{formatINR(walletPending)}</div>
+            <p className="text-xs text-slate-500 font-medium">Razorpay banking clearance</p>
           </div>
         </div>
 
         {/* Wallet Ledger Card */}
-        <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DBDAE3] shadow-xs space-y-6">
+        <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <span className="text-xs font-bold text-[#3659E3] uppercase tracking-wider">Organizer Wallet Ledger</span>
-              <h2 className="text-xl font-extrabold text-[#1E0A3C] mt-0.5">T+2 Settlement & Payout Engine</h2>
-              <p className="text-xs text-[#6F7287] mt-1">
-                Withdraw up to 85% of settled funds. 15% is held until 8:00 AM the morning after the event concludes.
+              <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Organizer Wallet Ledger</span>
+              <h2 className="text-xl font-extrabold text-slate-900 mt-0.5 tracking-tight">T+2 Settlement & Payout Engine</h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Withdraw up to 85% of settled funds. 15% is locked until 8:00 AM the morning after the event concludes.
               </p>
             </div>
 
@@ -542,7 +542,7 @@ export default function OrganizerDashboardPage() {
                 setWithdrawSuccess(null);
                 setIsWithdrawModalOpen(true);
               }}
-              className="px-5 py-3 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold shadow-xs transition-all active:scale-95 flex items-center gap-2 shrink-0 self-start sm:self-auto"
+              className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-xs transition-all active:scale-95 flex items-center gap-2 shrink-0 self-start sm:self-auto"
             >
               <Bank size={16} weight="bold" />
               <span>Request Bank Payout</span>
@@ -550,38 +550,38 @@ export default function OrganizerDashboardPage() {
           </div>
 
           {/* Settlement Rules Box */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[#EEEDF2] text-xs">
-            <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] space-y-1">
-              <span className="font-bold text-[#1E0A3C] block">Rule 2.1 — Never Pay Out Unsettled Funds</span>
-              <p className="text-[#6F7287]">Withdrawals are restricted to funds that completed Razorpay&apos;s T+2 bank settlement.</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <span className="font-bold text-slate-900 block">Rule 2.1 — Never Pay Out Unsettled Funds</span>
+              <p className="text-slate-500">Withdrawals are restricted to funds that completed Razorpay&apos;s T+2 bank settlement.</p>
             </div>
-            <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] space-y-1">
-              <span className="font-bold text-[#1E0A3C] block">Rule 2.2 — 15% Post-Event Holdback</span>
-              <p className="text-[#6F7287]">Remaining 15% is unlocked the morning post-event to protect against cancellations.</p>
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <span className="font-bold text-slate-900 block">Rule 2.2 — 15% Post-Event Holdback</span>
+              <p className="text-slate-500">Remaining 15% is unlocked at 8:00 AM morning post-event to protect against cancellations.</p>
             </div>
-            <div className="p-4 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] space-y-1">
-              <span className="font-bold text-[#1E0A3C] block">Rule 2.3 — Mandatory 12-Digit UTR</span>
-              <p className="text-[#6F7287]">Every payout requires a verified Indian Banking UTR number before marking complete.</p>
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <span className="font-bold text-slate-900 block">Rule 2.3 — Mandatory 12-Digit UTR</span>
+              <p className="text-slate-500">Every payout requires a verified Indian Banking UTR number before marking complete.</p>
             </div>
           </div>
         </div>
 
         {/* Gate Scanner Staff & Turnstile Access (Zero-Trust RBAC) */}
-        <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DBDAE3] shadow-xs space-y-5">
+        <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-50 text-[#4F46E5]">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-50 text-indigo-600">
                   Turnstile Access Control
                 </span>
-                <span className="text-xs text-[#6F7287]">
+                <span className="text-xs text-slate-500 font-medium">
                   • Zero Financial / PII Access
                 </span>
               </div>
-              <h2 className="text-xl font-extrabold text-[#1E0A3C] mt-1">
+              <h2 className="text-xl font-extrabold text-slate-900 mt-1 tracking-tight">
                 Gate Scanner Volunteers & Staff
               </h2>
-              <p className="text-xs text-[#6F7287] mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Delegate pass scanning to gate bouncers and student volunteers without exposing revenue, bank payouts, or attendee data.
               </p>
             </div>
@@ -594,7 +594,7 @@ export default function OrganizerDashboardPage() {
                   navigator.clipboard.writeText(url);
                   alert("Scanning Staff Login Portal Link copied to clipboard:\n" + url);
                 }}
-                className="px-3.5 py-2.5 rounded-lg border border-[#DBDAE3] hover:bg-slate-50 text-[#1E0A3C] text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
+                className="px-3.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-900 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
                 title="Copy general staff login link for this event"
               >
                 <LinkSimple size={15} weight="bold" />
@@ -609,7 +609,7 @@ export default function OrganizerDashboardPage() {
                   setNewStaffPassword(Math.floor(1000 + Math.random() * 9000).toString());
                   setIsStaffModalOpen(true);
                 }}
-                className="px-4 py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+                className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
               >
                 <UserCheck size={16} weight="bold" />
                 <span>+ Provision Staff</span>
@@ -619,13 +619,13 @@ export default function OrganizerDashboardPage() {
 
           {/* Scanner Staff Table or Empty State */}
           {staffList.length === 0 ? (
-            <div className="p-8 rounded-xl border border-dashed border-[#DBDAE3] bg-[#F8F7FA] text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-indigo-50 text-[#4F46E5] flex items-center justify-center mx-auto">
+            <div className="p-8 rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
                 <UserCheck size={24} weight="duotone" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-[#1E0A3C]">No Turnstile Staff Provisioned Yet</h4>
-                <p className="text-xs text-[#6F7287] mt-1 max-w-md mx-auto">
+                <h4 className="text-sm font-bold text-slate-900">No Turnstile Staff Provisioned Yet</h4>
+                <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
                   Click &ldquo;+ Provision Staff&rdquo; above to create gate entry accounts for bouncers or volunteers. They will only have camera scanning access.
                 </p>
               </div>
@@ -634,7 +634,7 @@ export default function OrganizerDashboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-[#DBDAE3] text-[#6F7287]">
+                  <tr className="border-b border-slate-200 text-slate-500">
                     <th className="py-3 px-3 font-bold uppercase">Staff ID</th>
                     <th className="py-3 px-3 font-bold uppercase">Assigned Gate</th>
                     <th className="py-3 px-3 font-bold uppercase">Passes Verified</th>
@@ -642,34 +642,34 @@ export default function OrganizerDashboardPage() {
                     <th className="py-3 px-3 font-bold uppercase text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EEEDF2] text-[#39364F]">
+                <tbody className="divide-y divide-slate-100 text-slate-700">
                   {staffList.map((staff) => (
                     <tr key={staff.id} className="hover:bg-slate-50/50 transition">
                       <td className="py-3.5 px-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-md bg-[#1E0A3C] text-white flex items-center justify-center font-mono font-bold text-[10px]">
+                          <div className="w-7 h-7 rounded-md bg-slate-900 text-white flex items-center justify-center font-mono font-bold text-[10px]">
                             {staff.scanner_id.slice(0, 2)}
                           </div>
                           <div>
-                            <span className="font-mono font-bold text-[#1E0A3C] block">
+                            <span className="font-mono font-bold text-slate-900 block">
                               {staff.scanner_id}
                             </span>
-                            <span className="text-[10px] text-[#6F7287]">
+                            <span className="text-[10px] text-slate-400">
                               Added {new Date(staff.created_at).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })}
                             </span>
                           </div>
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-3 font-medium text-[#1E0A3C]">
+                      <td className="py-3.5 px-3 font-medium text-slate-900">
                         {staff.assigned_gate}
                       </td>
 
                       <td className="py-3.5 px-3">
-                        <span className="font-mono font-bold text-sm text-[#1E0A3C]">
+                        <span className="font-mono font-bold text-sm text-slate-900">
                           {staff.scanned_count}
                         </span>
-                        <span className="text-[10px] text-[#6F7287] block">attendees admitted</span>
+                        <span className="text-[10px] text-slate-400 block">attendees admitted</span>
                       </td>
 
                       <td className="py-3.5 px-3">
@@ -694,7 +694,7 @@ export default function OrganizerDashboardPage() {
                             )}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 rounded-md hover:bg-[#25D366]/10 text-[#25D366] transition border border-[#DBDAE3]"
+                            className="p-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 transition border border-slate-200"
                             title="Share credentials on WhatsApp"
                           >
                             <WhatsappLogo size={15} weight="fill" />
@@ -704,7 +704,7 @@ export default function OrganizerDashboardPage() {
                           <button
                             type="button"
                             onClick={() => copyCredentials(staff)}
-                            className="p-1.5 rounded-md hover:bg-slate-100 text-[#6F7287] transition border border-[#DBDAE3]"
+                            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 transition border border-slate-200"
                             title="Copy credentials text"
                           >
                             <Copy size={15} weight="bold" className={copiedStaffId === staff.id ? "text-emerald-600" : ""} />
@@ -727,7 +727,7 @@ export default function OrganizerDashboardPage() {
                           <button
                             type="button"
                             onClick={() => handleDeleteStaff(staff.id)}
-                            className="p-1.5 rounded-md hover:bg-red-50 text-[#6F7287] hover:text-red-600 transition"
+                            className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 transition"
                             title="Remove scanner account"
                           >
                             <Trash size={15} weight="bold" />
@@ -743,28 +743,28 @@ export default function OrganizerDashboardPage() {
         </div>
 
         {/* Attendee Roster Table (Real Data) */}
-        <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DBDAE3] shadow-xs space-y-4">
+        <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-[#1E0A3C]">Attendee Roster ({attendees.length} Passes)</h2>
-              <p className="text-xs text-[#6F7287]">Live bookings from UPI online payments and offline promoter box-office.</p>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Attendee Roster ({attendees.length} Passes)</h2>
+              <p className="text-xs text-slate-500">Live bookings from UPI online payments and offline promoter box-office.</p>
             </div>
 
             <div className="flex items-center gap-2.5">
               <div className="relative">
-                <MagnifyingGlass size={14} className="absolute left-2.5 top-2.5 text-[#6F7287]" />
+                <MagnifyingGlass size={14} className="absolute left-2.5 top-2.5 text-slate-400" />
                 <input
                   type="text"
                   placeholder="Search name, phone, pass ID..."
                   value={attendeeSearch}
                   onChange={(e) => setAttendeeSearch(e.target.value)}
-                  className="pl-8 pr-3 py-1.5 rounded-lg border border-[#DBDAE3] bg-[#F8F7FA] text-xs outline-none focus:border-[#3659E3] w-48 sm:w-60"
+                  className="pl-8 pr-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs outline-none focus:border-indigo-600 w-48 sm:w-60"
                 />
               </div>
 
               <button
                 onClick={handleExportCSV}
-                className="px-3.5 py-1.5 rounded-lg border border-[#DBDAE3] hover:border-[#39364F] text-xs font-bold text-[#39364F] flex items-center gap-1.5 transition bg-white shadow-xs shrink-0"
+                className="px-3.5 py-1.5 rounded-xl border border-slate-200 hover:border-slate-800 text-xs font-bold text-slate-700 flex items-center gap-1.5 transition bg-white shadow-xs shrink-0"
               >
                 <DownloadSimple size={14} weight="bold" />
                 <span>Export CSV</span>
@@ -774,14 +774,14 @@ export default function OrganizerDashboardPage() {
 
           {filteredAttendees.length === 0 ? (
             <div className="py-12 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-slate-100 text-[#6F7287] flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto">
                 <Ticket size={24} weight="duotone" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-[#1E0A3C]">
+                <h4 className="text-sm font-bold text-slate-900">
                   {attendees.length === 0 ? "No Passes Booked Yet" : "No Matching Attendees Found"}
                 </h4>
-                <p className="text-xs text-[#6F7287] mt-1 max-w-sm mx-auto">
+                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
                   {attendees.length === 0
                     ? "Share your public event link or use the Box-Office Counter above to issue offline cash passes."
                     : "Try searching with a different attendee name or phone number."}
@@ -791,7 +791,7 @@ export default function OrganizerDashboardPage() {
                 <button
                   type="button"
                   onClick={copyPublicEventLink}
-                  className="px-4 py-2 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold transition shadow-xs inline-flex items-center gap-1.5 mt-2"
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-xs inline-flex items-center gap-1.5 mt-2"
                 >
                   <ShareNetwork size={14} weight="bold" />
                   <span>{copiedPublicLink ? "Link Copied!" : "Copy Event Link to Share"}</span>
@@ -802,7 +802,7 @@ export default function OrganizerDashboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-[#DBDAE3] text-[#6F7287]">
+                  <tr className="border-b border-slate-200 text-slate-500">
                     <th className="py-3 px-3 font-bold uppercase">Pass ID</th>
                     <th className="py-3 px-3 font-bold uppercase">Attendee</th>
                     <th className="py-3 px-3 font-bold uppercase">Tier / Qty</th>
@@ -811,10 +811,10 @@ export default function OrganizerDashboardPage() {
                     <th className="py-3 px-3 font-bold uppercase">Gate Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EEEDF2] text-[#39364F]">
+                <tbody className="divide-y divide-slate-100 text-slate-700">
                   {filteredAttendees.map((ticket) => (
                     <tr key={ticket.id} className="hover:bg-slate-50/50 transition">
-                      <td className="py-3 px-3 font-mono font-bold text-[#3659E3]">
+                      <td className="py-3 px-3 font-mono font-bold text-indigo-600">
                         <Link
                           href={`/ticket/${ticket.qr_token}`}
                           target="_blank"
@@ -826,12 +826,12 @@ export default function OrganizerDashboardPage() {
                         </Link>
                       </td>
                       <td className="py-3 px-3">
-                        <span className="font-semibold text-[#1E0A3C] block">{ticket.buyer_name}</span>
-                        <span className="text-[10px] text-[#6F7287] font-mono">{ticket.buyer_whatsapp}</span>
+                        <span className="font-semibold text-slate-900 block">{ticket.buyer_name}</span>
+                        <span className="text-[10px] text-slate-400 font-mono">{ticket.buyer_whatsapp}</span>
                       </td>
                       <td className="py-3 px-3">
-                        <span className="font-medium text-[#1E0A3C]">{ticket.tier_name || "General"}</span>
-                        <span className="text-[10px] text-[#6F7287] block">{ticket.quantity} pass(es)</span>
+                        <span className="font-medium text-slate-900">{ticket.tier_name || "General"}</span>
+                        <span className="text-[10px] text-slate-400 block">{ticket.quantity} pass(es)</span>
                       </td>
                       <td className="py-3 px-3">
                         <span
@@ -844,7 +844,7 @@ export default function OrganizerDashboardPage() {
                           {ticket.payment_mode === "CASH_PROMOTER" ? "CASH DESK" : "ONLINE UPI"}
                         </span>
                       </td>
-                      <td className="py-3 px-3 font-bold text-[#1E0A3C]">
+                      <td className="py-3 px-3 font-bold text-slate-900 font-mono">
                         {formatINR(Number(ticket.amount_paid))}
                       </td>
                       <td className="py-3 px-3">
@@ -852,7 +852,7 @@ export default function OrganizerDashboardPage() {
                           className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md font-bold text-[10px] ${
                             ticket.is_checked_in
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                              : "bg-slate-100 text-[#6F7287]"
+                              : "bg-slate-100 text-slate-500"
                           }`}
                         >
                           <span
@@ -875,13 +875,13 @@ export default function OrganizerDashboardPage() {
       {/* Cash Desk Modal */}
       {isCashModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white rounded-xl border border-[#DBDAE3] p-6 sm:p-8 space-y-5 shadow-2xl">
+          <div className="w-full max-w-md bg-white rounded-xl border border-slate-200 p-6 sm:p-8 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
                   Box Office Counter
                 </span>
-                <h3 className="text-lg font-bold text-[#1E0A3C] mt-1">Issue Offline Cash Pass</h3>
+                <h3 className="text-lg font-bold text-slate-900 mt-1">Issue Offline Cash Pass</h3>
               </div>
               <button
                 onClick={() => {
@@ -889,7 +889,7 @@ export default function OrganizerDashboardPage() {
                   setCashIssuedPass(null);
                   setCashError(null);
                 }}
-                className="text-[#6F7287] hover:text-[#1E0A3C]"
+                className="text-slate-400 hover:text-slate-900 transition-colors"
               >
                 <X size={20} weight="bold" />
               </button>
@@ -935,7 +935,7 @@ export default function OrganizerDashboardPage() {
                 )}
 
                 <div>
-                  <label className="block font-bold text-[#1E0A3C] mb-1">
+                  <label className="block font-bold text-slate-900 mb-1">
                     Attendee Full Name *
                   </label>
                   <input
@@ -944,12 +944,12 @@ export default function OrganizerDashboardPage() {
                     placeholder="e.g. Anand Kumar"
                     value={cashBuyerName}
                     onChange={(e) => setCashBuyerName(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-medium outline-none focus:border-emerald-600"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium outline-none focus:border-emerald-600 text-slate-900"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-[#1E0A3C] mb-1">
+                  <label className="block font-bold text-slate-900 mb-1">
                     Attendee WhatsApp Number *
                   </label>
                   <input
@@ -958,19 +958,19 @@ export default function OrganizerDashboardPage() {
                     placeholder="10-digit phone for pass delivery"
                     value={cashBuyerPhone}
                     onChange={(e) => setCashBuyerPhone(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-medium outline-none focus:border-emerald-600"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium outline-none focus:border-emerald-600 text-slate-900"
                   />
                 </div>
 
                 {event.ticket_tiers && event.ticket_tiers.length > 0 && (
                   <div>
-                    <label className="block font-bold text-[#1E0A3C] mb-1">
+                    <label className="block font-bold text-slate-900 mb-1">
                       Ticket Tier
                     </label>
                     <select
                       value={selectedTierId}
                       onChange={(e) => setSelectedTierId(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-bold text-[#1E0A3C] outline-none"
+                      className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600"
                     >
                       {event.ticket_tiers.map((tier) => (
                         <option key={tier.id} value={tier.id}>
@@ -983,7 +983,7 @@ export default function OrganizerDashboardPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-bold text-[#1E0A3C] mb-1">
+                    <label className="block font-bold text-slate-900 mb-1">
                       Quantity
                     </label>
                     <input
@@ -992,11 +992,11 @@ export default function OrganizerDashboardPage() {
                       max={10}
                       value={cashQuantity}
                       onChange={(e) => setCashQuantity(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-bold text-[#1E0A3C] outline-none"
+                      className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600"
                     />
                   </div>
                   <div>
-                    <label className="block font-bold text-[#1E0A3C] mb-1">
+                    <label className="block font-bold text-slate-900 mb-1">
                       Promoter Code (Optional)
                     </label>
                     <input
@@ -1004,7 +1004,7 @@ export default function OrganizerDashboardPage() {
                       placeholder="e.g. PROMO-SAS-01"
                       value={cashPromoterCode}
                       onChange={(e) => setCashPromoterCode(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-mono font-medium outline-none"
+                      className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono font-medium outline-none text-slate-900 focus:border-emerald-600"
                     />
                   </div>
                 </div>
@@ -1012,7 +1012,7 @@ export default function OrganizerDashboardPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs mt-2 flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  className="w-full py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs mt-2 flex items-center justify-center gap-1.5 disabled:opacity-50 transition"
                 >
                   {isPending ? (
                     <>
@@ -1032,13 +1032,13 @@ export default function OrganizerDashboardPage() {
       {/* Withdrawal Modal */}
       {isWithdrawModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white rounded-xl border border-[#DBDAE3] p-6 sm:p-8 space-y-5 shadow-2xl">
+          <div className="w-full max-w-md bg-white rounded-xl border border-slate-200 p-6 sm:p-8 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#3659E3] bg-indigo-50 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
                   Settled Payout Request
                 </span>
-                <h3 className="text-lg font-bold text-[#1E0A3C] mt-1">Request Bank Payout</h3>
+                <h3 className="text-lg font-bold text-slate-900 mt-1">Request Bank Payout</h3>
               </div>
               <button
                 onClick={() => {
@@ -1046,7 +1046,7 @@ export default function OrganizerDashboardPage() {
                   setWithdrawError(null);
                   setWithdrawSuccess(null);
                 }}
-                className="text-[#6F7287] hover:text-[#1E0A3C]"
+                className="text-slate-400 hover:text-slate-900 transition-colors"
               >
                 <X size={20} weight="bold" />
               </button>
@@ -1077,10 +1077,10 @@ export default function OrganizerDashboardPage() {
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="font-bold text-[#1E0A3C]">
+                    <label className="font-bold text-slate-900">
                       Withdrawal Amount (₹) *
                     </label>
-                    <span className="text-[11px] text-[#6F7287]">
+                    <span className="text-[11px] text-slate-500 font-mono">
                       Available: <strong>{formatINR(walletAvailable)}</strong>
                     </span>
                   </div>
@@ -1092,15 +1092,15 @@ export default function OrganizerDashboardPage() {
                     placeholder="e.g. 10000"
                     value={withdrawAmount}
                     onChange={(e) => setWithdrawAmount(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm font-bold text-[#1E0A3C] outline-none focus:border-[#3659E3]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-sm font-bold text-slate-900 outline-none focus:border-indigo-600"
                   />
-                  <span className="text-[10px] text-[#6F7287] block mt-1">
+                  <span className="text-[10px] text-slate-500 block mt-1">
                     Rule 2.2: 15% event-completion holdback automatically applied before event date.
                   </span>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-[#1E0A3C] mb-1">
+                  <label className="block font-bold text-slate-900 mb-1">
                     Destination UPI ID or Bank A/C + IFSC *
                   </label>
                   <input
@@ -1109,13 +1109,13 @@ export default function OrganizerDashboardPage() {
                     placeholder="e.g. host@upi or 50100234123 (IFSC: HDFC0001234)"
                     value={payoutDest}
                     onChange={(e) => setPayoutDest(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-medium outline-none focus:border-[#3659E3]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium outline-none focus:border-indigo-600 text-slate-900"
                   />
                 </div>
 
-                <div className="p-3 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-[11px] text-[#6F7287] space-y-1">
-                  <div className="flex items-center gap-1 font-bold text-[#1E0A3C]">
-                    <ShieldCheck size={14} weight="fill" className="text-[#3659E3]" />
+                <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-600 space-y-1">
+                  <div className="flex items-center gap-1 font-bold text-slate-900">
+                    <ShieldCheck size={14} weight="fill" className="text-indigo-600" />
                     <span>Rule 2.3 — Mandatory 12-Digit Indian Bank UTR</span>
                   </div>
                   <p>
@@ -1126,7 +1126,7 @@ export default function OrganizerDashboardPage() {
                 <button
                   type="submit"
                   disabled={isPending || walletAvailable <= 0}
-                  className="w-full py-3 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white font-bold text-xs shadow-xs mt-2 flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs mt-2 flex items-center justify-center gap-1.5 disabled:opacity-50 transition"
                 >
                   {isPending ? (
                     <>
@@ -1148,13 +1148,13 @@ export default function OrganizerDashboardPage() {
       {/* Provision Gate Scanner Staff Modal (RBAC) */}
       {isStaffModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white rounded-xl border border-[#DBDAE3] p-6 sm:p-8 space-y-5 shadow-2xl">
+          <div className="w-full max-w-md bg-white rounded-xl border border-slate-200 p-6 sm:p-8 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#3659E3] bg-[#3659E3]/10 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
                   Turnstile RBAC
                 </span>
-                <h3 className="text-lg font-bold text-[#1E0A3C] mt-1">Provision Gate Scanner Staff</h3>
+                <h3 className="text-lg font-bold text-slate-900 mt-1">Provision Gate Scanner Staff</h3>
               </div>
               <button
                 type="button"
@@ -1163,13 +1163,13 @@ export default function OrganizerDashboardPage() {
                   setStaffCreatedSuccess(null);
                   setStaffError(null);
                 }}
-                className="text-[#6F7287] hover:text-[#1E0A3C] text-sm font-bold p-1"
+                className="text-slate-400 hover:text-slate-900 text-sm font-bold p-1 transition-colors"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-[#6F7287]">
+            <p className="text-xs text-slate-500">
               Create dedicated gate credentials for gate staff or bouncers. They will have camera scanning permissions only—no financial data or payout access.
             </p>
 
@@ -1189,11 +1189,11 @@ export default function OrganizerDashboardPage() {
                   <p className="text-xs text-emerald-700">
                     {staffCreatedSuccess}
                   </p>
-                  <div className="p-3 bg-white rounded-lg border border-emerald-200 text-xs font-mono text-[#1E0A3C] space-y-1 mt-2">
-                    <div><span className="text-[#6F7287]">1. Event ID:</span> <strong>{event.id.slice(0, 8).toUpperCase()}</strong></div>
-                    <div><span className="text-[#6F7287]">2. Official Staff ID:</span> <strong>{newStaffScannerId.trim().toUpperCase()}</strong></div>
-                    <div><span className="text-[#6F7287]">3. Gate PIN / Password:</span> <strong>{newStaffPassword}</strong></div>
-                    <div><span className="text-[#6F7287]">Assigned Gate:</span> <strong>{newStaffGate}</strong></div>
+                  <div className="p-3 bg-white rounded-lg border border-emerald-200 text-xs font-mono text-slate-900 space-y-1 mt-2">
+                    <div><span className="text-slate-500">1. Event ID:</span> <strong>{event.id.slice(0, 8).toUpperCase()}</strong></div>
+                    <div><span className="text-slate-500">2. Official Staff ID:</span> <strong>{newStaffScannerId.trim().toUpperCase()}</strong></div>
+                    <div><span className="text-slate-500">3. Gate PIN / Password:</span> <strong>{newStaffPassword}</strong></div>
+                    <div><span className="text-slate-500">Assigned Gate:</span> <strong>{newStaffGate}</strong></div>
                   </div>
                 </div>
 
@@ -1204,7 +1204,7 @@ export default function OrganizerDashboardPage() {
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:flex-1 py-2.5 rounded-lg bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs"
+                    className="w-full sm:flex-1 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs"
                   >
                     <WhatsappLogo size={16} weight="fill" />
                     <span>Send via WhatsApp</span>
@@ -1217,7 +1217,7 @@ export default function OrganizerDashboardPage() {
                       navigator.clipboard.writeText(msg);
                       alert("Full WhatsApp invite with all 3 credentials copied to clipboard!");
                     }}
-                    className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-[#DBDAE3] hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] flex items-center justify-center gap-1 transition"
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-900 flex items-center justify-center gap-1 transition"
                   >
                     <Copy size={15} weight="bold" />
                     <span>Copy Full Message</span>
@@ -1231,7 +1231,7 @@ export default function OrganizerDashboardPage() {
                     navigator.clipboard.writeText(portalLink);
                     alert("Staff Portal Link copied:\n" + portalLink);
                   }}
-                  className="w-full py-2 rounded-lg bg-[#F8F7FA] hover:bg-slate-100 border border-[#DBDAE3] text-xs font-semibold text-[#1E0A3C] flex items-center justify-center gap-1.5 transition"
+                  className="w-full py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-900 flex items-center justify-center gap-1.5 transition"
                 >
                   <LinkSimple size={14} weight="bold" />
                   <span>Copy Portal Link Only</span>
@@ -1244,7 +1244,7 @@ export default function OrganizerDashboardPage() {
                     setStaffCreatedSuccess(null);
                     setNewStaffScannerId("");
                   }}
-                  className="w-full py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-[#1E0A3C] transition"
+                  className="w-full py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-900 transition"
                 >
                   Done
                 </button>
@@ -1252,7 +1252,7 @@ export default function OrganizerDashboardPage() {
             ) : (
               <form onSubmit={handleAddStaff} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#1E0A3C]">
+                  <label className="text-xs font-bold text-slate-900">
                     Scanner Staff Identifier (Unique)
                   </label>
                   <input
@@ -1261,15 +1261,15 @@ export default function OrganizerDashboardPage() {
                     placeholder="e.g. GATE-1-RAHUL or BOUNCER-01"
                     value={newStaffScannerId}
                     onChange={(e) => setNewStaffScannerId(e.target.value.toUpperCase())}
-                    className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-mono uppercase tracking-wider font-bold outline-none focus:border-[#3659E3]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono uppercase tracking-wider font-bold outline-none focus:border-indigo-600 text-slate-900"
                   />
-                  <p className="text-[10px] text-[#6F7287]">
+                  <p className="text-[10px] text-slate-500">
                     Will be stamped on every scanned ticket: <code>scanned_by</code>
                   </p>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#1E0A3C]">
+                  <label className="text-xs font-bold text-slate-900">
                     Assigned Gate / Entrance Turnstile
                   </label>
                   <input
@@ -1278,15 +1278,15 @@ export default function OrganizerDashboardPage() {
                     placeholder="e.g. Main Gate Turnstile A, VIP Entrance"
                     value={newStaffGate}
                     onChange={(e) => setNewStaffGate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-medium outline-none focus:border-[#3659E3]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium outline-none focus:border-indigo-600 text-slate-900"
                   />
-                  <p className="text-[10px] text-[#6F7287]">
+                  <p className="text-[10px] text-slate-500">
                     Recorded as <code>scanned_at_gate</code> for crowd control metrics
                   </p>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#1E0A3C]">
+                  <label className="text-xs font-bold text-slate-900">
                     Gate Access Password or PIN
                   </label>
                   <input
@@ -1295,9 +1295,9 @@ export default function OrganizerDashboardPage() {
                     placeholder="e.g. 9842 or GatePass@2026"
                     value={newStaffPassword}
                     onChange={(e) => setNewStaffPassword(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs font-mono font-bold outline-none focus:border-[#3659E3]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono font-bold outline-none focus:border-indigo-600 text-slate-900"
                   />
-                  <p className="text-[10px] text-[#6F7287]">
+                  <p className="text-[10px] text-slate-500">
                     Staff will enter this at <code>/staff/login</code> to activate camera scanning
                   </p>
                 </div>
@@ -1315,7 +1315,7 @@ export default function OrganizerDashboardPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full py-3 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white font-bold text-xs shadow-xs mt-2 flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs mt-2 flex items-center justify-center gap-1.5 disabled:opacity-50 transition"
                 >
                   {isPending ? (
                     <>

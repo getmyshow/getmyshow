@@ -14,6 +14,9 @@ import {
   Gift,
   X,
   Sparkle,
+  ShieldCheck,
+  Ticket,
+  Scissors,
 } from "@phosphor-icons/react";
 import { formatINR } from "@/lib/utils";
 import { QRCode } from "@/components/ui/qr-code";
@@ -49,17 +52,37 @@ export default function QrPassCard({
 }: QrPassCardProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [copiedToken, setCopiedToken] = useState(false);
+  const [copiedVoucher, setCopiedVoucher] = useState(false);
   const [showRewardModal, setShowRewardModal] = useState(false);
+  const [liveIstTime, setLiveIstTime] = useState<string>("");
   const ticketRef = useRef<HTMLDivElement>(null);
 
-  // Full verification URL so scanning with ANY smartphone camera opens the live ticket pass
+  // Live anti-screenshot clock running in Asia/Kolkata (IST)
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setLiveIstTime(
+        now.toLocaleTimeString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
+      );
+    };
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Full verification URL so scanning with ANY smartphone camera opens the live pass
   const [verificationUrl, setVerificationUrl] = useState<string>(() => {
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
       const port = window.location.port ? `:${window.location.port}` : "";
       const protocol = window.location.protocol;
 
-      // In local dev, if on localhost, use the local Wi-Fi IP so phone camera scanning from PC screen works seamlessly!
       if (hostname === "localhost" || hostname === "127.0.0.1") {
         const localIp = process.env.NEXT_PUBLIC_LOCAL_IP || "192.168.29.227";
         return `http://${localIp}${port || ":3000"}/ticket/${qrToken}`;
@@ -111,6 +134,14 @@ export default function QrPassCard({
     }
   };
 
+  const handleCopyVoucher = () => {
+    if (typeof navigator !== "undefined") {
+      navigator.clipboard.writeText("GMS-MAURYA-15");
+      setCopiedVoucher(true);
+      setTimeout(() => setCopiedVoucher(false), 2000);
+    }
+  };
+
   const handleShare = () => {
     const shareText = `🎟️ Verified GetMyShow M-Ticket for ${eventName}\nBooking ID: ${ticketNumber}\nDate: ${bmsDateTimeString}\nVenue: ${venue}`;
     if (typeof navigator !== "undefined" && navigator.share) {
@@ -133,7 +164,6 @@ export default function QrPassCard({
 
   /**
    * High-Resolution 2X PNG Ticket Generator for Offline Storage
-   * Produces a clean BookMyShow-style M-Ticket image
    */
   const handleDownloadImage = async () => {
     setIsDownloading(true);
@@ -143,7 +173,7 @@ export default function QrPassCard({
       if (!ctx) return;
 
       const width = 800;
-      const height = 1180;
+      const height = 1220;
       canvas.width = width;
       canvas.height = height;
 
@@ -155,7 +185,7 @@ export default function QrPassCard({
       const cardX = 40;
       const cardY = 40;
       const cardW = 720;
-      const cardH = 1100;
+      const cardH = 1140;
       const r = 24;
 
       ctx.save();
@@ -175,12 +205,21 @@ export default function QrPassCard({
       ctx.roundRect(cardX, cardY, cardW, cardH, r);
       ctx.stroke();
 
+      // Hologram Banner on PNG
+      ctx.fillStyle = "#4F46E5";
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, 44, [r, r, 0, 0]);
+      ctx.fill();
+
+      ctx.font = "bold 13px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillText("LIVE VERIFIED CRYPTOGRAPHIC PASS • GETMYSHOW", cardX + 32, cardY + 28);
+
       // 3. Event Header Section (Poster + Title + Date)
       const posterX = cardX + 32;
-      const posterY = cardY + 36;
+      const posterY = cardY + 70;
       const posterSize = 130;
 
-      // Draw poster if available
       if (posterUrl) {
         const posterImg = new window.Image();
         posterImg.crossOrigin = "anonymous";
@@ -226,7 +265,7 @@ export default function QrPassCard({
       ctx.fillText(venueShort, textX, posterY + 116);
 
       // 4. Tap for QR pill bar
-      const pillY = posterY + posterSize + 30;
+      const pillY = posterY + posterSize + 28;
       ctx.fillStyle = "#F1F5F9";
       ctx.beginPath();
       ctx.roundRect(cardX + 32, pillY, cardW - 64, 40, 20);
@@ -239,7 +278,7 @@ export default function QrPassCard({
       ctx.textAlign = "left";
 
       // 5. QR Code Box
-      const qrBoxY = pillY + 60;
+      const qrBoxY = pillY + 56;
       const qrBoxH = 260;
       ctx.fillStyle = "#FFFFFF";
       ctx.strokeStyle = "#E2E8F0";
@@ -285,7 +324,7 @@ export default function QrPassCard({
       ctx.fillText(`Total ticket(s) ${quantity}`, metaX, qrDrawY + 125);
 
       // 6. Cancellation Strip
-      const cancelY = qrBoxY + qrBoxH + 30;
+      const cancelY = qrBoxY + qrBoxH + 28;
       ctx.fillStyle = "#F8FAFC";
       ctx.fillRect(cardX, cancelY, cardW, 44);
       ctx.strokeStyle = "#E2E8F0";
@@ -358,22 +397,46 @@ export default function QrPassCard({
       */}
       <div
         ref={ticketRef}
-        className="relative bg-white rounded-2xl border border-slate-200/90 shadow-md shadow-slate-200/50 overflow-hidden print:border-2 print:border-slate-900 print:shadow-none"
+        className="relative bg-white rounded-3xl border border-slate-200/90 shadow-md shadow-slate-200/50 overflow-hidden print:border-2 print:border-slate-900 print:shadow-none"
       >
-        {/* Authentic Symmetrical Semicircular Cutout Notches */}
+        {/* Live Anti-Screenshot Dynamic Hologram Ribbon */}
+        <div className="relative overflow-hidden bg-slate-900 text-white px-4 py-2 flex items-center justify-between text-xs border-b border-slate-800">
+          <div className="absolute inset-0 opacity-25 animate-hologram-sheen pointer-events-none" />
+
+          <div className="relative z-10 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            <span className="text-[11px] font-bold tracking-wider uppercase text-emerald-400">
+              Live Verified Pass
+            </span>
+          </div>
+
+          <div className="relative z-10 flex items-center gap-1.5 font-mono text-[11px] text-slate-300">
+            <ShieldCheck size={14} weight="bold" className="text-indigo-400" />
+            <span>{liveIstTime || "IST"}</span>
+          </div>
+        </div>
+
+        {/* Authentic 35mm Film Pin-Feed Sprocket Scallops (Top Edge) */}
+        <div className="h-2 w-full bg-slate-100/60 border-b border-slate-200/60 flex justify-between px-3 items-center overflow-hidden" aria-hidden="true">
+          {Array.from({ length: 14 }).map((_, i) => (
+            <div key={i} className="w-1.5 h-1.5 rounded-full bg-slate-300/80" />
+          ))}
+        </div>
+
+        {/* Symmetrical Semicircular Cutout Notches */}
         <div
-          className="absolute -left-3 top-[175px] sm:top-[185px] w-6 h-6 rounded-full bg-[#ECECEF] border border-slate-200/80 z-20 shadow-inner"
+          className="absolute -left-3.5 top-[215px] sm:top-[225px] w-7 h-7 rounded-full bg-slate-100 border border-slate-300/80 z-20 shadow-inner"
           aria-hidden="true"
         />
         <div
-          className="absolute -right-3 top-[175px] sm:top-[185px] w-6 h-6 rounded-full bg-[#ECECEF] border border-slate-200/80 z-20 shadow-inner"
+          className="absolute -right-3.5 top-[215px] sm:top-[225px] w-7 h-7 rounded-full bg-slate-100 border border-slate-300/80 z-20 shadow-inner"
           aria-hidden="true"
         />
 
         {/* 1. Top Event Presentation Section (BookMyShow Split View) */}
         <div className="p-4 sm:p-5 flex items-start gap-3.5 relative">
           {/* Poster thumbnail */}
-          <div className="relative w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
+          <div className="relative w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0 shadow-2xs">
             {posterUrl ? (
               <img
                 src={posterUrl}
@@ -408,7 +471,7 @@ export default function QrPassCard({
             aria-hidden="true"
             className="absolute right-2.5 top-6 bottom-6 flex items-center justify-center select-none pointer-events-none"
           >
-            <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold text-slate-400/80 uppercase tracking-widest">
+            <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold text-slate-400/80 uppercase tracking-widest font-mono">
               M-Ticket
             </span>
           </div>
@@ -423,13 +486,13 @@ export default function QrPassCard({
 
         {/* 
           3. Core QR Code & Booking Details Box
-          Left: Crisp SVG QR Code (Dots variant matching provided design, no icon in center)
-          Right: Tier, Booking ID, Quantity
+          Left: Crisp SVG QR Code (Dots variant, no icon in center per user preference)
+          Right: Tier, Booking ID, Quantity, Attendee Name
         */}
         <div className="px-4 py-2">
-          <div className="p-3 sm:p-4 rounded-2xl border border-slate-200/90 bg-white flex items-center gap-3.5 sm:gap-4 shadow-2xs">
-            {/* QR Code Container */}
-            <div className="relative inline-flex items-center justify-center p-2 rounded-xl bg-white border border-slate-100 shrink-0">
+          <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 bg-white flex items-center gap-3.5 sm:gap-4 shadow-2xs">
+            {/* QR Code Container with 12px Quiet Zone */}
+            <div className="relative inline-flex items-center justify-center p-2.5 rounded-xl bg-white border border-slate-100 shrink-0 shadow-xs">
               <QRCode
                 value={verificationUrl}
                 size={112}
@@ -444,7 +507,7 @@ export default function QrPassCard({
 
             {/* Ticket Info (Right side) */}
             <div className="flex-1 min-w-0 space-y-1">
-              <div className="text-xs font-semibold text-slate-700 uppercase tracking-tight truncate">
+              <div className="text-xs font-bold text-slate-800 uppercase tracking-tight truncate">
                 {tierName} {quantity} ticket(s)
               </div>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -454,24 +517,29 @@ export default function QrPassCard({
                 <button
                   type="button"
                   onClick={handleCopyPassId}
-                  className="text-slate-400 hover:text-slate-600 transition p-0.5"
+                  className="text-slate-400 hover:text-indigo-600 transition p-0.5"
                   title="Copy Booking ID"
                 >
-                  <Copy size={13} weight="bold" className={copiedToken ? "text-emerald-600" : ""} />
+                  <Copy size={14} weight="bold" className={copiedToken ? "text-emerald-600" : ""} />
                 </button>
               </div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-slate-500 font-medium">
                 Total ticket(s) {quantity}
               </div>
-              <div className="text-[11px] text-slate-400 truncate pt-0.5">
-                Pass for {buyerName}
+              <div className="text-[11px] text-slate-500 truncate pt-0.5 font-medium">
+                Pass for <strong className="text-slate-700">{buyerName}</strong>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Perforated Divider Line */}
+        <div className="px-4 py-1" aria-hidden="true">
+          <div className="border-b border-dashed border-slate-300 w-full" />
+        </div>
+
         {/* 4. Cancellation unavailable for Live Events Strip */}
-        <div className="mt-3 bg-slate-50 py-2 px-4 text-center border-t border-b border-slate-100">
+        <div className="bg-slate-50/90 py-2 px-4 text-center border-t border-b border-slate-100">
           <p className="text-[11px] text-slate-400 font-medium tracking-tight">
             Cancellation unavailable for Live Events
           </p>
@@ -486,8 +554,8 @@ export default function QrPassCard({
         </div>
 
         {/* 6. BookMyShow Warm Yellow Bottom Stub */}
-        <div className="bg-[#FEF3C7] border-t border-amber-200/80 py-2.5 px-4 text-center rounded-b-2xl">
-          <p className="text-xs font-semibold text-[#92400E]">
+        <div className="bg-amber-100/90 border-t border-amber-200/80 py-2.5 px-4 text-center rounded-b-3xl">
+          <p className="text-xs font-semibold text-amber-900">
             Scan QR code at the entrance to gain entry.
           </p>
         </div>
@@ -513,24 +581,30 @@ export default function QrPassCard({
         {/* 2. Need Help / Visit Help Centre */}
         <Link
           href="/contact"
-          className="w-full py-2 text-center text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center justify-center gap-1 transition"
+          className="w-full py-1.5 text-center text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center justify-center gap-1 transition"
         >
           <Question size={15} weight="bold" />
           <span>Need help? • Visit help centre</span>
           <CaretRight size={13} weight="bold" />
         </Link>
 
-        {/* 3. "You've won 1 Reward!" Card (BookMyShow Style) */}
-        <div className="w-full rounded-2xl p-4 bg-gradient-to-br from-[#4F46E5] via-[#3730A3] to-[#1E1B4B] text-white shadow-md relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+        {/* 3. Local Sponsor Partner Tear-Away Voucher */}
+        <div className="w-full rounded-2xl p-4 bg-indigo-900 text-white shadow-md relative overflow-hidden border border-indigo-800">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
 
           <div className="relative z-10 flex items-center justify-between gap-3">
             <div>
-              <h4 className="text-base font-bold text-white tracking-tight">
-                You&apos;ve won 1 Reward!
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <Scissors size={14} weight="bold" className="text-amber-400 rotate-90" />
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">
+                  Exclusive Partner Voucher
+                </span>
+              </div>
+              <h4 className="text-sm font-bold text-white tracking-tight">
+                Flat 15% OFF at Maurya Royal Cafe
               </h4>
-              <p className="text-xs text-indigo-200 mt-0.5">
-                Exclusive Event Partner Voucher
+              <p className="text-[11px] text-indigo-200 mt-0.5">
+                GT Road, Sasaram • Show digital pass at billing
               </p>
             </div>
 
@@ -602,7 +676,7 @@ export default function QrPassCard({
             </div>
 
             <div className="space-y-1">
-              <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#F97316]">
+              <span className="text-[11px] font-extrabold uppercase tracking-widest text-amber-600">
                 Unlocked Event Reward
               </span>
               <h3 className="text-lg font-black text-slate-900">
@@ -613,14 +687,21 @@ export default function QrPassCard({
               </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 border border-dashed border-slate-300 font-mono text-xs font-bold text-slate-700">
-              Voucher Code: GMS-REWARD-15
+            <div className="p-3 rounded-xl bg-slate-50 border border-dashed border-slate-300 font-mono text-xs font-bold text-slate-700 flex items-center justify-between">
+              <span>Code: <strong>GMS-MAURYA-15</strong></span>
+              <button
+                type="button"
+                onClick={handleCopyVoucher}
+                className="text-indigo-600 hover:text-indigo-700 text-xs font-bold flex items-center gap-1"
+              >
+                {copiedVoucher ? "Copied!" : "Copy"}
+              </button>
             </div>
 
             <button
               type="button"
               onClick={() => setShowRewardModal(false)}
-              className="w-full py-3 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition"
+              className="w-full py-3 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-500 transition"
             >
               Awesome, Got It!
             </button>
