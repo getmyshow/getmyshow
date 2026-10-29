@@ -1,7 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/server";
-import { EventItem, TicketTier, CustomField, ActionResult } from "@/types";
+import { EventItem, TicketTier, CustomField, ActionResult, ArtistPerformer } from "@/types";
 
 export interface CreateEventInput {
   title: string;
@@ -20,6 +20,12 @@ export interface CreateEventInput {
   poster_url?: string | null;
   ticket_tiers?: TicketTier[];
   custom_fields?: CustomField[];
+  duration_hours?: number;
+  age_limit?: string;
+  genre_tags?: string[];
+  google_maps_url?: string;
+  performers?: ArtistPerformer[];
+  terms_and_conditions?: string[];
 }
 
 export async function getEvents(filters?: { city?: string }): Promise<ActionResult<EventItem[]>> {
@@ -236,6 +242,12 @@ export async function createEvent(input: CreateEventInput): Promise<ActionResult
       is_active: true,
       ticket_tiers: input.ticket_tiers || [],
       custom_fields: input.custom_fields || [],
+      duration_hours: input.duration_hours || 3,
+      age_limit: input.age_limit || "All Ages",
+      genre_tags: input.genre_tags || [],
+      google_maps_url: input.google_maps_url || null,
+      performers: input.performers || [],
+      terms_and_conditions: input.terms_and_conditions || [],
       wallet_pending_settlement: 0,
       wallet_available: 0,
       wallet_total_withdrawn: 0,
@@ -243,15 +255,23 @@ export async function createEvent(input: CreateEventInput): Promise<ActionResult
 
     let { data, error } = await supabase.from("events").insert(payload).select().single();
 
-    // Fallback if remote schema does not have ticket_tiers column yet
+    // Fallback if remote schema does not have ticket_tiers or new columns yet
     if (
       error &&
-      (error.message?.includes("ticket_tiers") ||
-        error.message?.includes("column \"ticket_tiers\"") ||
+      (error.message?.includes("column") ||
         error.code === "42703")
     ) {
-      console.warn("Fallback creating event without ticket_tiers column:", error.message);
-      const { ticket_tiers, ...resilientPayload } = payload;
+      console.warn("Fallback creating event with standard columns:", error.message);
+      const {
+        ticket_tiers,
+        performers,
+        genre_tags,
+        terms_and_conditions,
+        google_maps_url,
+        duration_hours,
+        age_limit,
+        ...resilientPayload
+      } = payload;
       const fallbackRes = await supabase.from("events").insert(resilientPayload).select().single();
       data = fallbackRes.data;
       error = fallbackRes.error;

@@ -596,12 +596,12 @@ function HeaderContent() {
                 </Link>
 
                 <Link
-                  href="/account"
+                  href="/profile"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
                 >
                   <UserCheck size={16} weight="duotone" className="text-[#4F46E5]" />
-                  <span>My Account</span>
+                  <span>My Profile</span>
                 </Link>
 
                 <Link
@@ -707,7 +707,9 @@ function HeaderContent() {
               </Show>
               <Show when="signed-in">
                 <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-xs font-bold text-[#1E0A3C]">Account</span>
+                  <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="text-xs font-bold text-[#1E0A3C] hover:text-[#4F46E5]">
+                    Profile Hub
+                  </Link>
                   <UserButton />
                 </div>
               </Show>

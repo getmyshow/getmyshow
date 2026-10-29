@@ -51,7 +51,7 @@ export default function MobileBottomNav() {
   const isExploreActive = pathname === "/";
   const isSearchActive = pathname.startsWith("/search");
   const isPassesActive = pathname.startsWith("/my-tickets") || pathname.startsWith("/ticket");
-  const isAccountActive = pathname.startsWith("/account");
+  const isProfileActive = pathname.startsWith("/profile") || pathname.startsWith("/account");
 
   return (
     <div
@@ -112,20 +112,20 @@ export default function MobileBottomNav() {
           <span className="text-[10px] mt-0.5 tracking-tight">Passes</span>
         </Link>
 
-        {/* 5. Account (User Account & Organizer Settings) */}
+        {/* 5. Profile (User Profile, Wishlist & Settings) */}
         <Link
-          href="/account"
+          href="/profile"
           className={`relative flex flex-col items-center justify-center min-w-[54px] py-1 transition-transform active:scale-90 ${
-            isAccountActive ? "text-[#4F46E5] font-bold" : "text-slate-400 hover:text-white"
+            isProfileActive ? "text-[#4F46E5] font-bold" : "text-slate-400 hover:text-white"
           }`}
         >
           <div className="relative">
-            <User size={20} weight={isAccountActive ? "fill" : "regular"} />
+            <User size={20} weight={isProfileActive ? "fill" : "regular"} />
             {isOrganizer && (
               <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#4F46E5] ring-2 ring-[#0F172A]" />
             )}
           </div>
-          <span className="text-[10px] mt-0.5 tracking-tight">Account</span>
+          <span className="text-[10px] mt-0.5 tracking-tight">Profile</span>
         </Link>
       </nav>
     </div>

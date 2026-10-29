@@ -62,6 +62,7 @@ export interface EventItem {
   duration_hours?: number;
   age_limit?: string;
   genre_tags?: string[];
+  google_maps_url?: string;
   terms_and_conditions?: string[];
   interested_count?: number;
   is_active: boolean;

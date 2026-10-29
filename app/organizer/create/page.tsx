@@ -18,32 +18,67 @@ import {
   CircleNotch,
   Plus,
   Trash,
-  PlusCircle,
-  Question,
   ArrowRight,
   Eye,
   Copy,
   Clock,
   CurrencyInr,
+  User,
+  Tag,
+  Globe,
+  MapPin,
+  FileText,
 } from "@phosphor-icons/react";
 import { formatINR } from "@/lib/utils";
 import { createEvent } from "@/actions/events";
-import { TicketTier, CustomField, EventItem } from "@/types";
+import { TicketTier, CustomField, EventItem, ArtistPerformer } from "@/types";
+import { ALL_BIHAR_DISTRICTS, BIHAR_CITIES, openPickRegionModal } from "@/lib/geo";
 import CheckoutSuccessIllustration from "@/components/illustrations/CheckoutSuccessIllustration";
 
 const DRAFT_STORAGE_KEY = "gms_organizer_create_draft";
+
+const AVAILABLE_GENRES = [
+  "Coaching Seminars",
+  "College Fests",
+  "Music Festivals",
+  "Dandiya & Cultural",
+  "Stand-up Comedy",
+  "Sports & Fitness",
+  "Tech & Career",
+  "Exhibitions & Expos",
+];
 
 export default function CreateEventPage() {
   const router = useRouter();
   const { user, isSignedIn } = useUser();
 
-  // Basic Details
+  // Basic Overview
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [venue, setVenue] = useState("");
   const [city, setCity] = useState("Sasaram");
   const [eventDate, setEventDate] = useState("");
   const [posterUrl, setPosterUrl] = useState("");
+
+  // Event Logistics & Vitals
+  const [durationHours, setDurationHours] = useState<number>(3);
+  const [ageLimit, setAgeLimit] = useState<string>("All Ages");
+  const [genreTags, setGenreTags] = useState<string[]>(["Coaching Seminars"]);
+  const [googleMapsUrl, setGoogleMapsUrl] = useState<string>("");
+
+  // Artists & Key Performers Builder
+  const [performers, setPerformers] = useState<ArtistPerformer[]>([
+    {
+      name: "",
+      role: "Keynote Speaker",
+      avatar_url: "",
+    },
+  ]);
+
+  // Terms & Conditions (itemized bullet text)
+  const [termsText, setTermsText] = useState<string>(
+    "• Please carry a valid School/College/Govt ID card for gate verification.\n• Arrive at least 30 minutes prior to gate closing.\n• Entry strictly via cryptographic HMAC QR ticket pass on your mobile phone.\n• Outside food, beverages, and contraband items strictly prohibited.\n• Digital passes are non-refundable once verified and scanned at the gate."
+  );
 
   // Multi-Tier Ticketing State
   const [ticketTiers, setTicketTiers] = useState<TicketTier[]>([
@@ -92,6 +127,18 @@ export default function CreateEventPage() {
     }
   }, [isSignedIn, user, organizerName, organizerEmail, organizerWhatsapp]);
 
+  // Listen to city-changed events from global region picker
+  useEffect(() => {
+    const handleCityChanged = (e: Event) => {
+      const customEvent = e as CustomEvent<{ city: string }>;
+      if (customEvent.detail?.city) {
+        setCity(customEvent.detail.city);
+      }
+    };
+    window.addEventListener("getmyshow:city-changed", handleCityChanged);
+    return () => window.removeEventListener("getmyshow:city-changed", handleCityChanged);
+  }, []);
+
   // Check for saved local draft on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -109,7 +156,7 @@ export default function CreateEventPage() {
 
   // Auto-save draft to localStorage whenever form state changes
   useEffect(() => {
-    if (typeof window === "undefined" || createdEvent) return;
+    if (typeof window !== "undefined" || createdEvent) return;
 
     const timeout = setTimeout(() => {
       const draftPayload = {
@@ -119,6 +166,12 @@ export default function CreateEventPage() {
         city,
         eventDate,
         posterUrl,
+        durationHours,
+        ageLimit,
+        genreTags,
+        googleMapsUrl,
+        performers,
+        termsText,
         ticketTiers,
         passFeeToBuyer,
         scannerPin,
@@ -139,6 +192,12 @@ export default function CreateEventPage() {
     city,
     eventDate,
     posterUrl,
+    durationHours,
+    ageLimit,
+    genreTags,
+    googleMapsUrl,
+    performers,
+    termsText,
     ticketTiers,
     passFeeToBuyer,
     scannerPin,
@@ -153,20 +212,26 @@ export default function CreateEventPage() {
     try {
       const saved = localStorage.getItem(DRAFT_STORAGE_KEY);
       if (!saved) return;
-      const parsed = JSON.parse(saved);
-      if (parsed.title) setTitle(parsed.title);
-      if (parsed.description) setDescription(parsed.description);
-      if (parsed.venue) setVenue(parsed.venue);
-      if (parsed.city) setCity(parsed.city);
-      if (parsed.eventDate) setEventDate(parsed.eventDate);
-      if (parsed.posterUrl) setPosterUrl(parsed.posterUrl);
-      if (parsed.ticketTiers && Array.isArray(parsed.ticketTiers)) setTicketTiers(parsed.ticketTiers);
-      if (typeof parsed.passFeeToBuyer === "boolean") setPassFeeToBuyer(parsed.passFeeToBuyer);
-      if (parsed.scannerPin) setScannerPin(parsed.scannerPin);
-      if (parsed.organizerName) setOrganizerName(parsed.organizerName);
-      if (parsed.organizerWhatsapp) setOrganizerWhatsapp(parsed.organizerWhatsapp);
-      if (parsed.organizerEmail) setOrganizerEmail(parsed.organizerEmail);
-      if (parsed.customFields && Array.isArray(parsed.customFields)) setCustomFields(parsed.customFields);
+      const d = JSON.parse(saved);
+      if (d.title) setTitle(d.title);
+      if (d.description) setDescription(d.description);
+      if (d.venue) setVenue(d.venue);
+      if (d.city) setCity(d.city);
+      if (d.eventDate) setEventDate(d.eventDate);
+      if (d.posterUrl) setPosterUrl(d.posterUrl);
+      if (d.durationHours) setDurationHours(d.durationHours);
+      if (d.ageLimit) setAgeLimit(d.ageLimit);
+      if (d.genreTags) setGenreTags(d.genreTags);
+      if (d.googleMapsUrl) setGoogleMapsUrl(d.googleMapsUrl);
+      if (d.performers && Array.isArray(d.performers)) setPerformers(d.performers);
+      if (d.termsText) setTermsText(d.termsText);
+      if (d.ticketTiers && Array.isArray(d.ticketTiers)) setTicketTiers(d.ticketTiers);
+      if (d.passFeeToBuyer !== undefined) setPassFeeToBuyer(d.passFeeToBuyer);
+      if (d.scannerPin) setScannerPin(d.scannerPin);
+      if (d.organizerName) setOrganizerName(d.organizerName);
+      if (d.organizerWhatsapp) setOrganizerWhatsapp(d.organizerWhatsapp);
+      if (d.organizerEmail) setOrganizerEmail(d.organizerEmail);
+      if (d.customFields && Array.isArray(d.customFields)) setCustomFields(d.customFields);
       setHasDraft(false);
     } catch {}
   };
@@ -176,7 +241,35 @@ export default function CreateEventPage() {
     setHasDraft(false);
   };
 
-  // Tier operations
+  // Genre pill toggle
+  const toggleGenre = (genre: string) => {
+    setGenreTags((prev) =>
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
+    );
+  };
+
+  // Performer operations
+  const addPerformer = () => {
+    setPerformers((prev) => [
+      ...prev,
+      { name: "", role: "Keynote Speaker", avatar_url: "" },
+    ]);
+  };
+
+  const updatePerformer = (index: number, field: keyof ArtistPerformer, value: string) => {
+    setPerformers((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], [field]: value };
+      return copy;
+    });
+  };
+
+  const removePerformer = (index: number) => {
+    if (performers.length <= 1) return;
+    setPerformers((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Multi-tier operations
   const addTier = () => {
     const newTierNumber = ticketTiers.length + 1;
     const defaultColor = newTierNumber === 2 ? "saffron" : newTierNumber === 3 ? "emerald" : "indigo";
@@ -296,6 +389,13 @@ export default function CreateEventPage() {
       return;
     }
 
+    const termsList = termsText
+      .split("\n")
+      .map((l) => l.replace(/^[•\-\*]\s*/, "").trim())
+      .filter((l) => l.length > 0);
+
+    const validPerformers = performers.filter((p) => p.name.trim().length > 0);
+
     startTransition(async () => {
       const result = await createEvent({
         title: title.trim(),
@@ -313,6 +413,12 @@ export default function CreateEventPage() {
         poster_url: posterUrl.trim() || undefined,
         ticket_tiers: ticketTiers,
         custom_fields: customFields,
+        duration_hours: Number(durationHours) || 3,
+        age_limit: ageLimit,
+        genre_tags: genreTags,
+        google_maps_url: googleMapsUrl.trim() || undefined,
+        performers: validPerformers,
+        terms_and_conditions: termsList,
       });
 
       if (result.success) {
@@ -352,64 +458,55 @@ export default function CreateEventPage() {
               Ticketing Desk Activated!
             </h1>
             <p className="text-xs text-[#6F7287] mt-1">
-              Your event is now live on GetMyShow. Share the direct ticket link on WhatsApp to launch instant UPI pass bookings.
+              Your event is now live on GetMyShow with full box-office features. Share the direct ticket link on WhatsApp to launch instant UPI pass bookings.
             </p>
           </div>
 
           <div className="p-4 rounded-xl bg-[#F8F7FA] border border-[#DBDAE3] text-left space-y-2.5 text-xs">
             <div className="flex justify-between items-center pb-2 border-b border-slate-200">
-              <span className="text-[#6F7287]">Event Title:</span>
-              <span className="font-bold text-[#1E0A3C] truncate max-w-[240px]">{createdEvent.title}</span>
+              <span className="text-slate-500">Event Title:</span>
+              <span className="font-bold text-[#1E0A3C]">{createdEvent.title}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[#6F7287]">Venue:</span>
-              <span className="font-semibold text-[#39364F]">{createdEvent.city} • {createdEvent.venue}</span>
+            <div className="flex justify-between items-center pb-2 border-b border-slate-200">
+              <span className="text-slate-500">Location:</span>
+              <span className="font-bold text-[#1E0A3C]">{createdEvent.venue}, {createdEvent.city}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[#6F7287]">Pass Capacity:</span>
-              <span className="font-bold text-[#1E0A3C]">{createdEvent.total_capacity} Passes ({ticketTiers.length} Tiers)</span>
-            </div>
-            <div className="flex justify-between items-center pt-2 border-t border-slate-200">
-              <span className="text-[#6F7287] font-semibold">Gate Volunteer PIN:</span>
-              <span className="font-mono font-bold text-sm text-[#4F46E5] bg-white px-2.5 py-0.5 rounded border border-[#DBDAE3]">
+            <div className="flex justify-between items-center pb-2 border-b border-slate-200">
+              <span className="text-slate-500">Gate Scanner PIN:</span>
+              <span className="font-mono font-bold text-[#4F46E5] bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
                 {createdEvent.scanner_pin}
               </span>
             </div>
+            <div className="flex justify-between items-center">
+              <span className="text-slate-500">Total Capacity:</span>
+              <span className="font-bold text-slate-800">{createdEvent.total_capacity} passes</span>
+            </div>
           </div>
 
-          {/* Quick Copy Link Bar */}
-          <div className="flex items-center gap-2 p-2 bg-[#F8F7FA] border border-[#DBDAE3] rounded-lg">
-            <input
-              type="text"
-              readOnly
-              value={typeof window !== "undefined" ? `${window.location.origin}${liveEventUrl}` : liveEventUrl}
-              className="bg-transparent text-xs text-[#39364F] font-mono flex-1 outline-none px-2 select-all"
-            />
+          <div className="space-y-3 pt-2">
             <button
               type="button"
               onClick={handleCopyLink}
-              className="px-3 py-1.5 rounded-md bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition flex items-center gap-1 shrink-0"
+              className="w-full py-3 px-4 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
             >
-              <Copy size={13} weight="bold" />
-              <span>{copiedLink ? "Copied!" : "Copy"}</span>
+              <Copy size={18} weight="bold" />
+              <span>{copiedLink ? "Link Copied!" : "Copy WhatsApp Ticket Link"}</span>
             </button>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
-            <Link
-              href={liveEventUrl}
-              className="w-full py-3 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white font-bold text-xs shadow-xs transition-all active:scale-95 flex items-center justify-center gap-1.5"
-            >
-              <Eye size={15} weight="bold" />
-              <span>View Live Event Page</span>
-            </Link>
-            <Link
-              href={dashboardUrl}
-              className="w-full py-3 rounded-lg border border-[#DBDAE3] text-[#1E0A3C] font-bold text-xs transition-all active:scale-95 flex items-center justify-center gap-1.5 bg-white hover:bg-[#F8F7FA]"
-            >
-              <span>Open Organizer Console</span>
-              <ArrowRight size={15} weight="bold" />
-            </Link>
+            <div className="grid grid-cols-2 gap-3">
+              <Link
+                href={liveEventUrl}
+                className="py-2.5 px-3 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-800 font-bold text-xs text-center transition"
+              >
+                View Live Event →
+              </Link>
+              <Link
+                href={dashboardUrl}
+                className="py-2.5 px-3 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-800 font-bold text-xs text-center transition"
+              >
+                Organizer Studio →
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -417,19 +514,20 @@ export default function CreateEventPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F7FA] text-[#39364F] py-10 px-4 sm:px-6">
+    <div className="min-h-screen bg-[#F8F7FA] py-8 px-4 sm:px-6 font-sans">
       <div className="max-w-3xl mx-auto space-y-6">
+        {/* Navigation Bar */}
         <div className="flex items-center justify-between">
           <Link
             href="/organizer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#39364F] hover:text-[#4F46E5] transition"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#6F7287] hover:text-[#1E0A3C] transition"
           >
             <CaretLeft size={16} weight="bold" />
-            <span>Back to Organizer Desk</span>
+            <span>Back to Organizer Studio</span>
           </Link>
 
           <span className="text-xs text-[#6F7287]">
-            Bihar Hyperlocal Ticketing Engine
+            Bihar Box-Office Engine
           </span>
         </div>
 
@@ -468,26 +566,26 @@ export default function CreateEventPage() {
           </div>
         )}
 
-        {/* Form Container (16px Radius - No AI Slop) */}
+        {/* Main Form Container */}
         <div className="bg-white rounded-2xl border border-[#DBDAE3] shadow-md p-6 sm:p-10 space-y-8">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F05537] uppercase tracking-wider mb-1">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F97316] uppercase tracking-wider mb-1">
               <Sparkle size={14} weight="fill" />
-              <span>60-Second Event Creator</span>
+              <span>Complete Box-Office Creator</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1E0A3C]">
               Launch Your Event in Bihar
             </h1>
             <p className="text-xs sm:text-sm text-[#6F7287] mt-1">
-              Configure multi-tier ticketing (VIP, General, Student), set gate scanner PIN, and add custom attendee questions.
+              Configure multi-tier tickets, set gate scanner PIN, add performer line-ups, and enter venue Google Maps directions.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* 1. BASIC EVENT DETAILS */}
             <div className="space-y-4">
-              <h2 className="text-sm font-black uppercase tracking-wider text-[#1E0A3C] border-b border-slate-100 pb-2">
-                1. Event Overview
+              <h2 className="text-sm font-black uppercase tracking-wider text-[#1E0A3C] border-b border-slate-100 pb-2 flex items-center gap-2">
+                <span>1. Event Overview & Logistics</span>
               </h2>
 
               <div>
@@ -497,48 +595,105 @@ export default function CreateEventPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Super 50 Scholarship Seminar or Rohtas Garba Mahotsav"
+                  placeholder="e.g. Super 50 Scholarship Seminar or Rohtas Dandiya Mahotsav"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition"
                 />
               </div>
 
+              {/* Genre Pills Multi-Select */}
               <div>
                 <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
-                  Event Description & Guidelines
+                  Category & Genre Tags
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {AVAILABLE_GENRES.map((g) => {
+                    const isSelected = genreTags.includes(g);
+                    return (
+                      <button
+                        key={g}
+                        type="button"
+                        onClick={() => toggleGenre(g)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-[#4F46E5] text-white shadow-xs"
+                            : "bg-[#F8F7FA] border border-[#DBDAE3] text-[#39364F] hover:border-slate-400"
+                        }`}
+                      >
+                        {g}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
+                  About The Event & Guidelines
                 </label>
                 <textarea
-                  rows={3}
-                  placeholder="Outline seminar schedule, chief guests, hall dress code, eligibility rules, etc."
+                  rows={4}
+                  placeholder="Outline seminar schedule, key highlights, hall dress code, eligibility rules, etc."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition resize-none"
                 />
               </div>
 
+              {/* City Selection with 38 Districts & Dialog Integration */}
+              <div className="p-4 rounded-xl bg-[#F8F7FA] border border-[#DBDAE3] space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-[#1E0A3C]">
+                    Event City / District (Bihar) *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={openPickRegionModal}
+                    className="text-xs font-bold text-[#4F46E5] hover:underline flex items-center gap-1"
+                  >
+                    <MapPin size={14} weight="bold" />
+                    <span>Pick from Region Dialog →</span>
+                  </button>
+                </div>
+
+                {/* Popular City Quick-Chips */}
+                <div className="flex flex-wrap gap-1.5">
+                  {BIHAR_CITIES.slice(0, 8).map((c) => (
+                    <button
+                      key={c.slug}
+                      type="button"
+                      onClick={() => setCity(c.name)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                        city.toLowerCase() === c.name.toLowerCase()
+                          ? "bg-[#4F46E5] text-white shadow-xs"
+                          : "bg-white border border-slate-200 text-slate-700 hover:border-indigo-300"
+                      }`}
+                    >
+                      {c.name}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Full 38 District Searchable Dropdown */}
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
+                >
+                  {ALL_BIHAR_DISTRICTS.map((district) => (
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Venue & Google Maps Link */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
-                    City (Bihar) *
-                  </label>
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
-                  >
-                    <option value="Sasaram">Sasaram (Rohtas)</option>
-                    <option value="Dehri-on-Sone">Dehri-on-Sone</option>
-                    <option value="Patna">Patna</option>
-                    <option value="Gaya">Gaya</option>
-                    <option value="Bhabua">Bhabua</option>
-                    <option value="Ara">Ara</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
-                    Venue & Address *
+                    Venue Name & Address *
                   </label>
                   <input
                     type="text"
@@ -549,9 +704,23 @@ export default function CreateEventPage() {
                     className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
+                    Google Maps Link (Optional)
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://maps.google.com/?q=..."
+                    value={googleMapsUrl}
+                    onChange={(e) => setGoogleMapsUrl(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
+                  />
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Date, Duration & Age Limit */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
                     Event Date & Time (IST) *
@@ -561,31 +730,177 @@ export default function CreateEventPage() {
                     required
                     value={eventDate}
                     onChange={(e) => setEventDate(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
+                    className="w-full px-3 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs sm:text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
-                    Poster Image URL (Optional)
+                    Duration (Hours)
                   </label>
                   <input
-                    type="url"
-                    placeholder="https://images.unsplash.com/..."
-                    value={posterUrl}
-                    onChange={(e) => setPosterUrl(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
+                    type="number"
+                    min={0.5}
+                    max={24}
+                    step={0.5}
+                    value={durationHours}
+                    onChange={(e) => setDurationHours(Number(e.target.value))}
+                    className="w-full px-3 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
+                    Age Limit
+                  </label>
+                  <select
+                    value={ageLimit}
+                    onChange={(e) => setAgeLimit(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
+                  >
+                    <option value="All Ages">All Ages (Family Friendly)</option>
+                    <option value="12+ Yrs">12+ Yrs (Students)</option>
+                    <option value="16+ Yrs">16+ Yrs (Coaching Aspirants)</option>
+                    <option value="18+ Yrs">18+ Yrs (Adults Only)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Poster Image */}
+              <div>
+                <label className="block text-xs font-bold text-[#1E0A3C] mb-1.5">
+                  Poster Image URL (16:9 Cinema Aspect Ratio Recommended)
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://images.unsplash.com/photo-..."
+                  value={posterUrl}
+                  onChange={(e) => setPosterUrl(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-sm text-[#39364F] font-medium outline-none focus:border-[#4F46E5]"
+                />
               </div>
             </div>
 
-            {/* 2. MULTI-TIER TICKETING BUILDER */}
+            {/* 2. ARTISTS & KEY PERFORMERS BUILDER */}
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                 <div>
                   <h2 className="text-sm font-black uppercase tracking-wider text-[#1E0A3C]">
-                    2. Ticket Tiers & Capacity
+                    2. Artists, Speakers & Performers
+                  </h2>
+                  <p className="text-xs text-[#6F7287]">
+                    Feature keynote guests, mentors, vocalists or DJs on your event box office page.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={addPerformer}
+                  className="px-3 py-1.5 rounded-lg bg-[#4F46E5]/10 hover:bg-[#4F46E5]/20 text-[#4F46E5] text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                >
+                  <Plus size={14} weight="bold" />
+                  <span>Add Performer</span>
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {performers.map((performer, pIdx) => (
+                  <div
+                    key={pIdx}
+                    className="p-4 rounded-xl bg-[#F8F7FA] border border-[#DBDAE3] space-y-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-[#4F46E5]">
+                        Performer #{pIdx + 1}
+                      </span>
+                      {performers.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removePerformer(pIdx)}
+                          className="text-xs text-rose-500 hover:text-rose-700 flex items-center gap-1 font-semibold"
+                        >
+                          <Trash size={13} weight="bold" />
+                          <span>Remove</span>
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#1E0A3C] mb-1">
+                          Artist / Speaker Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={performer.name}
+                          onChange={(e) => updatePerformer(pIdx, "name", e.target.value)}
+                          placeholder="e.g. Dr. Anand Kumar"
+                          className="w-full px-3 py-2 rounded-lg bg-white border border-[#DBDAE3] text-xs font-bold text-[#1E0A3C] outline-none focus:border-[#4F46E5]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#1E0A3C] mb-1">
+                          Role / Title
+                        </label>
+                        <select
+                          value={performer.role}
+                          onChange={(e) => updatePerformer(pIdx, "role", e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg bg-white border border-[#DBDAE3] text-xs font-medium text-[#39364F] outline-none focus:border-[#4F46E5]"
+                        >
+                          <option value="Keynote Speaker">Keynote Speaker</option>
+                          <option value="Lead Vocalist">Lead Vocalist</option>
+                          <option value="DJ Artist">DJ Artist</option>
+                          <option value="Stand-up Comedian">Stand-up Comedian</option>
+                          <option value="Guest Mentor">Guest Mentor</option>
+                          <option value="Chief Guest">Chief Guest</option>
+                          <option value="Panel Expert">Panel Expert</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#1E0A3C] mb-1">
+                          Photo URL (Optional)
+                        </label>
+                        <input
+                          type="url"
+                          value={performer.avatar_url || ""}
+                          onChange={(e) => updatePerformer(pIdx, "avatar_url", e.target.value)}
+                          placeholder="https://..."
+                          className="w-full px-3 py-2 rounded-lg bg-white border border-[#DBDAE3] text-xs text-[#39364F] outline-none focus:border-[#4F46E5]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 3. TERMS & CONDITIONS SECTION */}
+            <div className="space-y-4">
+              <h2 className="text-sm font-black uppercase tracking-wider text-[#1E0A3C] border-b border-slate-100 pb-2">
+                3. Event Terms & Conditions
+              </h2>
+              <p className="text-xs text-[#6F7287]">
+                Attendees will review these terms before booking. Each bullet line appears in the slide-up Terms sheet.
+              </p>
+
+              <div>
+                <textarea
+                  rows={5}
+                  value={termsText}
+                  onChange={(e) => setTermsText(e.target.value)}
+                  placeholder="Enter each term on a new line (e.g. • ID card required at gate)"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#F8F7FA] border border-[#DBDAE3] text-xs text-[#39364F] font-mono leading-relaxed outline-none focus:border-[#4F46E5] resize-none"
+                />
+              </div>
+            </div>
+
+            {/* 4. MULTI-TIER TICKETING BUILDER */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                <div>
+                  <h2 className="text-sm font-black uppercase tracking-wider text-[#1E0A3C]">
+                    4. Ticket Tiers & Capacity
                   </h2>
                   <p className="text-xs text-[#6F7287]">
                     Total event capacity automatically calculated: <strong>{totalCapacity} passes</strong>
@@ -594,7 +909,7 @@ export default function CreateEventPage() {
                 <button
                   type="button"
                   onClick={addTier}
-                  className="px-3 py-1.5 rounded-lg bg-[#4F46E5]/10 hover:bg-[#4F46E5]/20 text-[#4F46E5] text-xs font-bold transition flex items-center gap-1"
+                  className="px-3 py-1.5 rounded-lg bg-[#4F46E5]/10 hover:bg-[#4F46E5]/20 text-[#4F46E5] text-xs font-bold transition flex items-center gap-1 cursor-pointer"
                 >
                   <Plus size={14} weight="bold" />
                   <span>Add Another Tier</span>
@@ -615,7 +930,7 @@ export default function CreateEventPage() {
                         <button
                           type="button"
                           onClick={() => removeTier(idx)}
-                          className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1 font-semibold"
+                          className="text-xs text-rose-500 hover:text-rose-700 flex items-center gap-1 font-semibold"
                         >
                           <Trash size={14} weight="bold" />
                           <span>Remove</span>
@@ -739,12 +1054,12 @@ export default function CreateEventPage() {
               </div>
             </div>
 
-            {/* 3. CUSTOM ATTENDEE QUESTION BUILDER */}
+            {/* 5. CUSTOM ATTENDEE QUESTION BUILDER */}
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2">
                 <div>
                   <h2 className="text-sm font-black uppercase tracking-wider text-[#1E0A3C]">
-                    3. Attendee Questionnaire (Optional)
+                    5. Attendee Questionnaire (Optional)
                   </h2>
                   <p className="text-xs text-[#6F7287]">
                     Gather coaching roll numbers, target exams, or college classes during checkout.
@@ -753,7 +1068,7 @@ export default function CreateEventPage() {
                 <button
                   type="button"
                   onClick={addCustomQuestion}
-                  className="px-3 py-1.5 rounded-lg border border-[#DBDAE3] hover:border-[#4F46E5] text-[#39364F] hover:text-[#4F46E5] text-xs font-bold transition flex items-center gap-1 bg-white self-start sm:self-auto"
+                  className="px-3 py-1.5 rounded-lg border border-[#DBDAE3] hover:border-[#4F46E5] text-[#39364F] hover:text-[#4F46E5] text-xs font-bold transition flex items-center gap-1 bg-white self-start sm:self-auto cursor-pointer"
                 >
                   <Plus size={14} weight="bold" />
                   <span>Custom Field</span>
@@ -801,7 +1116,7 @@ export default function CreateEventPage() {
                         <button
                           type="button"
                           onClick={() => removeCustomField(qIdx)}
-                          className="text-xs text-red-500 hover:text-red-700 font-semibold flex items-center gap-1"
+                          className="text-xs text-rose-500 hover:text-rose-700 font-semibold flex items-center gap-1"
                         >
                           <Trash size={13} weight="bold" />
                           <span>Delete</span>
@@ -856,10 +1171,10 @@ export default function CreateEventPage() {
               )}
             </div>
 
-            {/* 4. SECURITY & ORGANIZER INFO */}
+            {/* 6. SECURITY & ORGANIZER INFO */}
             <div className="space-y-4">
               <h2 className="text-sm font-black uppercase tracking-wider text-[#1E0A3C] border-b border-slate-100 pb-2">
-                4. Gate Security PIN & Host Contact
+                6. Gate Security PIN & Host Contact
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -913,12 +1228,12 @@ export default function CreateEventPage() {
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full py-4 rounded-xl bg-[#F05537] hover:bg-[#D94428] text-white text-base font-bold shadow-md hover:shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50 min-h-[48px]"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-[#4F46E5] to-[#4338CA] hover:from-[#4338CA] hover:to-[#3730A3] text-white text-base font-bold shadow-md hover:shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50 min-h-[48px] cursor-pointer"
               >
                 {isPending ? (
                   <>
                     <CircleNotch size={20} weight="bold" className="animate-spin" />
-                    <span>Publishing Multi-Tier Event...</span>
+                    <span>Publishing Event with Box-Office Setup...</span>
                   </>
                 ) : (
                   <>

@@ -26,7 +26,6 @@ import EventCard from "@/components/ui/EventCard";
 import CategoryCircleRow from "@/components/discovery/CategoryCircleRow";
 import HeroBannerCarousel from "@/components/home/HeroBannerCarousel";
 import EmptyEventsIllustration from "@/components/illustrations/EmptyEventsIllustration";
-import OrganizerHostIllustration from "@/components/illustrations/OrganizerHostIllustration";
 import { getSubdomainUrl } from "@/lib/domains";
 import { EventItem } from "@/types";
 import { getUserStoredCity } from "@/lib/geo";
@@ -459,88 +458,6 @@ function HomeContent() {
             ))}
           </div>
         </div>
-
-        {/* 5. Why GetMyShow: The Bihar Hyperlocal Superpower Banner with Custom Vector Art */}
-        <section className="bg-white rounded-2xl border border-[#DBDAE3] p-6 sm:p-10 shadow-xs">
-          <div className="max-w-3xl">
-            <span className="text-xs font-extrabold text-[#F05537] uppercase tracking-widest">
-              The Hyperlocal Ticketing Revolution
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-1">
-              Why Tier-2 & Tier-3 Bihar Chooses GetMyShow
-            </h2>
-            <p className="mt-2 text-sm sm:text-base text-[#6F7287]">
-              We stripped away corporate 80MB app downloads, 15% commissions, and mandatory account creation to build the fastest box-office platform in India.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-[#EEEDF2]">
-            <div className="space-y-3 bg-[#F8F7FA] p-5 rounded-xl border border-[#DBDAE3]/80">
-              <div className="w-10 h-10 rounded-lg bg-[#3659E3]/10 text-[#3659E3] flex items-center justify-center">
-                <Lightning size={22} weight="duotone" />
-              </div>
-              <h3 className="text-base font-bold text-[#1E0A3C]">2-Click No-Login UPI</h3>
-              <p className="text-xs sm:text-sm text-[#6F7287] leading-relaxed">
-                Enter your Name + WhatsApp and pay in 10 seconds with Google Pay or PhonePe. No password to forget.
-              </p>
-            </div>
-
-            <div className="space-y-3 bg-[#F8F7FA] p-5 rounded-xl border border-[#DBDAE3]/80">
-              <div className="w-10 h-10 rounded-lg bg-[#F05537]/10 text-[#F05537] flex items-center justify-center">
-                <Ticket size={22} weight="duotone" />
-              </div>
-              <h3 className="text-base font-bold text-[#1E0A3C]">35mm Scalloped Passes</h3>
-              <p className="text-xs sm:text-sm text-[#6F7287] leading-relaxed">
-                Download authentic cinema ticket passes with tamper-proof HMAC cryptographic QR codes and local shop sponsor coupons.
-              </p>
-            </div>
-
-            <div className="space-y-3 bg-[#F8F7FA] p-5 rounded-xl border border-[#DBDAE3]/80">
-              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-                <ShieldCheck size={22} weight="duotone" />
-              </div>
-              <h3 className="text-base font-bold text-[#1E0A3C]">0% Cost for Organizers</h3>
-              <p className="text-xs sm:text-sm text-[#6F7287] leading-relaxed">
-                Pass the platform fee to ticket buyers to host free or paid fests at ₹0 cost. Payouts settled in T+2 business days.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* 6. Organizer CTA Section (Rectangular 16px Radius with Custom Vector Art) */}
-        <section className="bg-[#1E0A3C] rounded-2xl text-white p-8 sm:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 shadow-md">
-          <div className="relative z-10 max-w-xl space-y-3">
-            <span className="text-xs font-bold text-[#F97316] uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkle size={14} weight="fill" />
-              For Coaches, Colleges & Clubs
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Host Your Next Event in Sasaram in 60 Seconds
-            </h2>
-            <p className="text-sm text-[#DBDAE3] leading-relaxed">
-              Launch your seminar or fest, accept UPI payments, issue instant digital passes, and scan attendees at the gate with your phone.
-            </p>
-
-            <div className="pt-3 flex flex-col sm:flex-row gap-3">
-              <Link
-                href={getSubdomainUrl("org", "/create")}
-                className="px-6 py-3.5 rounded-lg bg-[#F05537] hover:bg-[#D94428] text-white text-sm font-bold text-center transition-all shadow-md active:scale-95"
-              >
-                Create Free Event
-              </Link>
-              <Link
-                href={getSubdomainUrl("org")}
-                className="px-6 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-semibold text-center transition-all active:scale-95 border border-white/20"
-              >
-                Organizer Dashboard
-              </Link>
-            </div>
-          </div>
-
-          <div className="relative z-10 hidden sm:flex shrink-0 items-center justify-center">
-            <OrganizerHostIllustration className="w-64 h-48 sm:w-72 sm:h-52" />
-          </div>
-        </section>
       </main>
     </div>
   );

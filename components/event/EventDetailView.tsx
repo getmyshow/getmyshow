@@ -99,6 +99,21 @@ export default function EventDetailView({ event }: EventDetailViewProps) {
     setInterestedCount((prev) => (next ? prev + 1 : Math.max(0, prev - 1)));
     try {
       localStorage.setItem(`getmyshow_interested_${event.id}`, next ? "true" : "false");
+      localStorage.setItem(`gms_interested_${event.id}`, next ? "true" : "false");
+      if (event.slug) {
+        localStorage.setItem(`gms_interested_${event.slug}`, next ? "true" : "false");
+      }
+
+      // Maintain gms_wishlist array
+      const rawWishlist = localStorage.getItem("gms_wishlist");
+      let wishlistArray: string[] = rawWishlist ? JSON.parse(rawWishlist) : [];
+      if (next) {
+        if (!wishlistArray.includes(event.id)) wishlistArray.push(event.id);
+        if (event.slug && !wishlistArray.includes(event.slug)) wishlistArray.push(event.slug);
+      } else {
+        wishlistArray = wishlistArray.filter((id) => id !== event.id && id !== event.slug);
+      }
+      localStorage.setItem("gms_wishlist", JSON.stringify(wishlistArray));
     } catch {
       // fallback
     }
