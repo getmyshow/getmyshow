@@ -16,7 +16,6 @@ interface BannerSlide {
   ctaText: string;
   ctaLink: string;
   imageSrc: string;
-  useDirectImage?: boolean;
 }
 
 const BANNERS: BannerSlide[] = [
@@ -28,10 +27,9 @@ const BANNERS: BannerSlide[] = [
     titleLine2: "TO EMO ENCORES",
     titleColor: "bg-[#708BFF] text-white",
     subtitle: "Discover high-energy live concerts, acoustic gigs, and musical nights across Bihar.",
-    ctaText: "Get Into Live Music",
+    ctaText: "Explore Live Music",
     ctaLink: "#events",
-    imageSrc: "/banners/banner-live-music.png",
-    useDirectImage: true,
+    imageSrc: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1600&auto=format&fit=crop",
   },
   {
     id: "coaching-seminar",
@@ -41,10 +39,9 @@ const BANNERS: BannerSlide[] = [
     titleLine2: "WITH TOP MENTORS",
     titleColor: "bg-[#3659E3] text-white",
     subtitle: "Super 50 Talent Scholarship Test & Career Blueprint Seminar in Sasaram.",
-    ctaText: "Explore Career Seminars",
+    ctaText: "Explore Seminars",
     ctaLink: "/e/sasaram-jee-neet-scholarship-seminar-2026",
     imageSrc: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1600&auto=format&fit=crop",
-    useDirectImage: false,
   },
   {
     id: "dandiya-mahotsav",
@@ -57,7 +54,6 @@ const BANNERS: BannerSlide[] = [
     ctaText: "Book Festival Passes",
     ctaLink: "/e/rohtas-dandiya-mahotsav-2026",
     imageSrc: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1600&auto=format&fit=crop",
-    useDirectImage: false,
   },
 ];
 
@@ -65,6 +61,7 @@ export default function HeroBannerCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
   const totalSlides = BANNERS.length;
 
@@ -74,6 +71,19 @@ export default function HeroBannerCarousel() {
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  // Touch Swipe for mobile gestures
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 50) nextSlide();
+    if (diff < -50) prevSlide();
+    touchStartX.current = null;
   };
 
   // 5-second automatic rotation loop
@@ -94,10 +104,12 @@ export default function HeroBannerCarousel() {
       className="relative w-full bg-[#1E0A3C] overflow-hidden select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
-      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {/* Banner Slide Frame */}
-        <div className="relative w-full min-h-[320px] sm:min-h-[380px] md:min-h-[420px] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-[#0F0521]">
+      <div className="max-w-[1340px] mx-auto px-3 sm:px-6 py-4 sm:py-6">
+        {/* Banner Slide Frame - Mobile-First Aspect Ratio */}
+        <div className="relative w-full min-h-[250px] sm:min-h-[320px] md:min-h-[380px] rounded-2xl overflow-hidden shadow-xl border border-white/10 bg-[#0F0521]">
           {BANNERS.map((banner, index) => {
             const isActive = index === currentSlide;
 
@@ -108,106 +120,79 @@ export default function HeroBannerCarousel() {
                   isActive ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
                 }`}
               >
-                {banner.useDirectImage ? (
-                  /* Banner 1: User's provided graphic representation */
-                  <Link
-                    href={banner.ctaLink}
-                    className="relative block w-full h-full group cursor-pointer"
-                  >
-                    <Image
-                      src={banner.imageSrc}
-                      alt="From Pop Ballads to Emo Encores - Live Music"
-                      fill
-                      priority={index === 0}
-                      className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.02]"
-                    />
-                    {/* Subtle edge gradient to blend seamlessly */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
-                    
-                    {/* Mobile interactive pill overlay for small touch targets */}
-                    <div className="absolute bottom-4 left-4 sm:hidden z-20">
-                      <span className="px-4 py-2 rounded-lg bg-white text-[#1E0A3C] text-xs font-bold shadow-md flex items-center gap-1.5">
-                        <span>Get Into Live Music</span>
-                        <ArrowRight size={14} weight="bold" />
+                <div className="relative w-full h-full flex items-center">
+                  {/* Background Photography with optimized mobile contrast */}
+                  <Image
+                    src={banner.imageSrc}
+                    alt={banner.subtitle}
+                    fill
+                    priority={index === 0}
+                    className="object-cover object-center filter brightness-60 md:brightness-75 transition-transform duration-700"
+                  />
+                  {/* Gradient Vignette for flawless text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#1E0A3C] via-[#1E0A3C]/80 to-black/30" />
+
+                  {/* Mobile-First Content Overlay */}
+                  <div className="relative z-20 max-w-xl px-4 sm:px-10 py-5 sm:py-8 space-y-2.5 sm:space-y-4">
+                    {/* Category Pill Badge */}
+                    <div>
+                      <span
+                        className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-md text-[10px] sm:text-xs font-extrabold uppercase tracking-wider ${banner.badgeColor} shadow-xs inline-flex items-center gap-1.5`}
+                      >
+                        <Sparkle size={12} weight="fill" />
+                        <span>{banner.badge}</span>
                       </span>
                     </div>
-                  </Link>
-                ) : (
-                  /* Banners 2 & 3: Matching Eventbrite Multi-block Banner Aesthetic */
-                  <div className="relative w-full h-full flex items-center">
-                    {/* Background Photography */}
-                    <Image
-                      src={banner.imageSrc}
-                      alt={banner.subtitle}
-                      fill
-                      priority={false}
-                      className="object-cover object-center filter brightness-60 md:brightness-75 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#1E0A3C]/95 via-[#1E0A3C]/75 to-transparent" />
 
-                    {/* Content Overlays matching Eventbrite Hero Typography */}
-                    <div className="relative z-20 max-w-2xl px-6 sm:px-12 py-8 space-y-4">
-                      {/* Pill Badge */}
-                      <div className="inline-block">
-                        <span
-                          className={`px-3 py-1 rounded-md text-[11px] sm:text-xs font-extrabold uppercase tracking-wider ${banner.badgeColor} shadow-xs inline-flex items-center gap-1.5`}
+                    {/* Stacked Colored Headline Blocks (Responsive Fluid Font) */}
+                    <div className="space-y-1">
+                      <div className="block">
+                        <h2
+                          className={`text-base sm:text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight px-2 sm:px-3.5 py-0.5 sm:py-1 rounded-md ${banner.titleColor} shadow-md inline-block max-w-full`}
                         >
-                          <Sparkle size={13} weight="fill" />
-                          <span>{banner.badge}</span>
-                        </span>
+                          {banner.titleLine1}
+                        </h2>
                       </div>
-
-                      {/* Stacked Colored Headline Blocks */}
-                      <div className="space-y-1 sm:space-y-2">
-                        <div className="inline-block">
-                          <h2
-                            className={`text-xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight px-3 sm:px-4 py-1 sm:py-1.5 rounded-md ${banner.titleColor} shadow-md`}
-                          >
-                            {banner.titleLine1}
-                          </h2>
-                        </div>
-                        <br />
-                        <div className="inline-block">
-                          <h2
-                            className={`text-xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight px-3 sm:px-4 py-1 sm:py-1.5 rounded-md ${banner.titleColor} shadow-md`}
-                          >
-                            {banner.titleLine2}
-                          </h2>
-                        </div>
-                      </div>
-
-                      {/* Subtitle / Description */}
-                      <p className="text-sm sm:text-base text-[#DBDAE3] font-medium max-w-lg leading-relaxed drop-shadow-sm">
-                        {banner.subtitle}
-                      </p>
-
-                      {/* Action CTA Button (Rectangular 8px Curved Radius - White/Pillow Style) */}
-                      <div className="pt-2">
-                        <Link
-                          href={banner.ctaLink}
-                          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white hover:bg-[#F8F7FA] text-[#1E0A3C] text-sm font-extrabold shadow-lg transition-all active:scale-95 group"
+                      <div className="block">
+                        <h2
+                          className={`text-base sm:text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight px-2 sm:px-3.5 py-0.5 sm:py-1 rounded-md ${banner.titleColor} shadow-md inline-block max-w-full`}
                         >
-                          <span>{banner.ctaText}</span>
-                          <ArrowRight
-                            size={16}
-                            weight="bold"
-                            className="transition-transform group-hover:translate-x-1"
-                          />
-                        </Link>
+                          {banner.titleLine2}
+                        </h2>
                       </div>
                     </div>
+
+                    {/* Subtitle / Description */}
+                    <p className="text-xs sm:text-sm text-[#DBDAE3] font-medium max-w-md leading-relaxed line-clamp-2 drop-shadow-xs">
+                      {banner.subtitle}
+                    </p>
+
+                    {/* Action CTA Button */}
+                    <div className="pt-1 sm:pt-2">
+                      <Link
+                        href={banner.ctaLink}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg bg-white hover:bg-[#F8F7FA] text-[#1E0A3C] text-xs sm:text-sm font-extrabold shadow-md transition-all active:scale-95 group"
+                      >
+                        <span>{banner.ctaText}</span>
+                        <ArrowRight
+                          size={14}
+                          weight="bold"
+                          className="transition-transform group-hover:translate-x-1"
+                        />
+                      </Link>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
 
-          {/* Navigation Arrows (Rectangular with 8px radius) */}
+          {/* Navigation Arrows: Hidden on Mobile to prevent obscuring text; Desktop only */}
           <button
             type="button"
             onClick={prevSlide}
             aria-label="Previous Banner"
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-lg bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center transition-all border border-white/20 active:scale-90"
+            className="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-lg bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
           >
             <CaretLeft size={20} weight="bold" />
           </button>
@@ -215,13 +200,13 @@ export default function HeroBannerCarousel() {
             type="button"
             onClick={nextSlide}
             aria-label="Next Banner"
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-lg bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center transition-all border border-white/20 active:scale-90"
+            className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-lg bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
           >
             <CaretRight size={20} weight="bold" />
           </button>
 
-          {/* 3 Progress Bars / Indicators with 5-second interval feedback */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+          {/* Progress Indicators */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 sm:gap-2">
             {BANNERS.map((_, i) => {
               const isSelected = i === currentSlide;
               return (
@@ -230,18 +215,18 @@ export default function HeroBannerCarousel() {
                   type="button"
                   onClick={() => setCurrentSlide(i)}
                   aria-label={`Go to slide ${i + 1}`}
-                  className="h-2 rounded-full transition-all duration-300 overflow-hidden relative"
+                  className="h-1.5 sm:h-2 rounded-full transition-all duration-300 overflow-hidden relative"
                   style={{
-                    width: isSelected ? "36px" : "10px",
-                    backgroundColor: isSelected ? "rgba(255, 255, 255, 0.4)" : "rgba(255, 255, 255, 0.25)",
+                    width: isSelected ? "28px" : "8px",
+                    backgroundColor: isSelected ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0.25)",
                   }}
                 >
                   {isSelected && (
                     <div
-                      key={`progress-${currentSlide}-${isPaused}`}
-                      className={`h-full bg-white rounded-full ${
-                        !isPaused ? "animate-banner-progress" : "w-full"
-                      }`}
+                      className="absolute inset-0 bg-white rounded-full transition-all duration-100 ease-linear"
+                      style={{
+                        animation: isPaused ? "none" : "progress 5s linear infinite",
+                      }}
                     />
                   )}
                 </button>
@@ -253,4 +238,3 @@ export default function HeroBannerCarousel() {
     </div>
   );
 }
-

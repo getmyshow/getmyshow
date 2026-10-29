@@ -102,8 +102,8 @@ export default function CategoryCircleRow({
         )}
       </div>
 
-      {/* Eventbrite-Style Rectangular Visual Category Cards (12px Radius - No Ovals) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
+      {/* Responsive Visual Category Cards: Horizontal Swipeable on Mobile, Grid on Desktop */}
+      <div className="flex sm:grid sm:grid-cols-4 lg:grid-cols-8 gap-2.5 sm:gap-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none snap-x">
         {CATEGORIES.map((cat) => {
           const isSelected = selectedCategory === cat.id;
 
@@ -112,7 +112,7 @@ export default function CategoryCircleRow({
               key={cat.id}
               type="button"
               onClick={() => onSelectCategory?.(isSelected ? "" : cat.id)}
-              className={`group relative h-28 sm:h-32 rounded-xl overflow-hidden border text-left transition-all duration-200 focus:outline-none flex flex-col justify-end p-2.5 ${
+              className={`group relative shrink-0 w-[130px] sm:w-auto h-24 sm:h-32 rounded-xl overflow-hidden border text-left transition-all duration-200 focus:outline-none flex flex-col justify-end p-2.5 snap-start active:scale-95 ${
                 isSelected
                   ? "border-[#3659E3] ring-2 ring-[#3659E3] ring-offset-1 shadow-md scale-[1.02]"
                   : "border-[#DBDAE3] hover:border-[#39364F] hover:shadow-md hover:-translate-y-0.5"

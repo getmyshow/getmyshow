@@ -300,21 +300,21 @@ function HomeContent() {
       </section>
 
       {/* 3. Main Discovery Feed */}
-      <main id="events" className="max-w-[1340px] mx-auto px-4 sm:px-6 py-12 space-y-16">
+      <main id="events" className="max-w-[1340px] mx-auto px-4 sm:px-6 py-6 sm:py-12 space-y-8 sm:space-y-16">
         {/* Curated Grid Section */}
         <div>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div>
               <div className="text-xs font-bold text-[#3659E3] uppercase tracking-wider">
                 {selectedCategory ? `Filtered by ${selectedCategory}` : "Discover in Sasaram & Rohtas"}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-0.5">
+              <h2 className="text-xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-0.5">
                 Popular Events Near You
               </h2>
             </div>
 
             {/* BookMyShow-style Date Quick Chips */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 snap-x">
               {(
                 [
                   { id: "all", label: "All Dates" },
@@ -329,7 +329,7 @@ function HomeContent() {
                     key={chip.id}
                     type="button"
                     onClick={() => setDateFilter(chip.id)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                    className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border shrink-0 snap-start active:scale-95 ${
                       isActive
                         ? "bg-[#1E0A3C] text-white border-[#1E0A3C] shadow-xs"
                         : "bg-white text-[#39364F] border-[#DBDAE3] hover:border-[#1E0A3C]/40 hover:bg-[#F8F7FA]"
@@ -347,7 +347,7 @@ function HomeContent() {
                     setSelectedCategory("");
                     setDateFilter("all");
                   }}
-                  className="text-xs font-bold text-[#F05537] hover:underline whitespace-nowrap ml-2"
+                  className="text-xs font-bold text-[#F05537] hover:underline whitespace-nowrap ml-2 shrink-0"
                 >
                   Clear Filters
                 </button>
@@ -357,7 +357,7 @@ function HomeContent() {
 
           {/* 4-Column Modern Eventbrite 16px Cards Grid or Empty State with unDraw Illustration */}
           {filteredEvents.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
@@ -390,39 +390,39 @@ function HomeContent() {
           )}
         </div>
 
-        {/* 4. Explore Cities in Bihar (Rich Photographic Cards) */}
+        {/* 4. Explore Cities in Bihar (Horizontal Swipe on Mobile, Grid on Desktop) */}
         <div>
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <span className="text-xs font-bold text-[#3659E3] uppercase tracking-wider">
               Regional Box-Office
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-0.5">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-[#1E0A3C] tracking-tight mt-0.5">
               Explore Events by City
             </h2>
-            <p className="text-sm text-[#6F7287] mt-1">
+            <p className="text-xs sm:text-sm text-[#6F7287] mt-0.5">
               Connect with college fests, coaching seminars, and celebrations across Bihar.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none snap-x">
             {BIHAR_REGIONAL_CITIES.map((city) => (
               <Link
                 key={city.name}
                 href={`/?city=${encodeURIComponent(city.name)}#events`}
-                className="group relative h-48 rounded-xl overflow-hidden border border-[#DBDAE3] shadow-xs hover:border-[#1E0A3C] hover:shadow-md transition-all block"
+                className="group relative shrink-0 w-64 sm:w-auto h-40 sm:h-48 rounded-xl overflow-hidden border border-[#DBDAE3] shadow-xs hover:border-[#1E0A3C] hover:shadow-md transition-all block snap-start active:scale-98"
               >
                 <Image
                   src={city.imageUrl}
                   alt={city.name}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  sizes="(max-width: 640px) 260px, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1E0A3C]/90 via-[#1E0A3C]/40 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <div className="text-lg font-bold leading-tight">{city.name}</div>
-                  <div className="text-xs text-white/80 mt-0.5">{city.tagline}</div>
-                  <div className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#F97316]">
+                <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                  <div className="text-base sm:text-lg font-bold leading-tight">{city.name}</div>
+                  <div className="text-xs text-white/80 mt-0.5 line-clamp-1">{city.tagline}</div>
+                  <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-[#F97316]">
                     <span>{city.eventsCount} upcoming events</span>
                     <ArrowRight size={12} weight="bold" />
                   </div>
