@@ -139,3 +139,8 @@
   - [x] Next.js Edge Middleware host rewriting (`middleware.ts`) for dedicated Organizer HQ (`org.*`), Gate Scanner Terminal (`scan.*`), and Public Attendee Discovery (`*`)
   - [x] Session & RBAC boundary protection with Clerk auth on Organizer HQ and PIN/token isolation on Gate Scanner
   - [x] Zero-code future custom domain migration readiness (`NEXT_PUBLIC_ROOT_DOMAIN`)
+- [x] Hyper-Mobile UI Overhaul (Mobile-First Experience):
+  - [x] Viewport-isolated Sticky Bottom Navigation Bar (`components/ui/MobileBottomNav.tsx`) mounted at root `layout.tsx` outside WebKit blur stacking context (5 buttons: Explore, Search, Host, Passes, Studio)
+  - [x] 60% Left Slide-Over Navigation Drawer (`components/ui/Header.tsx`) on hamburger tap with search bar, Bihar quick city chips, event categories, and Clerk auth actions
+  - [x] Minimalist Edge-to-Edge Hero Carousel (`components/home/HeroBannerCarousel.tsx`) eliminating thick purple borders on mobile screens
+  - [x] Dedicated City Landing Pages (`/city/[city]` & `components/city/CityDetailView.tsx`) with city hero headers, dynamic Supabase event filtering, category/date chips, and quick CTAs

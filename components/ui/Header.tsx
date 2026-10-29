@@ -110,7 +110,8 @@ function HeaderContent() {
   const handleSelectCity = (city: string) => {
     setSelectedCity(city);
     setIsCityDropdownOpen(false);
-    router.push(`/?city=${encodeURIComponent(city)}#events`);
+    const citySlug = city.toLowerCase().replace(/\s+/g, "-");
+    router.push(`/city/${citySlug}`);
   };
 
   const handleCategoryClick = (catId: string) => {
@@ -466,138 +467,186 @@ function HeaderContent() {
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* 60% Left Slide-Over Navigation Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-[#E2E8F0] bg-white px-4 py-4 space-y-4 animate-in slide-in-from-top-4 duration-200 shadow-xl z-50">
-          {/* Quick Categories for Mobile */}
-          <div>
-            <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-2">
-              Explore Categories
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {DISCOVERY_CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => {
-                    handleCategoryClick(cat.id);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
-                    activeCategory === cat.id
-                      ? "bg-[#4F46E5] text-white border-[#4F46E5]"
-                      : "bg-[#F8F7FA] text-[#39364F] border-slate-200"
-                  }`}
+        <div className="fixed inset-0 z-50 md:hidden">
+          {/* Dark Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+
+          {/* 60% Left Slide-Over Panel */}
+          <div className="fixed inset-y-0 left-0 w-[65%] min-w-[270px] max-w-[340px] bg-white shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-left duration-250 border-r border-[#DBDAE3] z-50 p-4 space-y-4">
+            <div>
+              {/* Drawer Top Bar */}
+              <div className="flex items-center justify-between pb-3 border-b border-[#EEEDF2]">
+                <Link
+                  href="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center"
                 >
-                  {cat.label}
+                  <Image
+                    src="/brand/logos/wordmark-tilted-black-text.svg"
+                    alt="GetMyShow"
+                    width={140}
+                    height={36}
+                    className="h-7 w-auto object-contain"
+                  />
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-1.5 rounded-lg text-[#6F7287] hover:bg-[#F8F7FA] hover:text-[#1E0A3C] transition"
+                  aria-label="Close menu"
+                >
+                  <X size={18} weight="bold" />
                 </button>
-              ))}
+              </div>
+
+              {/* Quick Search Inside Drawer */}
+              <form
+                onSubmit={(e) => {
+                  handleSearchSubmit(e);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="mt-3.5 flex items-center bg-[#F8F7FA] border border-[#DBDAE3] rounded-full h-9 px-3 focus-within:border-[#4F46E5] focus-within:bg-white"
+              >
+                <MagnifyingGlass size={15} weight="bold" className="text-[#64748B] mr-1.5 shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Search events in Bihar..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent text-xs text-[#0F172A] outline-none font-medium placeholder-[#94A3B8]"
+                />
+              </form>
+
+              {/* Navigation Links */}
+              <div className="mt-4 space-y-1">
+                <Link
+                  href="/#events"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
+                >
+                  <Ticket size={16} weight="duotone" className="text-[#4F46E5]" />
+                  <span>Browse Events</span>
+                </Link>
+
+                <Link
+                  href="/my-tickets"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
+                >
+                  <Ticket size={16} weight="bold" className="text-[#10B981]" />
+                  <span>My Passes</span>
+                </Link>
+
+                <Link
+                  href={getSubdomainUrl("org", "/create")}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-[#F05537]/10 hover:bg-[#F05537]/20 text-xs font-bold text-[#F05537] transition"
+                >
+                  <Plus size={16} weight="bold" />
+                  <span>Host an Event (0% Fee)</span>
+                </Link>
+
+                <Link
+                  href={getSubdomainUrl("org")}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
+                >
+                  <Buildings size={16} weight="duotone" className="text-[#4F46E5]" />
+                  <span>Organizer Studio</span>
+                </Link>
+
+                <Link
+                  href={getSubdomainUrl("scan", "/login")}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#F8F7FA] hover:bg-slate-100 text-xs font-semibold text-[#39364F] transition border border-[#DBDAE3]"
+                >
+                  <UserCheck size={16} weight="bold" className="text-[#4F46E5]" />
+                  <span>Gate Staff Scanner</span>
+                </Link>
+              </div>
+
+              {/* Popular Cities in Bihar */}
+              <div className="mt-4 pt-3 border-t border-[#EEEDF2]">
+                <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-2">
+                  Cities in Bihar
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {BIHAR_CITIES.map((c) => {
+                    const citySlug = c.name.toLowerCase().replace(/\s+/g, "-");
+                    return (
+                      <Link
+                        key={c.name}
+                        href={`/city/${citySlug}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition ${
+                          selectedCity === c.name
+                            ? "bg-[#4F46E5] text-white border-[#4F46E5]"
+                            : "bg-[#F8F7FA] text-[#39364F] border-slate-200 hover:border-slate-400"
+                        }`}
+                      >
+                        {c.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Categories */}
+              <div className="mt-4 pt-3 border-t border-[#EEEDF2]">
+                <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-2">
+                  Event Types
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {DISCOVERY_CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => {
+                        handleCategoryClick(cat.id);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition ${
+                        activeCategory === cat.id
+                          ? "bg-[#1E0A3C] text-white border-[#1E0A3C]"
+                          : "bg-[#F8F7FA] text-[#39364F] border-slate-200 hover:border-slate-400"
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="h-px bg-slate-200" />
-
-          {/* Mobile Links */}
-          <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
-            <Link
-              href="/#events"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-[#0F172A] flex items-center gap-2 border border-slate-200"
-            >
-              <Ticket size={16} weight="duotone" className="text-[#4F46E5]" />
-              <span>Browse Events</span>
-            </Link>
-            <Link
-              href="/my-tickets"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-[#0F172A] flex items-center gap-2 border border-slate-200"
-            >
-              <Ticket size={16} weight="bold" className="text-[#10B981]" />
-              <span>My Passes</span>
-            </Link>
-            <Link
-              href={getSubdomainUrl("org", "/create")}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-3 rounded-xl bg-[#F05537]/10 hover:bg-[#F05537]/20 text-[#F05537] flex items-center gap-2 border border-[#F05537]/20"
-            >
-              <Plus size={16} weight="bold" />
-              <span>Create Event</span>
-            </Link>
-            <Link
-              href={getSubdomainUrl("org")}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-[#0F172A] flex items-center gap-2 border border-slate-200"
-            >
-              <Buildings size={16} weight="duotone" className="text-[#4F46E5]" />
-              <span>Host Console</span>
-            </Link>
-            <Link
-              href={getSubdomainUrl("scan", "/login")}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="col-span-2 p-2.5 rounded-xl bg-[#F8F7FA] hover:bg-slate-100 text-[#39364F] flex items-center justify-center gap-2 border border-[#DBDAE3] text-[11px] font-semibold"
-            >
-              <UserCheck size={16} weight="bold" className="text-[#4F46E5]" />
-              <span>Scanning Staff Portal (Gate Login)</span>
-            </Link>
+            {/* Bottom Profile / Sign-in */}
+            <div className="pt-3 border-t border-[#EEEDF2]">
+              <Show when="signed-out">
+                <SignInButton mode="modal">
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full py-2.5 rounded-lg bg-[#4F46E5] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs"
+                  >
+                    <UserCheck size={14} weight="bold" />
+                    <span>Sign In to Account</span>
+                  </button>
+                </SignInButton>
+              </Show>
+              <Show when="signed-in">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <span className="text-xs font-bold text-[#1E0A3C]">Account</span>
+                  <UserButton />
+                </div>
+              </Show>
+            </div>
           </div>
         </div>
-      )}
-
-      {/* FIXED MOBILE BOTTOM NAVIGATION BAR (BookMyShow / Native App Style) - Hidden on event detail pages to prioritize Sticky Checkout Bar */}
-      {!pathname.startsWith("/e/") && !pathname.startsWith("/scan") && (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-[#DBDAE3] h-14 flex items-center justify-around px-2 shadow-lg">
-          <Link
-            href="/"
-            className={`flex flex-col items-center justify-center min-w-[56px] py-1 transition-colors ${
-              pathname === "/" ? "text-[#4F46E5] font-bold" : "text-[#64748B] font-medium"
-            }`}
-          >
-            <Compass size={20} weight={pathname === "/" ? "fill" : "regular"} />
-            <span className="text-[10px] mt-0.5">Explore</span>
-          </Link>
-
-          <button
-            type="button"
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-              focusSearchInput();
-            }}
-            className="flex flex-col items-center justify-center min-w-[56px] py-1 text-[#64748B] font-medium transition-colors"
-          >
-            <MagnifyingGlass size={20} />
-            <span className="text-[10px] mt-0.5">Search</span>
-          </button>
-
-          <Link
-            href={getSubdomainUrl("org", "/create")}
-            className="flex flex-col items-center justify-center min-w-[56px] py-1 text-[#F05537] font-bold transition-transform active:scale-90"
-          >
-            <div className="w-8 h-8 rounded-full bg-[#F05537] text-white flex items-center justify-center shadow-xs -mt-2 border-2 border-white">
-              <Plus size={16} weight="bold" />
-            </div>
-            <span className="text-[10px] mt-0.5">Host</span>
-          </Link>
-
-          <Link
-            href="/my-tickets"
-            className={`flex flex-col items-center justify-center min-w-[56px] py-1 transition-colors ${
-              pathname.startsWith("/my-tickets") ? "text-[#4F46E5] font-bold" : "text-[#64748B] font-medium"
-            }`}
-          >
-            <Ticket size={20} weight={pathname.startsWith("/my-tickets") ? "fill" : "regular"} />
-            <span className="text-[10px] mt-0.5">Passes</span>
-          </Link>
-
-          <Link
-            href={getSubdomainUrl("org")}
-            className={`flex flex-col items-center justify-center min-w-[56px] py-1 transition-colors ${
-              pathname.startsWith("/organizer") ? "text-[#4F46E5] font-bold" : "text-[#64748B] font-medium"
-            }`}
-          >
-            <Buildings size={20} weight={pathname.startsWith("/organizer") ? "fill" : "regular"} />
-            <span className="text-[10px] mt-0.5">Studio</span>
-          </Link>
-        </nav>
       )}
     </>
   );

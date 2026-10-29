@@ -101,15 +101,15 @@ export default function HeroBannerCarousel() {
 
   return (
     <div
-      className="relative w-full bg-[#1E0A3C] overflow-hidden select-none"
+      className="relative w-full bg-[#F8F7FA] overflow-hidden select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="max-w-[1340px] mx-auto px-3 sm:px-6 py-4 sm:py-6">
-        {/* Banner Slide Frame - Mobile-First Aspect Ratio */}
-        <div className="relative w-full min-h-[250px] sm:min-h-[320px] md:min-h-[380px] rounded-2xl overflow-hidden shadow-xl border border-white/10 bg-[#0F0521]">
+      <div className="max-w-[1340px] mx-auto px-0 sm:px-6 py-0 sm:py-4">
+        {/* Banner Slide Frame: Edge-to-Edge on Mobile with Minimal Clean Border on Desktop */}
+        <div className="relative w-full min-h-[240px] sm:min-h-[320px] md:min-h-[380px] rounded-none sm:rounded-2xl overflow-hidden shadow-xs sm:shadow-lg border-y sm:border border-[#DBDAE3]/60 bg-[#0F0521]">
           {BANNERS.map((banner, index) => {
             const isActive = index === currentSlide;
 

@@ -19,6 +19,8 @@
 | **OrganizerDashboard** | `app/organizer/dashboard/[id]/page.tsx` | Dashboard | Completed | Default | Eventbrite-inspired organizer console with real-time sales metrics (GMV, Tickets Sold, Attendance %), T+2 wallet ledger card, 15% event-completion holdback rule, 12-digit UTR payout modal, and offline cash promoter desk. |
 | **EventCreator** | `app/organizer/create/page.tsx` | Organizer | Completed | Default | 60-Second event creation wizard with 0% commission convenience fee toggle, gate PIN setup, and instant live preview. |
 | **Footer** | `components/ui/Footer.tsx` | Navigation | Completed | Default | Eventbrite-inspired rich directory footer with Bihar city links, organizer resources, trust strip, copyright, and Phosphor icons. |
+| **MobileBottomNav** | `components/ui/MobileBottomNav.tsx` | Navigation | Completed | Default | Viewport-isolated mobile bottom sticky bar mounted at root layout outside WebKit blur context. 5 navigation touch targets: Explore, Search, Host (+), Passes, Studio with safe-area insets. |
+| **CityDetailView** | `components/city/CityDetailView.tsx` | Discovery | Completed | `citySlug: string` | Dedicated city events landing page with photographic hero, regional badge, category chips, date filters, dynamic Supabase events feed, and quick host CTA. |
 
 ---
 

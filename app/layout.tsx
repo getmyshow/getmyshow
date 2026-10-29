@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
+import MobileBottomNav from "@/components/ui/MobileBottomNav";
 import AgentationProvider from "@/components/dev/AgentationProvider";
 import ClerkAuthProvider from "@/components/auth/ClerkAuthProvider";
 
@@ -54,6 +55,7 @@ export default function RootLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          <MobileBottomNav />
         </ClerkAuthProvider>
       </body>
     </html>

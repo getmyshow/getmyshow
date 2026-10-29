@@ -170,24 +170,28 @@ const DEMO_EVENTS: EventItem[] = [
 const BIHAR_REGIONAL_CITIES = [
   {
     name: "Sasaram",
+    slug: "sasaram",
     tagline: "Historic Rohtas Capital",
     imageUrl: "https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?auto=format&fit=crop&w=600&q=80",
     eventsCount: 14,
   },
   {
     name: "Patna",
+    slug: "patna",
     tagline: "State Cultural Hub",
     imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
     eventsCount: 28,
   },
   {
     name: "Gaya",
+    slug: "gaya",
     tagline: "International Heritage & Arts",
     imageUrl: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=600&q=80",
     eventsCount: 19,
   },
   {
     name: "Dehri-on-Sone",
+    slug: "dehri-on-sone",
     tagline: "Sone Riverfront Festivals",
     imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
     eventsCount: 8,
@@ -408,7 +412,7 @@ function HomeContent() {
             {BIHAR_REGIONAL_CITIES.map((city) => (
               <Link
                 key={city.name}
-                href={`/?city=${encodeURIComponent(city.name)}#events`}
+                href={`/city/${city.slug}`}
                 className="group relative shrink-0 w-64 sm:w-auto h-40 sm:h-48 rounded-xl overflow-hidden border border-[#DBDAE3] shadow-xs hover:border-[#1E0A3C] hover:shadow-md transition-all block snap-start active:scale-98"
               >
                 <Image
