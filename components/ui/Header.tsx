@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { SignInButton, Show, UserButton } from "@clerk/nextjs";
+import { SignInButton, Show, UserButton, useUser } from "@clerk/nextjs";
 import {
   MagnifyingGlass,
   MapPin,
@@ -19,7 +19,7 @@ import {
   ArrowRight,
   Compass,
 } from "@phosphor-icons/react";
-import { getEvents } from "@/actions/events";
+import { getEvents, checkUserRole } from "@/actions/events";
 import { EventItem } from "@/types";
 import { formatINR } from "@/lib/utils";
 import { getSubdomainUrl } from "@/lib/domains";
@@ -50,16 +50,37 @@ function HeaderContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get("category") || "all";
+  const { user, isSignedIn } = useUser();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("Sasaram");
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isOrganizer, setIsOrganizer] = useState(false);
   const [allEvents, setAllEvents] = useState<EventItem[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Check dynamic role: isOrganizer is true ONLY if user has hosted >= 1 events
+  useEffect(() => {
+    let active = true;
+    if (isSignedIn && user) {
+      const email = user.primaryEmailAddress?.emailAddress;
+      const phone = user.primaryPhoneNumber?.phoneNumber;
+      checkUserRole({ email, phone }).then((res) => {
+        if (active && res.success && res.data) {
+          setIsOrganizer(res.data.isOrganizer);
+        }
+      });
+    } else {
+      setIsOrganizer(false);
+    }
+    return () => {
+      active = false;
+    };
+  }, [isSignedIn, user]);
 
   // Set mounted state for React Portal teleportation
   useEffect(() => {
@@ -352,6 +373,17 @@ function HeaderContent() {
               <span>Passes</span>
             </Link>
 
+            {/* Organizer Studio Desktop Link (Visible ONLY if user has hosted >= 1 events) */}
+            {isOrganizer && (
+              <Link
+                href={getSubdomainUrl("org")}
+                className="hidden md:inline-flex items-center gap-1.5 text-xs font-bold text-[#4F46E5] hover:text-indigo-700 transition-colors px-2.5 py-1.5 rounded-full bg-indigo-50/80 hover:bg-indigo-100/80"
+              >
+                <Buildings size={15} weight="duotone" />
+                <span>Studio</span>
+              </Link>
+            )}
+
             {/* Host Event Button (Visible from tablet up) */}
             <Link
               href={getSubdomainUrl("org", "/create")}
@@ -383,11 +415,13 @@ function HeaderContent() {
                         labelIcon={<Ticket size={16} weight="duotone" />}
                         href="/my-tickets"
                       />
-                      <UserButton.Link
-                        label="Organizer Dashboard"
-                        labelIcon={<Buildings size={16} weight="duotone" />}
-                        href={getSubdomainUrl("org")}
-                      />
+                      {isOrganizer && (
+                        <UserButton.Link
+                          label="Organizer Dashboard"
+                          labelIcon={<Buildings size={16} weight="duotone" />}
+                          href={getSubdomainUrl("org")}
+                        />
+                      )}
                     </UserButton.MenuItems>
                   </UserButton>
                 </div>
@@ -581,23 +615,17 @@ function HeaderContent() {
                   <span>Host an Event (0% Fee)</span>
                 </Link>
 
-                <Link
-                  href={getSubdomainUrl("org")}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
-                >
-                  <Buildings size={16} weight="duotone" className="text-[#4F46E5]" />
-                  <span>Organizer Studio</span>
-                </Link>
-
-                <Link
-                  href={getSubdomainUrl("scan", "/login")}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#F8F7FA] hover:bg-slate-100 text-xs font-semibold text-[#39364F] transition border border-[#DBDAE3]"
-                >
-                  <UserCheck size={16} weight="bold" className="text-[#4F46E5]" />
-                  <span>Gate Staff Scanner</span>
-                </Link>
+                {/* Organizer Studio: Rendered ONLY if user has hosted >= 1 events */}
+                {isOrganizer && (
+                  <Link
+                    href={getSubdomainUrl("org")}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-xs font-bold text-[#1E0A3C] transition"
+                  >
+                    <Buildings size={16} weight="duotone" className="text-[#4F46E5]" />
+                    <span>Organizer Studio</span>
+                  </Link>
+                )}
               </div>
 
               {/* Popular Cities in Bihar */}

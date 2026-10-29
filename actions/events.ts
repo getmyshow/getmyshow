@@ -277,3 +277,53 @@ export async function createEvent(input: CreateEventInput): Promise<ActionResult
     };
   }
 }
+
+export async function checkUserRole(filter: {
+  email?: string | null;
+  phone?: string | null;
+}): Promise<ActionResult<{ isOrganizer: boolean; hostedCount: number }>> {
+  try {
+    const supabase = createAdminClient();
+    if (!filter.email?.trim() && !filter.phone?.trim()) {
+      return { success: true, data: { isOrganizer: false, hostedCount: 0 } };
+    }
+
+    const conditions: string[] = [];
+    if (filter.email?.trim()) {
+      conditions.push(`organizer_email.ilike.%${filter.email.trim()}%`);
+    }
+    if (filter.phone?.trim()) {
+      const cleanPhone = filter.phone.replace(/\D/g, "").slice(-10);
+      if (cleanPhone) {
+        conditions.push(`organizer_whatsapp.ilike.%${cleanPhone}%`);
+      }
+    }
+
+    if (conditions.length === 0) {
+      return { success: true, data: { isOrganizer: false, hostedCount: 0 } };
+    }
+
+    const { count, error } = await supabase
+      .from("events")
+      .select("id", { count: "exact", head: true })
+      .or(conditions.join(","));
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const hostedCount = count || 0;
+    return {
+      success: true,
+      data: {
+        isOrganizer: hostedCount > 0,
+        hostedCount,
+      },
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to check user role",
+    };
+  }
+}

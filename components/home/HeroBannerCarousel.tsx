@@ -21,11 +21,11 @@ interface BannerSlide {
 const BANNERS: BannerSlide[] = [
   {
     id: "live-music",
-    badge: "GET INTO IT",
+    badge: "LIVE IN BIHAR",
     badgeColor: "bg-[#FF70A6] text-white",
     titleLine1: "FROM POP BALLADS",
     titleLine2: "TO EMO ENCORES",
-    titleColor: "bg-[#708BFF] text-white",
+    titleColor: "bg-[#4F46E5] text-white",
     subtitle: "Discover high-energy live concerts, acoustic gigs, and musical nights across Bihar.",
     ctaText: "Explore Live Music",
     ctaLink: "#events",
@@ -81,8 +81,8 @@ export default function HeroBannerCarousel() {
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff > 50) nextSlide();
-    if (diff < -50) prevSlide();
+    if (diff > 45) nextSlide();
+    if (diff < -45) prevSlide();
     touchStartX.current = null;
   };
 
@@ -101,15 +101,15 @@ export default function HeroBannerCarousel() {
 
   return (
     <div
-      className="relative w-full bg-[#F8F7FA] overflow-hidden select-none"
+      className="relative w-full overflow-hidden select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="max-w-[1340px] mx-auto px-0 sm:px-6 py-0 sm:py-4">
-        {/* Banner Slide Frame: Edge-to-Edge on Mobile with Minimal Clean Border on Desktop */}
-        <div className="relative w-full min-h-[240px] sm:min-h-[320px] md:min-h-[380px] rounded-none sm:rounded-2xl overflow-hidden shadow-xs sm:shadow-lg border-y sm:border border-[#DBDAE3]/60 bg-[#0F0521]">
+      <div className="max-w-[1340px] mx-auto px-0 sm:px-6 py-0 sm:py-3">
+        {/* Banner Slide Frame: Zero border on mobile (edge-to-edge bleed), subtle 1px border on desktop (gsap.com) */}
+        <div className="relative w-full min-h-[260px] sm:min-h-[320px] md:min-h-[380px] rounded-none sm:rounded-2xl overflow-hidden shadow-none sm:shadow-md border-0 sm:border sm:border-slate-200/80 bg-[#0A0D14]">
           {BANNERS.map((banner, index) => {
             const isActive = index === currentSlide;
 
@@ -121,23 +121,23 @@ export default function HeroBannerCarousel() {
                 }`}
               >
                 <div className="relative w-full h-full flex items-center">
-                  {/* Background Photography with optimized mobile contrast */}
+                  {/* Background Photography with optimized contrast */}
                   <Image
                     src={banner.imageSrc}
                     alt={banner.subtitle}
                     fill
                     priority={index === 0}
-                    className="object-cover object-center filter brightness-60 md:brightness-75 transition-transform duration-700"
+                    className="object-cover object-center filter brightness-65 md:brightness-75 transition-transform duration-700"
                   />
-                  {/* Gradient Vignette for flawless text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#1E0A3C] via-[#1E0A3C]/80 to-black/30" />
+                  {/* Subtle Cinematic Vignette for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-black/85 via-black/55 to-transparent" />
 
                   {/* Mobile-First Content Overlay */}
-                  <div className="relative z-20 max-w-xl px-4 sm:px-10 py-5 sm:py-8 space-y-2.5 sm:space-y-4">
+                  <div className="relative z-20 max-w-xl px-4 sm:px-10 py-6 sm:py-8 space-y-2.5 sm:space-y-3.5">
                     {/* Category Pill Badge */}
                     <div>
                       <span
-                        className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-md text-[10px] sm:text-xs font-extrabold uppercase tracking-wider ${banner.badgeColor} shadow-xs inline-flex items-center gap-1.5`}
+                        className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-wider ${banner.badgeColor} shadow-xs inline-flex items-center gap-1.5`}
                       >
                         <Sparkle size={12} weight="fill" />
                         <span>{banner.badge}</span>
@@ -148,14 +148,14 @@ export default function HeroBannerCarousel() {
                     <div className="space-y-1">
                       <div className="block">
                         <h2
-                          className={`text-base sm:text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight px-2 sm:px-3.5 py-0.5 sm:py-1 rounded-md ${banner.titleColor} shadow-md inline-block max-w-full`}
+                          className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-lg ${banner.titleColor} shadow-md inline-block max-w-full`}
                         >
                           {banner.titleLine1}
                         </h2>
                       </div>
                       <div className="block">
                         <h2
-                          className={`text-base sm:text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight px-2 sm:px-3.5 py-0.5 sm:py-1 rounded-md ${banner.titleColor} shadow-md inline-block max-w-full`}
+                          className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-lg ${banner.titleColor} shadow-md inline-block max-w-full`}
                         >
                           {banner.titleLine2}
                         </h2>
@@ -163,7 +163,7 @@ export default function HeroBannerCarousel() {
                     </div>
 
                     {/* Subtitle / Description */}
-                    <p className="text-xs sm:text-sm text-[#DBDAE3] font-medium max-w-md leading-relaxed line-clamp-2 drop-shadow-xs">
+                    <p className="text-xs sm:text-sm text-slate-200 font-medium max-w-md leading-relaxed line-clamp-2 drop-shadow-xs">
                       {banner.subtitle}
                     </p>
 
@@ -171,7 +171,7 @@ export default function HeroBannerCarousel() {
                     <div className="pt-1 sm:pt-2">
                       <Link
                         href={banner.ctaLink}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg bg-white hover:bg-[#F8F7FA] text-[#1E0A3C] text-xs sm:text-sm font-extrabold shadow-md transition-all active:scale-95 group"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-white hover:bg-slate-100 text-[#0F172A] text-xs sm:text-sm font-extrabold shadow-md transition-all active:scale-95 group"
                       >
                         <span>{banner.ctaText}</span>
                         <ArrowRight
@@ -187,12 +187,12 @@ export default function HeroBannerCarousel() {
             );
           })}
 
-          {/* Navigation Arrows: Hidden on Mobile to prevent obscuring text; Desktop only */}
+          {/* Navigation Arrows: Hidden on Mobile so they NEVER overlap text; visible on desktop only */}
           <button
             type="button"
             onClick={prevSlide}
             aria-label="Previous Banner"
-            className="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-lg bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
+            className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
           >
             <CaretLeft size={20} weight="bold" />
           </button>
@@ -200,7 +200,7 @@ export default function HeroBannerCarousel() {
             type="button"
             onClick={nextSlide}
             aria-label="Next Banner"
-            className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-lg bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
+            className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white items-center justify-center transition-all border border-white/20 active:scale-90"
           >
             <CaretRight size={20} weight="bold" />
           </button>

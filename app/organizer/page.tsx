@@ -38,20 +38,16 @@ export default function OrganizerLandingPage() {
       const email = user?.primaryEmailAddress?.emailAddress;
       const phone = user?.primaryPhoneNumber?.phoneNumber;
 
-      // Query organizer events
+      // Query organizer events strictly for the logged-in user
       const res = await getOrganizerEvents({ email, phone });
       if (res.success) {
-        setEvents(res.data);
+        setEvents(res.data || []);
       } else {
-        // Fallback: load all events if filtered returns empty
-        const fallbackRes = await getOrganizerEvents();
-        if (fallbackRes.success) {
-          setEvents(fallbackRes.data);
-        } else {
-          setErrorMsg(fallbackRes.error || res.error || "Failed to load events.");
-        }
+        setEvents([]);
+        setErrorMsg(res.error || "Failed to load events.");
       }
     } catch (err) {
+      setEvents([]);
       setErrorMsg(err instanceof Error ? err.message : "Network error loading events.");
     } finally {
       setIsLoading(false);
@@ -172,21 +168,63 @@ export default function OrganizerLandingPage() {
               ))}
             </div>
           ) : events.length === 0 ? (
-            <div className="py-14 text-center space-y-4">
-              <EmptyEventsIllustration className="w-56 h-40 mx-auto" />
-              <div>
-                <h3 className="text-lg font-bold text-[#1E0A3C]">No Events Published Yet</h3>
-                <p className="text-xs text-[#6F7287] mt-1 max-w-sm mx-auto">
-                  Get your first event live in Sasaram or anywhere in Bihar within 60 seconds with 0% organizer platform fees.
+            <div className="py-12 px-4 text-center max-w-xl mx-auto space-y-6">
+              <div className="w-16 h-16 rounded-3xl bg-[#3659E3]/10 border border-[#3659E3]/20 flex items-center justify-center text-[#3659E3] mx-auto shadow-xs">
+                <Ticket size={32} weight="duotone" />
+              </div>
+              <div className="space-y-2">
+                <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  0% Commission for Bihar Creators
+                </span>
+                <h3 className="text-xl sm:text-2xl font-black text-[#1E0A3C]">
+                  Welcome to GetMyShow Organizer Studio
+                </h3>
+                <p className="text-xs sm:text-sm text-[#6F7287] leading-relaxed">
+                  You haven&apos;t published any events yet. Launch your first event in Sasaram, Dehri, Patna, or anywhere in Bihar in 60 seconds with instant UPI ticketing and dedicated gate bouncer scanners.
                 </p>
               </div>
-              <Link
-                href="/organizer/create"
-                className="px-5 py-2.5 rounded-lg bg-[#3659E3] hover:bg-[#2b4ac2] text-white text-xs font-bold transition shadow-xs inline-flex items-center gap-1.5"
-              >
-                <Plus size={16} weight="bold" />
-                <span>Create Your First Event</span>
-              </Link>
+
+              {/* 4 Feature Highlights Grid (pricingpages.design) */}
+              <div className="grid grid-cols-2 gap-3 text-left pt-2">
+                <div className="p-3 rounded-xl bg-[#F8F7FA] border border-[#EEEDF2] space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#1E0A3C]">
+                    <Lightning size={14} className="text-[#F05537]" weight="fill" />
+                    <span>Instant UPI</span>
+                  </div>
+                  <p className="text-[11px] text-[#6F7287]">Google Pay, PhonePe, Paytm with 0% gateway dropoff.</p>
+                </div>
+                <div className="p-3 rounded-xl bg-[#F8F7FA] border border-[#EEEDF2] space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#1E0A3C]">
+                    <QrCode size={14} className="text-[#3659E3]" weight="bold" />
+                    <span>Gate Scanner PWA</span>
+                  </div>
+                  <p className="text-[11px] text-[#6F7287]">Dedicated bouncer portal with 3-credential security.</p>
+                </div>
+                <div className="p-3 rounded-xl bg-[#F8F7FA] border border-[#EEEDF2] space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#1E0A3C]">
+                    <ShieldCheck size={14} className="text-emerald-600" weight="bold" />
+                    <span>Anti-Counterfeit</span>
+                  </div>
+                  <p className="text-[11px] text-[#6F7287]">Cryptographic HMAC-signed QR passes with live holograms.</p>
+                </div>
+                <div className="p-3 rounded-xl bg-[#F8F7FA] border border-[#EEEDF2] space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#1E0A3C]">
+                    <Wallet size={14} className="text-[#3659E3]" weight="bold" />
+                    <span>T+2 Settlements</span>
+                  </div>
+                  <p className="text-[11px] text-[#6F7287]">Direct bank transfer with verified 12-digit Indian UTR.</p>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Link
+                  href="/organizer/create"
+                  className="px-6 py-3 rounded-xl bg-[#F05537] hover:bg-[#D94428] text-white text-xs sm:text-sm font-bold transition shadow-md inline-flex items-center gap-2 active:scale-95"
+                >
+                  <Plus size={18} weight="bold" />
+                  <span>Create Your First Event Now</span>
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="divide-y divide-[#EEEDF2]">
