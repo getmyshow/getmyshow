@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -54,10 +55,28 @@ function HeaderContent() {
   const [selectedCity, setSelectedCity] = useState("Sasaram");
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [allEvents, setAllEvents] = useState<EventItem[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Set mounted state for React Portal teleportation
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Prevent background scroll when mobile navigation drawer is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   // Load events for predictive autocomplete search
   useEffect(() => {
@@ -467,17 +486,27 @@ function HeaderContent() {
         </div>
       </div>
 
-      {/* 60% Left Slide-Over Navigation Drawer */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+      {/* 60% Left Slide-Over Navigation Drawer (Rendered via Portal into body to escape header stacking context) */}
+      {isMounted && isMobileMenuOpen && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[999] md:hidden">
           {/* Dark Backdrop */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+            className="fixed inset-0 bg-black/75 backdrop-blur-xs transition-opacity duration-300 z-[1000]"
             onClick={() => setIsMobileMenuOpen(false)}
+            aria-hidden="true"
           />
 
           {/* 60% Left Slide-Over Panel */}
-          <div className="fixed inset-y-0 left-0 w-[65%] min-w-[270px] max-w-[340px] bg-white shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-left duration-250 border-r border-[#DBDAE3] z-50 p-4 space-y-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation Menu"
+            className="fixed inset-y-0 left-0 w-[70%] sm:w-[60%] min-w-[280px] max-w-[340px] h-[100dvh] bg-white shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-left duration-250 border-r border-[#DBDAE3] z-[1001] p-4 space-y-4"
+            style={{
+              paddingTop: "max(1rem, env(safe-area-inset-top))",
+              paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
+            }}
+          >
             <div>
               {/* Drawer Top Bar */}
               <div className="flex items-center justify-between pb-3 border-b border-[#EEEDF2]">
@@ -646,7 +675,8 @@ function HeaderContent() {
               </Show>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
